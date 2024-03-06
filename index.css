@@ -5,3 +5,7 @@ p {
 h1 {
     color: blue;
 }
+
+* {
+    outline: 2px solid red;
+}
