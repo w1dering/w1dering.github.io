@@ -1,0 +1,41 @@
+.main {
+    margin: 0px;
+    display: flex;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    background-color: #1F2937;
+    margin: 0px;
+    padding: 5px;
+    height: 50px;
+    justify-content: left;
+    align-items: center;
+}
+
+.header .left {
+    color: white;
+    font-size: 24px;
+    
+    flex: 1;
+}
+
+.header .right {
+    color: #E5E7EB;
+    font-size: 18px;
+    flex: 1;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.header .right a {
+    width: 200px;
+    flex: 1 1 auto;
+}
+
+.section-a {
+    background-color: #1F2937;
+    display: flex;
+}
