@@ -1,6 +1,7 @@
 .main {
     margin: 0px;
     display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -8,34 +9,37 @@
     flex-direction: row;
     background-color: #1F2937;
     margin: 0px;
-    padding: 5px;
+    padding-block: 5px;
+    padding-inline: 250px;
     height: 50px;
     justify-content: left;
     align-items: center;
+    
 }
 
 .header .left {
     color: white;
     font-size: 24px;
-    
     flex: 1;
 }
+
 
 .header .right {
     color: #E5E7EB;
     font-size: 18px;
-    flex: 1;
+    width: 300px;
+    gap: 100px;
+    flex: 1 1 auto;
     display: flex;
     justify-content: right;
     align-items: center;
 }
 
-.header .right a {
-    width: 200px;
-    flex: 1 1 auto;
-}
+/* .header .right a {
+} */
 
 .section-a {
+    padding-inline: 250px;
     background-color: #1F2937;
     display: flex;
 }
