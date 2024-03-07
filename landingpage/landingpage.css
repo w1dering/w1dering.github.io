@@ -1,7 +1,13 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
 .main {
     margin: 0px;
     display: flex;
     flex-direction: column;
+    width: 1600px;
 }
 
 .header {
@@ -14,13 +20,12 @@
     height: 50px;
     justify-content: left;
     align-items: center;
-    
 }
 
 .header .left {
     color: white;
     font-size: 24px;
-    flex: 1;
+    flex: 1 1 0 ;
 }
 
 
@@ -28,7 +33,7 @@
     color: #E5E7EB;
     font-size: 18px;
     width: 300px;
-    gap: 100px;
+    gap: 30px;
     flex: 1 1 auto;
     display: flex;
     justify-content: right;
@@ -38,8 +43,105 @@
 /* .header .right a {
 } */
 
-.section-a {
+.section {
     padding-inline: 250px;
+    padding-block: 50px;
+    display: flex;
+    align-items: center;
+    height: 500px;  
+    flex: 1 1 0;    
+}
+
+.section.a {
+    background-color: #1F2937;
+    gap: 20px;
+}
+
+.section.a div {
+    flex: 1 1 0;
+}
+
+.section.a img {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+button {
+    background-color: #3882F6;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+}
+
+.section.b {
+    padding-top: 0px;
+    flex-direction: column;
+    background-color: #FFFFFF;
+}
+
+.section.b div div {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;;
+    align-items: center;
+}
+
+.section.b div div div {
+    width: 180px;
+    height: 180px;
+    border: 4px solid #3882F6;
+    border-radius: 15px;
+    flex: 1 1 auto;
+}
+
+.section.b div div p {
+    font-size: 18px;
+    color: #000000;
+    justify-content: center;
+    text-align: center;
+}
+
+.section.c {
+    background-color: #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.section.c div {
+    width: 800px;
+}
+
+.section.d {
+    display: flex;
+    justify-content: center;
+}
+
+.section.d .blue-box {
+    height: 120px;
+    width: 1100px;
+    gap: 200px;
+    border-radius: 10px;
+    background-color: #3882F6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block: 0px;
+    padding-inline: 50px;
+}
+
+.section.d .blue-box div {
+    margin: 0px;
+}
+
+.footer {
     background-color: #1F2937;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
 }
