@@ -300,7 +300,7 @@ function loadLevel(levelID) {
     }
 
 
-    drawInventory(4);
+    drawInventory(3);
         
 }
 
@@ -317,13 +317,14 @@ function drawGrid()
     }
 
     // draw grid lines
-    gridCTX.fillStyle = darkGray;
+    gridCTX.strokeStyle = darkGray;
+    gridCTX.lineWidth = scale * 16;
     for (let r = 1; r < gridSquareCount; r++) {
-        gridCTX.fillRect(0, r * squareSize - 8 * scale, gridCanvas.width, 16 * scale);
+        drawLine(gridCTX, 0, r * squareSize, gridCanvas.width, r * squareSize);
     }
 
     for (let c = 1; c < gridSquareCount; c++) {
-        gridCTX.fillRect(c * squareSize - 8 * scale, 0, 16 * scale, gridCanvas.width)
+        drawLine(gridCTX, c * squareSize, 0, c * squareSize, gridCanvas.height);
     }
 }
 
@@ -355,24 +356,81 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
     }
 
     // draw subsquare grid lines
-    inventoryCTX.fillStyle = lightGray + "80"; // adds 50% opacity
+    inventoryCTX.strokeStyle = lightGray + "80"; // adds 50% opacity
+    inventoryCTX.lineWidth = scale * 8;
     for (let r = 1; r < inventorySubSquareCount * inventorySquareCount; r++) {
-        inventoryCTX.fillRect(0, r * inventorySubSquareSize - 4 * scale, inventoryCanvas.width, 8 * scale);
+        drawLine(inventoryCTX, 0, r * inventorySubSquareSize, inventoryCanvas.width, r * inventorySubSquareSize);
     }
 
     for (let c = 1; c < inventorySubSquareCount * inventorySquareCount; c++) {
-        inventoryCTX.fillRect(c * inventorySubSquareSize - 4 * scale, 0, 8 * scale, inventoryCanvas.width);
+        drawLine(inventoryCTX, c * inventorySubSquareSize, 0, c * inventorySubSquareSize, inventoryCanvas.height);
     }
 
     // draw square grid lines
-    inventoryCTX.fillStyle = darkGray;
+    inventoryCTX.strokeStyle = darkGray;
+    inventoryCTX.lineWidth = scale * 16;
+
     for (let r = 1; r < inventorySquareCount; r++) {
-        inventoryCTX.fillRect(0, r * inventorySquareSize - 8 * scale, inventoryCanvas.width, 16 * scale);
-    }
+        drawLine(inventoryCTX, 0, r * inventorySquareSize, inventoryCanvas.width, r * inventorySquareSize);
+    }   
 
     for (let c = 1; c < inventorySquareCount; c++) {
-        inventoryCTX.fillRect(c * inventorySquareSize - 8 * scale, 0, 16 * scale, inventoryCanvas.width);
+        drawLine(inventoryCTX, c * inventorySquareSize, 0, c * inventorySquareSize, inventoryCanvas.height);
     }
+
+    // draw outlines of shapes
+    for (let i = 0; i < currentInventory.length; i++) {
+        let baseR = Math.floor(i / inventorySquareCount) * inventorySquareSize;
+        let baseC = (i % inventorySquareCount) * inventorySquareSize;
+        inventoryCTX.strokeStyle = darkGray;
+        inventoryCTX.lineWidth = scale * 12 ;
+        for (let r = 0; r < inventorySubSquareCount; r++) {
+            for (let c = 0; c < inventorySubSquareCount; c++) {
+                //inventoryCTX.fillStyle = getColourFromID(currentInventory[i].colour);
+                // if (currentInventory[i].arr[r][c]) {
+                //     if (r > 0 && !currentInventory[i].arr[r - 1][c])
+                //     {
+                //         drawLi   ne(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize);
+                //     }
+                //     if (c > 0 && !currentInventory[i].arr[r][c - 1])
+                //     {
+                //         drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
+                //     }
+                //     if (r < inventorySubSquareCount - 1 && !currentInventory[i].arr[r + 1][c])
+                //     {
+                //         drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
+                //     }
+                //     if (c < inventorySubSquareCount - 1 && !currentInventory[i].arr[r][c + 1])
+                //     {
+                //         drawLine(inventoryCTX, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
+                //     }
+                // }
+
+                if (currentInventory[i].arr[r][c]) {
+                    if (r > 0) {
+                        drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize);
+                    }
+                    if (c > 0) {
+                        drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
+                    }
+                    if (r < inventorySubSquareCount - 1) {
+                        drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
+                    }
+                    if (c < inventorySubSquareCount - 1) {
+                        drawLine(inventoryCTX, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function drawLine(context, startX, startY, endX, endY)
+{
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(endX, endY);
+    context.stroke();
 }
 
 function clearAll()
