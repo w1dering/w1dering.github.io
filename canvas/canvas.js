@@ -386,26 +386,6 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
         inventoryCTX.lineWidth = scale * 12 ;
         for (let r = 0; r < inventorySubSquareCount; r++) {
             for (let c = 0; c < inventorySubSquareCount; c++) {
-                //inventoryCTX.fillStyle = getColourFromID(currentInventory[i].colour);
-                // if (currentInventory[i].arr[r][c]) {
-                //     if (r > 0 && !currentInventory[i].arr[r - 1][c])
-                //     {
-                //         drawLi   ne(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize);
-                //     }
-                //     if (c > 0 && !currentInventory[i].arr[r][c - 1])
-                //     {
-                //         drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
-                //     }
-                //     if (r < inventorySubSquareCount - 1 && !currentInventory[i].arr[r + 1][c])
-                //     {
-                //         drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
-                //     }
-                //     if (c < inventorySubSquareCount - 1 && !currentInventory[i].arr[r][c + 1])
-                //     {
-                //         drawLine(inventoryCTX, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
-                //     }
-                // }
-
                 if (currentInventory[i].arr[r][c]) {
                     if (r > 0) {
                         drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize);
