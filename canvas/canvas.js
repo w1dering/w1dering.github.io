@@ -1,91 +1,124 @@
-// shapes
+// common shapes
 const SMALL_L = [
-    [true , false],
-    [true , true ]
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, false, true , true , false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
 ];
 
 const L = [
-    [true , false],
-    [true , false],
-    [true , true ]
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , true , false],
+    [false, false, false, false, false]
 ];
 
 const BIG_L = [
-    [true , false],
-    [true , false],
-    [true , false],
-    [true , true ]
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , true , false],
+    [false, false, false, false, false]
 ];
 
 const SMALL_J = [
-    [false, true ],
-    [true , true ]
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, true , true , false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
 ];
 
 const J = [
-    [false, true ],
-    [false, true ],
-    [true , true ]
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, true , true , false, false],
+    [false, false, false, false, false]
 ];
 
 const BIG_J = [
-    [true , false],
-    [true , false],
-    [true , false],
-    [true , true ]
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, true , true , false, false],
+    [false, false, false, false, false]
 ];
 
 const DOT =
 [
-    [true]
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
 ];
 
 const SMALL_O =
 [
-    [true]
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
 ];
 
 const O =
 [
-    [true , true ],
-    [true , true ]
+    [false, false, false, false, false],
+    [false, true , true , false, false],
+    [false, true , true , false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
 ];
 
 const BIG_O =
 [
-    [true , true , true ],
-    [true , true , true ],
-    [true , true , true ]
+    [false, false, false, false, false],
+    [false, true , true , true , false],
+    [false, true , true , true , false],
+    [false, true , true , true , false],
+    [false, false, false, false, false]
 ];
 
 const SMALL_I =
 [
-    [true],
-    [true]
+    [false, false, false, false, false],
+    [false, false, true, false, false],
+    [false, false, true , false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
 ];
 
 const I =
 [
-    [true],
-    [true],
-    [true]
+    [false, false, false, false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, false, false, false]
 ];
 
 const BIG_I =
 [
-    [true],
-    [true],
-    [true],
-    [true]
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, true , false, false],
+    [false, false, false, false, false]
 ];
 
 // colours
 const red = "#EDC9D4";
 const orange = "#FFD3C9";
 const yellow = "#FFF7CF";
-const green = "#E4F0C9";
+const green = "#7DDE92";
 const blue = "#C7E0FF";
 const purple = "#BAC3FF";
+const darkGray = "#37383A";
+const lightGray = "#CCCCCC";
 
 class Shape 
 {
@@ -156,6 +189,8 @@ if (!!window.chrome)
 }
 const inventoryCanvas = document.getElementById("inventory-canvas");
 const inventoryCTX = inventoryCanvas.getContext("2d");
+inventoryCanvas.width = 2520 * scale;
+inventoryCanvas.height = 2520 * scale;
 
 const gridCanvas = document.getElementById("grid");
 const gridCTX = gridCanvas.getContext("2d");
@@ -228,56 +263,115 @@ let levelInformation = [
     ]
 ]
 let levelID = 0;
+let currentGrid;
+let currentInventory;
 loadLevel(levelID);
 
-function loadLevel(levelID)
-{
+function loadLevel(levelID) {
     clearAll();
-    const gridArray = levelInformation[levelID][0];
-    const sideLength = gridArray.length;
-    const squareSize = gridCanvas.width / sideLength;
+    currentGrid = levelInformation[levelID][0];
     const goalArray = levelInformation[levelID][1];
-
-    for (let r = 0; r < sideLength; r++)
-    {
-        for (let c = 0; c < sideLength; c++)
-        {
-            gridCTX.fillStyle = getColourFromID(gridArray[r][c]);
-            gridCTX.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
-        }
-    }
-
-    // draw grid lines
-    gridCTX.fillStyle = "#37383A";
-    for (let r = 1; r < sideLength; r++)
-    {
-        gridCTX.fillRect(0, r * squareSize - 8 * scale, gridCanvas.width, 16 * scale);
-    }
-
-    for (let c = 1; c < sideLength; c++)
-    {
-        gridCTX.fillRect(c * squareSize - 8 * scale, 0, 16 * scale, gridCanvas.width)
-    }
-
+    currentInventory = levelInformation[levelID][2];
+    
+    drawGrid();
+    
+    const gridSquareCount = currentGrid.length; 
+    const squareSize = gridCanvas.width / gridSquareCount;
     // draw goal
-    for (let r = 0; r < sideLength; r++)
+    for (let r = 0; r < gridSquareCount; r++)
     {
-        for (let c = 0; c < sideLength; c++)
+        for (let c = 0; c < gridSquareCount; c++)
         {
             goalCTX.fillStyle = getColourFromID(goalArray[r][c]);
             goalCTX.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
         }
     }
 
-    goalCTX.fillStyle = "#37383A";
-    for (let r = 1; r < sideLength; r++)
+    // draw goal gridlines
+    goalCTX.fillStyle = darkGray;
+    for (let r = 1; r < gridSquareCount; r++)
     {
-        goalCTX.fillRect(0, r * squareSize - 16 * scale, goalCanvas.width, 32 * scale);
+        goalCTX.fillRect(0, r * squareSize - 12 * scale, goalCanvas.width, 24 * scale); // goal is 66% size of grid, so lines should be 1/66% times larger for even thickness
     }
 
-    for (let c = 1; c < sideLength; c++)
+    for (let c = 1; c < gridSquareCount; c++)
     {
-        goalCTX.fillRect(c * squareSize - 16 * scale, 0, 32 * scale, goalCanvas.width)
+        goalCTX.fillRect(c * squareSize - 12 * scale, 0, 24 * scale, goalCanvas.width)
+    }
+
+
+    drawInventory(4);
+        
+}
+
+function drawGrid()
+{
+    const gridSquareCount = currentGrid.length; // number of squares in the grid and goal 
+    const squareSize = gridCanvas.width / gridSquareCount;
+
+    for (let r = 0; r < gridSquareCount; r++) {
+        for (let c = 0; c < gridSquareCount; c++) {
+            gridCTX.fillStyle = getColourFromID(currentGrid[r][c]);
+            gridCTX.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
+        }
+    }
+
+    // draw grid lines
+    gridCTX.fillStyle = darkGray;
+    for (let r = 1; r < gridSquareCount; r++) {
+        gridCTX.fillRect(0, r * squareSize - 8 * scale, gridCanvas.width, 16 * scale);
+    }
+
+    for (let c = 1; c < gridSquareCount; c++) {
+        gridCTX.fillRect(c * squareSize - 8 * scale, 0, 16 * scale, gridCanvas.width)
+    }
+}
+
+function drawInventory(inventorySquareCount) // inventorySquareCount is the number of pieces per row, which can be adjusted
+{
+    const inventorySubSquareCount = 5; // number of grid squares per piece slot
+    let inventorySquareSize = inventoryCanvas.width / inventorySquareCount; // size of square each piece is allocated
+    let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
+
+    // draw pieces
+    for (let i = 0; i < currentInventory.length; i++) {
+        let baseR = Math.floor(i / inventorySquareCount) * inventorySquareSize;
+        let baseC = (i % inventorySquareCount) * inventorySquareSize;
+        for (let r = 0; r < inventorySubSquareCount; r++)
+        {
+            for (let c = 0; c < inventorySubSquareCount; c++)
+            {
+                if (currentInventory[i].arr[r][c])
+                {
+                    inventoryCTX.fillStyle = getColourFromID(currentInventory[i].colour);
+                }
+                else
+                {
+                    inventoryCTX.fillStyle = "#FFFFFF00";
+                }
+                inventoryCTX.fillRect(baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+            }
+        }
+    }
+
+    // draw subsquare grid lines
+    inventoryCTX.fillStyle = lightGray + "80"; // adds 50% opacity
+    for (let r = 1; r < inventorySubSquareCount * inventorySquareCount; r++) {
+        inventoryCTX.fillRect(0, r * inventorySubSquareSize - 4 * scale, inventoryCanvas.width, 8 * scale);
+    }
+
+    for (let c = 1; c < inventorySubSquareCount * inventorySquareCount; c++) {
+        inventoryCTX.fillRect(c * inventorySubSquareSize - 4 * scale, 0, 8 * scale, inventoryCanvas.width);
+    }
+
+    // draw square grid lines
+    inventoryCTX.fillStyle = darkGray;
+    for (let r = 1; r < inventorySquareCount; r++) {
+        inventoryCTX.fillRect(0, r * inventorySquareSize - 8 * scale, inventoryCanvas.width, 16 * scale);
+    }
+
+    for (let c = 1; c < inventorySquareCount; c++) {
+        inventoryCTX.fillRect(c * inventorySquareSize - 8 * scale, 0, 16 * scale, inventoryCanvas.width);
     }
 }
 

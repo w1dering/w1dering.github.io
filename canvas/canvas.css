@@ -46,6 +46,7 @@ body
 
 .inventory
 {
+    margin-top: 1px;
     height: 102%;
     width: 30%;
     display: flex;
@@ -63,8 +64,9 @@ body
 {
     flex: 5 1 auto;
     height: 83.3%;
-    width: 100%;
+    aspect-ratio: 1;
     background-color: #37383A80;
+    border: 3px solid #37383A;
     margin-right: -4px;
     border-top-left-radius: 32px;
     border-bottom-left-radius: 32px;
