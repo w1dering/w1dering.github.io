@@ -182,25 +182,29 @@ class Shape
 // list of references
 const gameInterfaceDiv = document.querySelector(".game-interface");
 
+let canvasResolution = 1440;
 let scale = 1;
 if (!!window.chrome)
 {
     scale = 4;
 }
-const inventoryCanvas = document.getElementById("inventory-canvas");
-const inventoryCTX = inventoryCanvas.getContext("2d");
-inventoryCanvas.width = 1440 * scale;
-inventoryCanvas.height = 1440 * scale;
+const inventoryCanvasBackground = document.getElementById("inventory-canvas-background");
+const inventoryCTX = inventoryCanvasBackground.getContext("2d");
+inventoryCanvasBackground.width = canvasResolution * scale;
+inventoryCanvasBackground.height = canvasResolution * scale;
+
+const inventoryDivOverlay = document.getElementById("inventory-div-overlay");
+
 
 const gridCanvas = document.getElementById("grid");
 const gridCTX = gridCanvas.getContext("2d");
-gridCanvas.width = 1440 * scale; 
-gridCanvas.height = 1440 * scale;
+gridCanvas.width = canvasResolution * scale; 
+gridCanvas.height = canvasResolution * scale;
 
 const goalCanvas = document.getElementById("goal-canvas");
 const goalCTX = goalCanvas.getContext("2d");
-goalCanvas.width = 1440 * scale; 
-goalCanvas.height = 1440 * scale;
+goalCanvas.width = canvasResolution * scale; 
+goalCanvas.height = canvasResolution * scale;
 
 
 
@@ -331,26 +335,58 @@ function drawGrid()
 function drawInventory(inventorySquareCount) // inventorySquareCount is the number of pieces per row, which can be adjusted
 {
     const inventorySubSquareCount = 5; // number of grid squares per piece slot
-    let inventorySquareSize = inventoryCanvas.width / inventorySquareCount; // size of square each piece is allocated
+    let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount; // size of square each piece is allocated
     let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
+
+    let piecesCTXArray = [];
+    for (let r = 0; r < inventorySquareCount; r++)
+    {
+        let tempDiv = document.createElement("div");
+        tempDiv.classList.add("inventory-grid-row");
+        tempDiv.style.aspectRatio = inventorySquareCount;
+        
+        let tempArray = [];
+
+        for (let c = 0; c < inventorySquareCount; c++)
+        {
+            let tempCanvas = document.createElement("canvas");
+            tempCanvas.width = canvasResolution / 3 * scale;
+            tempCanvas.height = canvasResolution / 3 * scale; // these unfortunately override css declarations
+            tempCanvas.style.height = "100%";// so they must be re-declared here
+            tempCanvas.style.width = 100 / inventorySquareCount + "%";
+
+            tempCanvas.classList.add("inventory-grid-square");
+            tempCanvas.setAttribute("draggable", true);
+            tempArray.push(tempCanvas.getContext("2d"));
+            tempDiv.appendChild(tempCanvas);
+        }
+
+        inventoryDivOverlay.appendChild(tempDiv);
+        piecesCTXArray.push(tempArray);
+    }
+
+    console.log(inventoryDivOverlay.style.width);
 
     // draw pieces
     for (let i = 0; i < currentInventory.length; i++) {
-        let baseR = Math.floor(i / inventorySquareCount) * inventorySquareSize;
-        let baseC = (i % inventorySquareCount) * inventorySquareSize;
+        let baseR = Math.floor(i / inventorySquareCount);
+        let baseC = i % inventorySquareCount;
         for (let r = 0; r < inventorySubSquareCount; r++)
         {
             for (let c = 0; c < inventorySubSquareCount; c++)
             {
                 if (currentInventory[i].arr[r][c])
                 {
-                    inventoryCTX.fillStyle = getColourFromID(currentInventory[i].colour);
+                    // draw colours of shapes
+                    piecesCTXArray[baseR][baseC].fillStyle = getColourFromID(currentInventory[i].colour);
+                    piecesCTXArray[baseR][baseC].fillRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+                    
+                    // draw outlines
+                    piecesCTXArray[baseR][baseC].strokeStyle = darkGray;
+                    piecesCTXArray[baseR][baseC].lineWidth = scale * 12;
+                    piecesCTXArray[baseR][baseC].strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
                 }
-                else
-                {
-                    inventoryCTX.fillStyle = "#FFFFFF00";
-                }
-                inventoryCTX.fillRect(baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+                
             }
         }
     }
@@ -359,11 +395,11 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
     inventoryCTX.strokeStyle = lightGray + "80"; // adds 50% opacity
     inventoryCTX.lineWidth = scale * 8;
     for (let r = 1; r < inventorySubSquareCount * inventorySquareCount; r++) {
-        drawLine(inventoryCTX, 0, r * inventorySubSquareSize, inventoryCanvas.width, r * inventorySubSquareSize);
+        drawLine(inventoryCTX, 0, r * inventorySubSquareSize, inventoryCanvasBackground.width, r * inventorySubSquareSize);
     }
 
     for (let c = 1; c < inventorySubSquareCount * inventorySquareCount; c++) {
-        drawLine(inventoryCTX, c * inventorySubSquareSize, 0, c * inventorySubSquareSize, inventoryCanvas.height);
+        drawLine(inventoryCTX, c * inventorySubSquareSize, 0, c * inventorySubSquareSize, inventoryCanvasBackground.height);
     }
 
     // draw square grid lines
@@ -371,27 +407,13 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
     inventoryCTX.lineWidth = scale * 16;
 
     for (let r = 1; r < inventorySquareCount; r++) {
-        drawLine(inventoryCTX, 0, r * inventorySquareSize, inventoryCanvas.width, r * inventorySquareSize);
+        drawLine(inventoryCTX, 0, r * inventorySquareSize, inventoryCanvasBackground.width, r * inventorySquareSize);
     }   
 
     for (let c = 1; c < inventorySquareCount; c++) {
-        drawLine(inventoryCTX, c * inventorySquareSize, 0, c * inventorySquareSize, inventoryCanvas.height);
+        drawLine(inventoryCTX, c * inventorySquareSize, 0, c * inventorySquareSize, inventoryCanvasBackground.height);
     }
 
-    // draw outlines of shapes
-    for (let i = 0; i < currentInventory.length; i++) {
-        let baseR = Math.floor(i / inventorySquareCount) * inventorySquareSize;
-        let baseC = (i % inventorySquareCount) * inventorySquareSize;
-        inventoryCTX.strokeStyle = darkGray;
-        inventoryCTX.lineWidth = scale * 12 ;
-        for (let r = 0; r < inventorySubSquareCount; r++) {
-            for (let c = 0; c < inventorySubSquareCount; c++) {
-                if (currentInventory[i].arr[r][c]) {
-                    inventoryCTX.strokeRect(baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
-                }
-            }
-        }
-    }
 }
 
 function drawLine(context, startX, startY, endX, endY)
@@ -404,7 +426,7 @@ function drawLine(context, startX, startY, endX, endY)
 
 function clearAll()
 {
-    inventoryCanvas.innerHTML = "";
+    inventoryCanvasBackground.innerHTML = "";
     gridCanvas.innerHTML = "";
     goalCanvas.innerHTML = "";
 }

@@ -5,6 +5,7 @@
         <title>Canvas - A Puzzle Game</title>
         <link href="canvas.css" rel="stylesheet">
         <script src="canvas.js" defer></script>
+        <script src="draganddrop.js" defer></script>
 
         <!--import Coiny font API-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +20,10 @@
         <div class="game-interface">
             <div class="inventory">
                 <h3 class="coiny inventory-title" style="font-size: 35px; font-size: 4vmin; color: #37383A;">Inventory</h3>
-                <canvas id="inventory-canvas"></canvas>
+                <div id="inventory-canvas">
+                    <canvas id="inventory-canvas-background"></canvas>
+                    <div id="inventory-div-overlay"></div>
+                </div>
             </div>
             <canvas id="grid"></canvas>
 
