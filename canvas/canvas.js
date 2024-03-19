@@ -460,13 +460,44 @@ function onPiecePickUp(ev)
     draggedCanvas.style.width = ((gridCanvas.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
     draggedCanvas.style.height = ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px"; 
     
-    // draggedCanvas.style.zIndex = 9999;
+    // flag to read mousemove event
     draggedCanvas.beingDragged = true;
 
+    // move piece to cursor
     draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
     draggedCanvas.style.top = (ev.clientY - draggedCanvas.offsetHeight / 2) + "px";
-    draggedCanvas.style.position = "fixed";
+    draggedCanvas.style.position = "fixed"; // must be used for absolute positioning (else it moves relative to parent)
     
+    redrawPiece(draggedCanvas);
+}
+
+function onPieceMoving(ev)
+{
+    if (ev.target.beingDragged)
+    {
+        let draggedCanvas = ev.target;
+
+        // moves canvas
+        draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
+        draggedCanvas.style.top = (ev.clientY - draggedCanvas.offsetHeight / 2) + "px";
+        
+        // redraws shape on canvas
+        redrawPiece(draggedCanvas);
+    }
+}
+
+function onPieceDropOff(ev)
+{
+    if (ev.target.beingDragged)
+    {
+        // check if piece can be placed into grid
+
+        ev.target.beingDragged = false;
+    }
+}
+
+function redrawPiece(draggedCanvas)
+{
     let draggedCTX = draggedCanvas.getContext("2d");
     draggedCTX.clearRect(0, 0, draggedCanvas.width, draggedCanvas.height);
     draggedCTX.fillStyle = getColourFromID(draggedCanvas.shape.colour);
@@ -483,46 +514,5 @@ function onPiecePickUp(ev)
                 draggedCTX.strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
             }
         }
-    }
-}
-
-function onPieceMoving(ev)
-{
-    if (ev.target.beingDragged)
-    {
-        let draggedCanvas = ev.target;
-        // moves canvas
-
-        draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
-        draggedCanvas.style.top = (ev.clientY - draggedCanvas.offsetHeight / 2) + "px";
-        
-        // redraws shape on canvas
-        let draggedCTX = draggedCanvas.getContext("2d");
-        draggedCTX.clearRect(0, 0, draggedCanvas.width, draggedCanvas.height);
-        draggedCTX.fillStyle = getColourFromID(draggedCanvas.shape.colour);
-        draggedCTX.strokeStyle = darkGray;
-        draggedCTX.lineWidth = scale * 4;
-
-        for (let r = 0; r < inventorySubSquareCount; r++) {
-            for (let c = 0; c < inventorySubSquareCount; c++) {
-                if (draggedCanvas.shape.arr[r][c]) {
-                    // draw colours of shapes
-                    draggedCTX.fillRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
-
-                    // draw outlines
-                    draggedCTX.strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
-                }
-            }
-        }
-    }
-}
-
-function onPieceDropOff(ev)
-{
-    if (ev.target.beingDragged)
-    {
-        
-
-        ev.target.beingDragged = false;
     }
 }
