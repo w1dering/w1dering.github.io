@@ -269,6 +269,11 @@ let levelInformation = [
 let levelID = 0;
 let currentGrid;
 let currentInventory;
+const inventorySubSquareCount = 5; // number of grid squares per piece slot
+let inventorySquareCount = 3;
+let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount; // size of square each piece is allocated
+let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
+
 loadLevel(levelID);
 
 function loadLevel(levelID) {
@@ -304,7 +309,7 @@ function loadLevel(levelID) {
     }
 
 
-    drawInventory(3);
+    drawInventory(inventorySquareCount);
         
 }
 
@@ -334,43 +339,52 @@ function drawGrid()
 
 function drawInventory(inventorySquareCount) // inventorySquareCount is the number of pieces per row, which can be adjusted
 {
-    const inventorySubSquareCount = 5; // number of grid squares per piece slot
-    let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount; // size of square each piece is allocated
-    let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
-
+    // create pieces array
+    
     let piecesCTXArray = [];
     for (let r = 0; r < inventorySquareCount; r++)
     {
-        let tempDiv = document.createElement("div");
-        tempDiv.classList.add("inventory-grid-row");
-        tempDiv.style.aspectRatio = inventorySquareCount;
+        let tempRow = document.createElement("div");
+        tempRow.classList.add("inventory-grid-row");
+        tempRow.style.aspectRatio = inventorySquareCount;
         
         let tempArray = [];
 
         for (let c = 0; c < inventorySquareCount; c++)
         {
             let tempCanvas = document.createElement("canvas");
+            let tempDiv = document.createElement("div");
             tempCanvas.width = canvasResolution / 3 * scale;
             tempCanvas.height = canvasResolution / 3 * scale; // these unfortunately override css declarations
             tempCanvas.style.height = "100%";// so they must be re-declared here
-            tempCanvas.style.width = 100 / inventorySquareCount + "%";
+            tempCanvas.style.width = "100%";
+
+
+            tempDiv.classList.add("inventory-grid-square-holder");
+            tempDiv.style.height = "100%";
+            tempDiv.style.width = 100 / inventorySquareCount + "%";
 
             tempCanvas.classList.add("inventory-grid-square");
-            tempCanvas.setAttribute("draggable", true);
+            tempCanvas.addEventListener("mousedown", onPiecePickUp);
+            tempCanvas.addEventListener("mousemove", onPieceMoving);
+            tempCanvas.addEventListener("mouseup", onPieceDropOff);
+            tempCanvas.beingDragged = false;
             tempArray.push(tempCanvas.getContext("2d"));
             tempDiv.appendChild(tempCanvas);
+            tempRow.appendChild(tempDiv);
         }
 
-        inventoryDivOverlay.appendChild(tempDiv);
+        inventoryDivOverlay.appendChild(tempRow);
         piecesCTXArray.push(tempArray);
     }
 
-    console.log(inventoryDivOverlay.style.width);
 
     // draw pieces
     for (let i = 0; i < currentInventory.length; i++) {
         let baseR = Math.floor(i / inventorySquareCount);
         let baseC = i % inventorySquareCount;
+        piecesCTXArray[baseR][baseC].canvas.shape = currentInventory[i];
+
         for (let r = 0; r < inventorySubSquareCount; r++)
         {
             for (let c = 0; c < inventorySubSquareCount; c++)
@@ -386,7 +400,6 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
                     piecesCTXArray[baseR][baseC].lineWidth = scale * 12;
                     piecesCTXArray[baseR][baseC].strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
                 }
-                
             }
         }
     }
@@ -439,4 +452,77 @@ function getColourFromID(ID)
     else if (ID == 3) return green;
     else if (ID == 4) return blue;
     else if (ID == 5) return purple;
+}
+
+function onPiecePickUp(ev)
+{
+    let draggedCanvas = ev.target;
+    draggedCanvas.style.width = ((gridCanvas.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
+    draggedCanvas.style.height = ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px"; 
+    
+    // draggedCanvas.style.zIndex = 9999;
+    draggedCanvas.beingDragged = true;
+
+    draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
+    draggedCanvas.style.top = (ev.clientY - draggedCanvas.offsetHeight / 2) + "px";
+    draggedCanvas.style.position = "fixed";
+    
+    let draggedCTX = draggedCanvas.getContext("2d");
+    draggedCTX.clearRect(0, 0, draggedCanvas.width, draggedCanvas.height);
+    draggedCTX.fillStyle = getColourFromID(draggedCanvas.shape.colour);
+    draggedCTX.strokeStyle = darkGray;
+    draggedCTX.lineWidth = scale * 4;
+
+    for (let r = 0; r < inventorySubSquareCount; r++) {
+        for (let c = 0; c < inventorySubSquareCount; c++) {
+            if (draggedCanvas.shape.arr[r][c]) {
+                // draw colours of shapes
+                draggedCTX.fillRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+
+                // draw outlines
+                draggedCTX.strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+            }
+        }
+    }
+}
+
+function onPieceMoving(ev)
+{
+    if (ev.target.beingDragged)
+    {
+        let draggedCanvas = ev.target;
+        // moves canvas
+
+        draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
+        draggedCanvas.style.top = (ev.clientY - draggedCanvas.offsetHeight / 2) + "px";
+        
+        // redraws shape on canvas
+        let draggedCTX = draggedCanvas.getContext("2d");
+        draggedCTX.clearRect(0, 0, draggedCanvas.width, draggedCanvas.height);
+        draggedCTX.fillStyle = getColourFromID(draggedCanvas.shape.colour);
+        draggedCTX.strokeStyle = darkGray;
+        draggedCTX.lineWidth = scale * 4;
+
+        for (let r = 0; r < inventorySubSquareCount; r++) {
+            for (let c = 0; c < inventorySubSquareCount; c++) {
+                if (draggedCanvas.shape.arr[r][c]) {
+                    // draw colours of shapes
+                    draggedCTX.fillRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+
+                    // draw outlines
+                    draggedCTX.strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+                }
+            }
+        }
+    }
+}
+
+function onPieceDropOff(ev)
+{
+    if (ev.target.beingDragged)
+    {
+        
+
+        ev.target.beingDragged = false;
+    }
 }

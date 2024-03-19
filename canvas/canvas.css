@@ -10,6 +10,8 @@ html, body
     border: 0px;
     padding: 0px;
     box-sizing: border-box;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .coiny
@@ -105,9 +107,15 @@ body
     justify-content: center;
 }
 
-.inventory-grid-square
+.inventory-grid-square-holder
 {
     flex: 1 1 0;
+    position: relative;
+}
+
+.inventory-grid-square
+{
+    position: absolute;
 }
 
 
