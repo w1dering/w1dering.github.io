@@ -387,18 +387,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
         for (let r = 0; r < inventorySubSquareCount; r++) {
             for (let c = 0; c < inventorySubSquareCount; c++) {
                 if (currentInventory[i].arr[r][c]) {
-                    if (r > 0) {
-                        drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize);
-                    }
-                    if (c > 0) {
-                        drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
-                    }
-                    if (r < inventorySubSquareCount - 1) {
-                        drawLine(inventoryCTX, baseC + c * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
-                    }
-                    if (c < inventorySubSquareCount - 1) {
-                        drawLine(inventoryCTX, baseC + (c + 1) * inventorySubSquareSize, baseR + r * inventorySubSquareSize, baseC + (c + 1) * inventorySubSquareSize, baseR + (r + 1) * inventorySubSquareSize);
-                    }
+                    inventoryCTX.strokeRect(baseC + c * inventorySubSquareSize, baseR + r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
                 }
             }
         }
