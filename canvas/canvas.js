@@ -182,25 +182,25 @@ class Shape
 // list of references
 const gameInterfaceDiv = document.querySelector(".game-interface");
 
-let scale = 0.25;
+let scale = 1;
 if (!!window.chrome)
 {
-    scale = 1;
+    scale = 4;
 }
 const inventoryCanvas = document.getElementById("inventory-canvas");
 const inventoryCTX = inventoryCanvas.getContext("2d");
-inventoryCanvas.width = 2520 * scale;
-inventoryCanvas.height = 2520 * scale;
+inventoryCanvas.width = 1440 * scale;
+inventoryCanvas.height = 1440 * scale;
 
 const gridCanvas = document.getElementById("grid");
 const gridCTX = gridCanvas.getContext("2d");
-gridCanvas.width = 2520 * scale; // 2520 is divisible by 2-10 (allowing for boards up to 10x10 to be cleanly divided)
-gridCanvas.height = 2520 * scale;
+gridCanvas.width = 1440 * scale; 
+gridCanvas.height = 1440 * scale;
 
 const goalCanvas = document.getElementById("goal-canvas");
 const goalCTX = goalCanvas.getContext("2d");
-goalCanvas.width = 2520 * scale; 
-goalCanvas.height = 2520 * scale;
+goalCanvas.width = 1440 * scale; 
+goalCanvas.height = 1440 * scale;
 
 
 
