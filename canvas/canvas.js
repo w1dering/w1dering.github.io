@@ -268,6 +268,7 @@ let levelInformation = [
 let levelID = 0;
 let currentGrid;
 let currentInventory;
+let goalArray;
 const inventorySubSquareCount = 5; // number of grid squares per piece slot
 let inventorySquareCount = 3;
 let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount; // size of square each piece is allocated
@@ -278,13 +279,16 @@ let draggedShape = null;
 let gridSquareCount;
 let squareHoveringOver = [-1, -1]; // the square a dragged piece is being hovered over
 let canDropOff = false; //variable that determines if a piece can be dropped off at squareHoveringOver
+let previousMouseCoordinates;
+
+document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
 
 loadLevel(levelID);
 
 function loadLevel(levelID) {
     // clearAll();
     currentGrid = levelInformation[levelID][0];
-    const goalArray = levelInformation[levelID][1];
+    goalArray = levelInformation[levelID][1];
     currentInventory = levelInformation[levelID][2];
     
     drawGrid();
@@ -481,7 +485,6 @@ function onPiecePickUp(ev) {
     draggedSVG.initialStyle = draggedSVG.style;
 
     draggedSVG.style.visibility = "visible";
-    draggedSVG.parent = draggedSVG.parentElement;
     draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
     draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
 
@@ -492,17 +495,28 @@ function onPiecePickUp(ev) {
     draggedSVG.style.left = (ev.clientX - parseInt(draggedSVG.style.width, 10) / 2) + "px";
     draggedSVG.style.top = (ev.clientY - parseInt(draggedSVG.style.height) / 2) + "px";
     draggedSVG.style.position = "fixed"; // must be used for absolute positioning (else it moves relative to parent)
+    
+    // make svg appear in front of everything
     draggedSVG.style.zIndex = 9999;
     draggedSVG.style.pointerEvents = "auto"; // this (along with setting it to none upon dropping) lets the player move the mouse within a 5x5 area, reducing the chance that you move the mouse too fast and drop the piece
     draggedSVG.focus(); // focuses the piece, enabling keydown events
 
-    draggedShape = draggedSVG.shape;
+    draggedShape = draggedSVG.shape; // used to read what shape is being dragged
 }
 
 function onPieceMoving(ev)
 {
     if (ev.currentTarget.beingDragged)
     {
+        if (ev.clientX == undefined) // when this method is called via the rotate method, ev doesn't have these mouse coords; thus, they must be supplied
+        {
+            ev.clientX = previousMouseCoordinates[0];
+            ev.clientY = previousMouseCoordinates[1];
+        }
+        else
+        {
+            previousMouseCoordinates = [ev.clientX, ev.clientY];
+        }
         let draggedSVG = ev.currentTarget;
 
         // moves center of piece to mouse cursor
@@ -562,14 +576,7 @@ function onPieceMoving(ev)
                         }
                     }
                 }
-
-                draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
-                draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
             }
-        }
-        else
-        {
-            console.log ("not hovering");
         }
     }
 }
@@ -602,6 +609,28 @@ function onPieceDropOff(ev)
                 }
             }
             draggedSVG.style.visibility = "hidden";
+
+            let winned = true;
+            outer:
+            for (let r = 0; r < gridSquareCount; r++)
+            {
+                for (let c = 0; c < gridSquareCount; c++)
+                {
+                    if (currentGrid[r][c] != goalArray[r][c])
+                    {
+                        winned = false;
+                        break outer;
+                    }
+                }
+            }
+            console.log(currentGrid);
+            console.log(goalArray);
+
+            if (winned) 
+            {
+                // setTimeout(showMenu(), 2000);
+                alert("WOOHOOOOOOO");
+            }
         }
         else // returns piece to inventory slot
         {
