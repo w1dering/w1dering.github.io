@@ -511,10 +511,10 @@ function onKeyDown(ev)
     let draggedPiece = ev.currentTarget;
     if (ev.currentTarget.beingDragged)
     {
-        if (ev.key == "e" || ev.keyC =="d" || ev.key == "c" || ev.key == "ArrowRight") // right arrow key, e, d, or c
+        if (ev.key == "e" || ev.key == "d" || ev.key == "c" || ev.key == "ArrowRight") // right arrow key, e, d, or c
         {
             draggedPiece.shape.rotateArray("r");
-            draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
+            draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`; 
         }
         else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowLeft") // left arrow key, q, a or z
         {
