@@ -126,6 +126,7 @@ class Shape
     {
         this.arr = arr;
         this.colour = colour;
+        this.rotation = 0;
     }
 
     rotateArray(dir)
@@ -157,6 +158,8 @@ class Shape
                 oldR = 0;
                 oldC--;
             }
+
+            this.rotation -= 90;
         }
         else
         {
@@ -172,6 +175,7 @@ class Shape
                 oldR = this.arr.length - 1;
                 oldC++;
             }
+            this.rotation += 90;
         }
 
         this.arr = temp;
@@ -363,6 +367,8 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
             tempSVG.addEventListener("mousedown", onPiecePickUp);
             tempSVG.addEventListener("mousemove", onPieceMoving);
             tempSVG.addEventListener("mouseup", onPieceDropOff);
+            tempSVG.addEventListener("keydown", onKeyDown);
+
             tempSVG.beingDragged = false;
 
             tempArray.push(tempSVG);
@@ -381,7 +387,8 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
         let baseC = i % inventorySquareCount;
         piecesSVGArray[baseR][baseC].shape = currentInventory[i];
         piecesSVGArray[baseR][baseC].setAttributeNS(null, "viewBox", "0 0 50 50"); // sets viewBox to be 50x50
-        piecesSVGArray[baseR][baseC].setAttribute("pointer-events", "none");
+        piecesSVGArray[baseR][baseC].setAttribute("pointer-events", "none"); // see below: pointerEvents = "auto"
+        piecesSVGArray[baseR][baseC].setAttribute("tabindex", "0"); // allows the pieces to be focused
         for (let r = 0; r < inventorySubSquareCount; r++)
         {
             for (let c = 0; c < inventorySubSquareCount; c++)
@@ -395,7 +402,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
                     tempPolygon.setAttribute("stroke-width", 1);
                     tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                         + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
-                    tempPolygon.style.pointerEvents = "auto"; // in tadem with setting SVG pointers-event to none, only polygons can be selected
+                    tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
                     // thus, the effective hitbox is only the actual shape, not the 5x5 canvas around it
                     piecesSVGArray[baseR][baseC].appendChild(tempPolygon);
                 }
@@ -454,11 +461,10 @@ function getColourFromID(ID)
     else if (ID == 5) return purple;
 }
 
-function onPiecePickUp(ev)
-{
+function onPiecePickUp(ev) {
     let draggedPiece = ev.currentTarget;
     draggedPiece.style.width = 0.8 * ((gridCanvas.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
-    draggedPiece.style.height = 0.8 * ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px"; 
+    draggedPiece.style.height = 0.8 * ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
 
     // flag to read mousemove event
     draggedPiece.beingDragged = true;
@@ -468,6 +474,8 @@ function onPiecePickUp(ev)
     draggedPiece.style.top = (ev.clientY - parseInt(draggedPiece.style.height) / 2) + "px";
     draggedPiece.style.position = "fixed"; // must be used for absolute positioning (else it moves relative to parent)
     draggedPiece.style.zIndex = 9999;
+    draggedPiece.style.pointerEvents = "auto"; // this (along with setting it to none upon dropping) lets the player move the mouse within a 5x5 area, reducing the chance that you move the mouse too fast and drop the piece
+    draggedPiece.focus(); // focuses the piece, enabling keydown events
 }
 
 function onPieceMoving(ev)
@@ -480,6 +488,7 @@ function onPieceMoving(ev)
         draggedPiece.style.left = (ev.clientX - parseInt(draggedPiece.style.width, 10) / 2) + "px";
         draggedPiece.style.top = (ev.clientY - parseInt(draggedPiece.style.height) / 2) + "px";
         // console.log("being dragged");
+
     }
 }
 
@@ -492,5 +501,29 @@ function onPieceDropOff(ev)
         // check if piece can be placed into grid
         ev.currentTarget.beingDragged = false;
         draggedPiece.style.zIndex = 0;
+        draggedPiece.style.pointerEvents = "none";
+        draggedPiece.blur();
+    }
+}
+
+function onKeyDown(ev)
+{
+    let draggedPiece = ev.currentTarget;
+    console.log("hi");
+    if (ev.currentTarget.beingDragged)
+    {
+        if (ev.key == "e" || ev.keyC =="d" || ev.key == "c" || ev.key == "ArrowRight") // right arrow key, e, d, or c
+        {
+            draggedPiece.shape.rotateArray("r");
+            draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
+            
+            console.log("right");
+        }
+        else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowRight") // left arrow key, q, a or z
+        {
+            draggedPiece.shape.rotateArray("l");
+            draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
+    
+        }
     }
 }
