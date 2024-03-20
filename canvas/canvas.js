@@ -177,9 +177,7 @@ class Shape
             }
             this.rotation += 90;
         }
-
         this.arr = temp;
-        return this.arr;
     }
 }
 
@@ -199,11 +197,8 @@ inventoryCanvasBackground.height = canvasResolution * scale;
 
 const inventoryDivOverlay = document.getElementById("inventory-div-overlay");
 
-
-const gridCanvas = document.getElementById("grid");
-const gridCTX = gridCanvas.getContext("2d");
-gridCanvas.width = canvasResolution * scale; 
-gridCanvas.height = canvasResolution * scale;
+const gridSVG = document.getElementById("grid");
+const gridHolderDiv = document.getElementById("grid-holder");
 
 const goalCanvas = document.getElementById("goal-canvas");
 const goalCTX = goalCanvas.getContext("2d");
@@ -277,11 +272,13 @@ const inventorySubSquareCount = 5; // number of grid squares per piece slot
 let inventorySquareCount = 3;
 let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount; // size of square each piece is allocated
 let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
+let piecesSVGArray;
+let gridPolygonArray;
 
 loadLevel(levelID);
 
 function loadLevel(levelID) {
-    clearAll();
+    // clearAll();
     currentGrid = levelInformation[levelID][0];
     const goalArray = levelInformation[levelID][1];
     currentInventory = levelInformation[levelID][2];
@@ -289,7 +286,8 @@ function loadLevel(levelID) {
     drawGrid();
     
     const gridSquareCount = currentGrid.length; 
-    const squareSize = gridCanvas.width / gridSquareCount;
+    const squareSize = goalCanvas.width / gridSquareCount;
+    console.log(gridHolderDiv.offsetWidth);
     // draw goal
     for (let r = 0; r < gridSquareCount; r++)
     {
@@ -320,24 +318,26 @@ function loadLevel(levelID) {
 function drawGrid()
 {
     const gridSquareCount = currentGrid.length; // number of squares in the grid and goal 
-    const squareSize = gridCanvas.width / gridSquareCount;
+    gridSVG.setAttributeNS(null, "viewBox", `0 0 ${10 * gridSquareCount} ${10 * gridSquareCount}`);
+    
+    gridPolygonArray = [];
+    for (let r = 0; r < gridSquareCount; r++)
+    {
+        let tempRow = [];
+        for (let c = 0; c < gridSquareCount; c++)
+        {
+            let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            tempPolygon.setAttribute("fill", getColourFromID(currentGrid[r][c]));
+            console.log(getColourFromID(currentGrid[r][c]));
+            tempPolygon.setAttribute("stroke", darkGray);
+            tempPolygon.setAttribute("stroke-width", 0.5);
+            tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
+                + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
 
-    for (let r = 0; r < gridSquareCount; r++) {
-        for (let c = 0; c < gridSquareCount; c++) {
-            gridCTX.fillStyle = getColourFromID(currentGrid[r][c]);
-            gridCTX.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
+            gridSVG.appendChild(tempPolygon);
+            tempRow.push(tempPolygon);
         }
-    }
-
-    // draw grid lines
-    gridCTX.strokeStyle = darkGray;
-    gridCTX.lineWidth = scale * 16;
-    for (let r = 1; r < gridSquareCount; r++) {
-        drawLine(gridCTX, 0, r * squareSize, gridCanvas.width, r * squareSize);
-    }
-
-    for (let c = 1; c < gridSquareCount; c++) {
-        drawLine(gridCTX, c * squareSize, 0, c * squareSize, gridCanvas.height);
+        gridPolygonArray.push(tempRow);
     }
 }
 
@@ -345,7 +345,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
 {
     // create pieces array
     
-    let piecesSVGArray = [];
+    piecesSVGArray = [];
     for (let r = 0; r < inventorySquareCount; r++)
     {
         let tempRow = document.createElement("div");
@@ -386,7 +386,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
         let baseR = Math.floor(i / inventorySquareCount);
         let baseC = i % inventorySquareCount;
         piecesSVGArray[baseR][baseC].shape = currentInventory[i];
-        piecesSVGArray[baseR][baseC].setAttributeNS(null, "viewBox", "0 0 50 50"); // sets viewBox to be 50x50
+        piecesSVGArray[baseR][baseC].setAttributeNS(null, "viewBox", `0 0 ${10 * inventorySubSquareCount} ${10 * inventorySubSquareCount}`); // sets viewBox to be 50x50
         piecesSVGArray[baseR][baseC].setAttribute("pointer-events", "none"); // see below: pointerEvents = "auto"
         piecesSVGArray[baseR][baseC].setAttribute("tabindex", "0"); // allows the pieces to be focused
         for (let r = 0; r < inventorySubSquareCount; r++)
@@ -399,7 +399,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
                     let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); // creates a polygon (ensures tag is self-closing)
                     tempPolygon.setAttribute("fill", getColourFromID(currentInventory[i].colour));
                     tempPolygon.setAttribute("stroke", darkGray);
-                    tempPolygon.setAttribute("stroke-width", 1);
+                    tempPolygon.setAttribute("stroke-width", 0.5);
                     tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                         + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
                     tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
@@ -444,12 +444,12 @@ function drawLine(context, startX, startY, endX, endY)
     context.stroke();
 }
 
-function clearAll()
-{
-    inventoryCanvasBackground.innerHTML = "";
-    gridCanvas.innerHTML = "";
-    goalCanvas.innerHTML = "";
-}
+// function clearAll()
+// {
+//     inventoryCanvasBackground.innerHTML = "";
+//     gridHolderDiv.innerHTML = "";
+//     goalCanvas.innerHTML = "";
+// }
 
 function getColourFromID(ID)
 {
@@ -463,8 +463,8 @@ function getColourFromID(ID)
 
 function onPiecePickUp(ev) {
     let draggedPiece = ev.currentTarget;
-    draggedPiece.style.width = 0.8 * ((gridCanvas.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
-    draggedPiece.style.height = 0.8 * ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
+    draggedPiece.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
+    draggedPiece.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
 
     // flag to read mousemove event
     draggedPiece.beingDragged = true;
@@ -520,7 +520,6 @@ function onKeyDown(ev)
         {
             draggedPiece.shape.rotateArray("l");
             draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
-    
         }
     }
 }

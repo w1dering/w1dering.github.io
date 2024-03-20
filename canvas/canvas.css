@@ -125,8 +125,7 @@ body
     transition: transform 0.3s ease;
 }
 
-
-#grid
+#grid-holder
 {
     height: 100%;
     aspect-ratio: 1;
