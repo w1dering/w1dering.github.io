@@ -274,6 +274,10 @@ let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount
 let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
 let piecesSVGArray;
 let gridPolygonArray;
+let draggedShape = null;
+let gridSquareCount;
+let squareHoveringOver = [-1, -1]; // the square a dragged piece is being hovered over
+let canDropOff = false; //variable that determines if a piece can be dropped off at squareHoveringOver
 
 loadLevel(levelID);
 
@@ -285,9 +289,8 @@ function loadLevel(levelID) {
     
     drawGrid();
     
-    const gridSquareCount = currentGrid.length; 
+    gridSquareCount = currentGrid.length; 
     const squareSize = goalCanvas.width / gridSquareCount;
-    console.log(gridHolderDiv.offsetWidth);
     // draw goal
     for (let r = 0; r < gridSquareCount; r++)
     {
@@ -328,12 +331,14 @@ function drawGrid()
         {
             let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
             tempPolygon.setAttribute("fill", getColourFromID(currentGrid[r][c]));
-            console.log(getColourFromID(currentGrid[r][c]));
             tempPolygon.setAttribute("stroke", darkGray);
             tempPolygon.setAttribute("stroke-width", 0.5);
             tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                 + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
 
+            tempPolygon.x = c;
+            tempPolygon.y = r;
+             
             gridSVG.appendChild(tempPolygon);
             tempRow.push(tempPolygon);
         }
@@ -387,7 +392,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
         let baseC = i % inventorySquareCount;
         piecesSVGArray[baseR][baseC].shape = currentInventory[i];
         piecesSVGArray[baseR][baseC].setAttributeNS(null, "viewBox", `0 0 ${10 * inventorySubSquareCount} ${10 * inventorySubSquareCount}`); // sets viewBox to be 50x50
-        piecesSVGArray[baseR][baseC].setAttribute("pointer-events", "none"); // see below: pointerEvents = "auto"
+        //piecesSVGArray[baseR][baseC].setAttribute("pointer-events", "none"); // see below: pointerEvents = "auto"
         piecesSVGArray[baseR][baseC].setAttribute("tabindex", "0"); // allows the pieces to be focused
         for (let r = 0; r < inventorySubSquareCount; r++)
         {
@@ -402,7 +407,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
                     tempPolygon.setAttribute("stroke-width", 0.5);
                     tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                         + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
-                    tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
+                   // tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
                     // thus, the effective hitbox is only the actual shape, not the 5x5 canvas around it
                     piecesSVGArray[baseR][baseC].appendChild(tempPolygon);
                 }
@@ -461,34 +466,111 @@ function getColourFromID(ID)
     else if (ID == 5) return purple;
 }
 
+function getIDFromColour(colour)
+{
+    if (colour == red) return 0;
+    else if (colour == orange) return 1;
+    else if (colour = yellow) return 2;
+    else if (colour == green) return 3;
+    else if (colour == blue) return 4;
+    else if (colour == purple) return 5;
+}
+
 function onPiecePickUp(ev) {
-    let draggedPiece = ev.currentTarget;
-    draggedPiece.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
-    draggedPiece.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
+    let draggedSVG = ev.currentTarget;
+    draggedSVG.initialStyle = draggedSVG.style;
+
+    draggedSVG.style.visibility = "visible";
+    draggedSVG.parent = draggedSVG.parentElement;
+    draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
+    draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
 
     // flag to read mousemove event
-    draggedPiece.beingDragged = true;
+    draggedSVG.beingDragged = true;
 
     // move piece to cursor
-    draggedPiece.style.left = (ev.clientX - parseInt(draggedPiece.style.width, 10) / 2) + "px";
-    draggedPiece.style.top = (ev.clientY - parseInt(draggedPiece.style.height) / 2) + "px";
-    draggedPiece.style.position = "fixed"; // must be used for absolute positioning (else it moves relative to parent)
-    draggedPiece.style.zIndex = 9999;
-    draggedPiece.style.pointerEvents = "auto"; // this (along with setting it to none upon dropping) lets the player move the mouse within a 5x5 area, reducing the chance that you move the mouse too fast and drop the piece
-    draggedPiece.focus(); // focuses the piece, enabling keydown events
+    draggedSVG.style.left = (ev.clientX - parseInt(draggedSVG.style.width, 10) / 2) + "px";
+    draggedSVG.style.top = (ev.clientY - parseInt(draggedSVG.style.height) / 2) + "px";
+    draggedSVG.style.position = "fixed"; // must be used for absolute positioning (else it moves relative to parent)
+    draggedSVG.style.zIndex = 9999;
+    draggedSVG.style.pointerEvents = "auto"; // this (along with setting it to none upon dropping) lets the player move the mouse within a 5x5 area, reducing the chance that you move the mouse too fast and drop the piece
+    draggedSVG.focus(); // focuses the piece, enabling keydown events
+
+    draggedShape = draggedSVG.shape;
 }
 
 function onPieceMoving(ev)
 {
     if (ev.currentTarget.beingDragged)
     {
-        let draggedPiece = ev.currentTarget;
+        let draggedSVG = ev.currentTarget;
 
-        // moves piece
-        draggedPiece.style.left = (ev.clientX - parseInt(draggedPiece.style.width, 10) / 2) + "px";
-        draggedPiece.style.top = (ev.clientY - parseInt(draggedPiece.style.height) / 2) + "px";
+        // moves center of piece to mouse cursor
+        draggedSVG.style.left = (ev.clientX - parseInt(draggedSVG.style.width, 10) / 2) + "px";
+        draggedSVG.style.top = (ev.clientY - parseInt(draggedSVG.style.height) / 2) + "px";
         // console.log("being dragged");
 
+        for (let r = 0; r < gridSquareCount; r++) // iterates through the grid, clearing outlines from every square
+        {
+            for (let c = 0; c < gridSquareCount; c++) {
+                gridPolygonArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
+            }
+        }
+
+        // check which grid squares the piece is hovering over
+        squareHoveringOver = [-1, -1];
+        outer: // iterates through all grid squares to find if the mouse is hovering over one of them
+        for (let r = 0; r < gridSquareCount; r++){ 
+            for (let c = 0; c < gridSquareCount; c++) 
+            {
+                let gridSquareSize = gridHolderDiv.offsetWidth / gridSquareCount;
+                let baseX = gridHolderDiv.getBoundingClientRect().left;
+                let baseY = gridHolderDiv.getBoundingClientRect().top;
+                if (ev.clientX >= (baseX + c * gridSquareSize) && ev.clientX <= (baseX + (c + 1) * gridSquareSize)
+                && ev.clientY >= (baseY + r * gridSquareSize) & ev.clientY <= (baseY + (r + 1) * gridSquareSize))
+                {
+                    squareHoveringOver = [r, c];
+                    break outer;
+                }
+            }
+        }
+
+        if (!(squareHoveringOver[0] == -1 && squareHoveringOver[1] == -1)) {
+            let targetSquare = gridPolygonArray[squareHoveringOver[0]][squareHoveringOver[1]];
+
+            canDropOff = true; // iterates through the 5x5 array of the piece to see if the piece can be dropped without it going out of bounds
+            outer:
+            for (let r = 0; r < inventorySubSquareCount; r++) {
+                for (let c = 0; c < inventorySubSquareCount; c++) {
+                    if (draggedShape.arr[r][c]) {
+                        if (targetSquare.x + (c - 2) < 0 || targetSquare.x + (c - 2) >= currentGrid.length ||
+                            targetSquare.y + (r - 2) < 0 || targetSquare.y + (r - 2) >= currentGrid.length) // subtract 2 because the center of the 5x5 piece is (2, 2)
+                        {
+                            canDropOff = false;
+                            break outer;
+                        }
+                    }
+                }
+            }
+
+            if (canDropOff) {
+                
+                for (let r = 0; r < inventorySubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
+                    for (let c = 0; c < inventorySubSquareCount; c++) {
+                        if (draggedShape.arr[r][c]) {
+                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.colour) + "80");
+                        }
+                    }
+                }
+
+                draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
+                draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
+            }
+        }
+        else
+        {
+            console.log ("not hovering");
+        }
     }
 }
 
@@ -496,30 +578,85 @@ function onPieceDropOff(ev)
 {
     if (ev.currentTarget.beingDragged)
     {
-        let draggedPiece = ev.currentTarget;
-        // console.log("dropped");
+        let draggedSVG = ev.currentTarget;
         // check if piece can be placed into grid
         ev.currentTarget.beingDragged = false;
-        draggedPiece.style.zIndex = 0;
-        draggedPiece.style.pointerEvents = "none";
-        draggedPiece.blur(); // unfocuses piece, disabling it from reading keydown event
+        draggedSVG.style.zIndex = 0;
+        draggedSVG.blur(); // unfocuses piece, disabling it from reading keydown event
+
+        if (canDropOff && !(squareHoveringOver[0] == -1 && squareHoveringOver[1] == -1)) // drops piece into grid
+        {
+            let targetSquare = gridPolygonArray[squareHoveringOver[0]][squareHoveringOver[1]];
+            for (let r = 0; r < gridSquareCount; r++) // iterates through the grid, clearing outlines from every square
+            {
+                for (let c = 0; c < gridSquareCount; c++) {
+                    gridPolygonArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
+                }
+            }
+            for (let r = 0; r < inventorySubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
+                for (let c = 0; c < inventorySubSquareCount; c++) {
+                    if (draggedShape.arr[r][c]) {
+                        gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.colour));
+                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] = draggedShape.colour;
+                    }
+                }
+            }
+            draggedSVG.style.visibility = "hidden";
+        }
+        else // returns piece to inventory slot
+        {
+            draggedSVG.style = draggedSVG.initialStyle; // resets style to default
+            while (draggedShape.rotation > 0) // resets piece to initial position
+            {
+                while (draggedShape.rotation >= 360) draggedShape.rotation -= 360;
+                draggedShape.rotateArray("l");
+            }
+
+            while (draggedShape.rotation < 0)
+            {
+                while (draggedShape.rotation <= -360) draggedShape.rotation += 360;
+                draggedShape.rotateArray("r");
+            }
+        }
+
+        draggedShape = null;
     }
 }
 
 function onKeyDown(ev)
 {
-    let draggedPiece = ev.currentTarget;
+    let draggedSVG = ev.currentTarget;
     if (ev.currentTarget.beingDragged)
     {
         if (ev.key == "e" || ev.key == "d" || ev.key == "c" || ev.key == "ArrowRight") // right arrow key, e, d, or c
         {
-            draggedPiece.shape.rotateArray("r");
-            draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`; 
+            draggedSVG.shape.rotateArray("r");
+            draggedSVG.style.transform = `rotate(${draggedSVG.shape.rotation}deg)`; 
         }
         else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowLeft") // left arrow key, q, a or z
         {
-            draggedPiece.shape.rotateArray("l");
-            draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
+            draggedSVG.shape.rotateArray("l");
+            draggedSVG.style.transform = `rotate(${draggedSVG.shape.rotation}deg)`;
         }
+        onPieceMoving(ev);
     }
+}
+
+function onPieceEnterGridSquare(ev)
+{
+    // check if piece can be dropped off
+    console.log("piece entered");
+    
+    
+    
+}
+
+function onPieceExitGridSquare(ev)
+{
+
+}
+
+function onPieceDropOverGridSquare(ev)
+{
+
 }
