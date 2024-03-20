@@ -341,7 +341,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
 {
     // create pieces array
     
-    let piecesCTXArray = [];
+    let piecesSVGArray = [];
     for (let r = 0; r < inventorySquareCount; r++)
     {
         let tempRow = document.createElement("div");
@@ -352,30 +352,25 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
 
         for (let c = 0; c < inventorySquareCount; c++)
         {
-            let tempCanvas = document.createElement("canvas");
+            let tempSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             let tempDiv = document.createElement("div");
-            tempCanvas.width = canvasResolution / 3 * scale;
-            tempCanvas.height = canvasResolution / 3 * scale; // these unfortunately override css declarations
-            tempCanvas.style.height = "100%";// so they must be re-declared here
-            tempCanvas.style.width = "100%";
-
 
             tempDiv.classList.add("inventory-grid-square-holder");
             tempDiv.style.height = "100%";
             tempDiv.style.width = 100 / inventorySquareCount + "%";
 
-            tempCanvas.classList.add("inventory-grid-square");
-            tempCanvas.addEventListener("mousedown", onPiecePickUp);
-            tempCanvas.addEventListener("mousemove", onPieceMoving);
-            tempCanvas.addEventListener("mouseup", onPieceDropOff);
-            tempCanvas.beingDragged = false;
-            tempArray.push(tempCanvas.getContext("2d"));
-            tempDiv.appendChild(tempCanvas);
+            tempSVG.classList.add("inventory-grid-square");
+            tempSVG.addEventListener("mousedown", onPiecePickUp);
+            tempSVG.addEventListener("mousemove", onPieceMoving);
+            tempSVG.addEventListener("mouseup", onPieceDropOff);
+            tempSVG.beingDragged = false;
+            tempArray.push(tempSVG);
+            tempDiv.appendChild(tempSVG);
             tempRow.appendChild(tempDiv);
         }
 
         inventoryDivOverlay.appendChild(tempRow);
-        piecesCTXArray.push(tempArray);
+        piecesSVGArray.push(tempArray);
     }
 
 
@@ -383,25 +378,31 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
     for (let i = 0; i < currentInventory.length; i++) {
         let baseR = Math.floor(i / inventorySquareCount);
         let baseC = i % inventorySquareCount;
-        piecesCTXArray[baseR][baseC].canvas.shape = currentInventory[i];
-
+        piecesSVGArray[baseR][baseC].shape = currentInventory[i];
+        piecesSVGArray[baseR][baseC].setAttributeNS(null, "viewBox", "0 0 50 50"); // sets viewBox to be 50x50
+        
         for (let r = 0; r < inventorySubSquareCount; r++)
         {
             for (let c = 0; c < inventorySubSquareCount; c++)
             {
                 if (currentInventory[i].arr[r][c])
                 {
-                    // draw colours of shapes
-                    piecesCTXArray[baseR][baseC].fillStyle = getColourFromID(currentInventory[i].colour);
-                    piecesCTXArray[baseR][baseC].fillRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
-                    
-                    // draw outlines
-                    piecesCTXArray[baseR][baseC].strokeStyle = darkGray;
-                    piecesCTXArray[baseR][baseC].lineWidth = scale * 12;
-                    piecesCTXArray[baseR][baseC].strokeRect(c * inventorySubSquareSize, r * inventorySubSquareSize, inventorySubSquareSize, inventorySubSquareSize);
+                    // draw SVG shape in shape of a square
+                    if (i == 1)
+                    {
+                        console.log("true at " + r + ", " + c);
+                    }
+                    let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); // creates a polygon (ensures tag is self-closing)
+                    tempPolygon.setAttribute("fill", getColourFromID(currentInventory[i].colour));
+                    tempPolygon.setAttribute("stroke", darkGray);
+                    tempPolygon.setAttribute("stroke-width", 1);
+                    tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
+                        + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
+                    piecesSVGArray[baseR][baseC].appendChild(tempPolygon);
                 }
             }
         }
+
     }
 
     // draw subsquare grid lines
@@ -456,9 +457,9 @@ function getColourFromID(ID)
 
 function onPiecePickUp(ev)
 {
-    let draggedCanvas = ev.target;
-    draggedCanvas.style.width = ((gridCanvas.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
-    draggedCanvas.style.height = ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px"; 
+    let draggedCanvas = ev.currentTarget;
+    draggedCanvas.style.width = 0.8 * ((gridCanvas.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
+    draggedCanvas.style.height = 0.8 * ((gridCanvas.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px"; 
     
     // flag to read mousemove event
     draggedCanvas.beingDragged = true;
@@ -467,15 +468,17 @@ function onPiecePickUp(ev)
     draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
     draggedCanvas.style.top = (ev.clientY - draggedCanvas.offsetHeight / 2) + "px";
     draggedCanvas.style.position = "fixed"; // must be used for absolute positioning (else it moves relative to parent)
-    
+    draggedCanvas.style.zIndex = 9999;
+
     redrawPiece(draggedCanvas);
+    
 }
 
 function onPieceMoving(ev)
 {
-    if (ev.target.beingDragged)
+    if (ev.currentTarget.beingDragged)
     {
-        let draggedCanvas = ev.target;
+        let draggedCanvas = ev.currentTarget;
 
         // moves canvas
         draggedCanvas.style.left = (ev.clientX - draggedCanvas.offsetWidth / 2) + "px";
@@ -488,11 +491,12 @@ function onPieceMoving(ev)
 
 function onPieceDropOff(ev)
 {
-    if (ev.target.beingDragged)
+    if (ev.currentTarget.beingDragged)
     {
+        let draggedCanvas = ev.currentTarget;
         // check if piece can be placed into grid
-
-        ev.target.beingDragged = false;
+        ev.currentTarget.beingDragged = false;
+        draggedCanvas.style.zIndex = 0;
     }
 }
 
