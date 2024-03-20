@@ -519,7 +519,7 @@ function onKeyDown(ev)
             
             console.log("right");
         }
-        else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowRight") // left arrow key, q, a or z
+        else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowLeft") // left arrow key, q, a or z
         {
             draggedPiece.shape.rotateArray("l");
             draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
