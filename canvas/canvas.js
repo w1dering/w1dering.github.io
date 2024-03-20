@@ -502,22 +502,19 @@ function onPieceDropOff(ev)
         ev.currentTarget.beingDragged = false;
         draggedPiece.style.zIndex = 0;
         draggedPiece.style.pointerEvents = "none";
-        draggedPiece.blur();
+        draggedPiece.blur(); // unfocuses piece, disabling it from reading keydown event
     }
 }
 
 function onKeyDown(ev)
 {
     let draggedPiece = ev.currentTarget;
-    console.log("hi");
     if (ev.currentTarget.beingDragged)
     {
         if (ev.key == "e" || ev.keyC =="d" || ev.key == "c" || ev.key == "ArrowRight") // right arrow key, e, d, or c
         {
             draggedPiece.shape.rotateArray("r");
             draggedPiece.style.transform = `rotate(${draggedPiece.shape.rotation}deg)`;
-            
-            console.log("right");
         }
         else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowLeft") // left arrow key, q, a or z
         {
