@@ -1,7 +1,7 @@
 class Shape {
     constructor(arr, colour) {
         this.arr = arr;
-        this.colour = colour;
+        this.colour = colour; // 0 means customizable, anything else means all squares are that colour
         this.rotation = 0;
         this.available = true;
     }

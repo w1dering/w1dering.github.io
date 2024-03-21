@@ -1,132 +1,132 @@
 // common shapes
 
 const SMALL_L = [
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, false, true , true , false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const L = [
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , true , false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const BIG_L = [
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , true , false],
-    [false, false, false, false, false]
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const SMALL_J = [
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, true , true , false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const J = [
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, true , true , false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const BIG_J = [
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, true , true , false, false],
-    [false, false, false, false, false]
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const DOT =
 [
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const SMALL_O =
 [
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const O =
 [
-    [false, false, false, false, false],
-    [false, true , true , false, false],
-    [false, true , true , false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const BIG_O =
 [
-    [false, false, false, false, false],
-    [false, true , true , true , false],
-    [false, true , true , true , false],
-    [false, true , true , true , false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const SMALL_I =
 [
-    [false, false, false, false, false],
-    [false, false, true, false, false],
-    [false, false, true , false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const I =
 [
-    [false, false, false, false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const BIG_I =
 [
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, true , false, false],
-    [false, false, false, false, false]
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0]
 ];
 
 const SMALL_T =
 [
-    [false, false, false , false, false],
-    [false, false, true , false, false],
-    [false, true , true , true , false],
-    [false, false, false , false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 const TWO_BY_THREE =
 [
-    [false, false, false, false, false],
-    [false, true , true , false, false],
-    [false, true , true , false , false],
-    [false, true , true , false, false],
-    [false, false, false, false, false]
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0]
 ]
 
 // colours
@@ -172,13 +172,11 @@ document.getElementById("level-button").addEventListener("click", chooseLevel);
  * the format is:
  * [0]: 2d array containing original layout; each element is a NUMBER
     * the colours are as follows:
-    * 0: red
-    * 1: orange
-    * 2: yellow
-    * 3: green
-    * 4: blue
-    * 5: lilac
-    * 6: purple
+    * 1: red
+    * 2: orange
+    * 3: yellow
+    * 4: green
+    * 5: blue    * 6: purple
 * [1]: 2d array containing goal 
 * [2]: 2d array containing pieces; each piece is a 2d array:
     * [0]: shape, in the form of array or string ids for shorthand:
@@ -204,34 +202,74 @@ document.getElementById("level-button").addEventListener("click", chooseLevel);
 let levelInformation = [
     [
         [ // starting grid
-            [2, 2, 2, 2],
-            [2, 2, 2, 2],
-            [2, 2, 2, 2],
-            [2, 2, 2, 2]
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 3, 3]
         ],
         [ // goal
-            [2, 4, 4, 4],
-            [4, 0, 3, 4],
-            [4, 3, 0, 4],
-            [4, 4, 4, 2]
+            [3, 5, 5, 5],
+            [5, 1, 4, 5],
+            [5, 4, 1, 5],
+            [5, 5, 5, 3]
         ],
         [ // inventory
-            new Shape(O, 0),
-            new Shape(SMALL_L, 3),
-            new Shape(SMALL_L, 3),
-            new Shape(SMALL_J, 4),
-            new Shape(SMALL_J, 4),
-            new Shape(SMALL_J, 4),
-            new Shape(SMALL_J, 4),
+            new Shape(O, 1),
+            new Shape(SMALL_L, 4),
+            new Shape(SMALL_L, 4),
+            new Shape(SMALL_J, 5),
+            new Shape(SMALL_J, 5),
+            new Shape(SMALL_J, 5),
+            new Shape(SMALL_J, 5),
         ]
     ],
     [
         [
-            [2, 2, 2, 2],
-            [2, 3, 2, 2],
-            [2, 2, 2, 2],
-            [2, 2, 3, 2]
+            [3, 3, 3, 3],
+            [3, 4, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 4, 3]
         ],
+        [
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4]
+        ],
+        [
+            new Shape(L, 4),
+            new Shape(SMALL_J, 4),
+            new Shape (J, 4),
+            new Shape (SMALL_O, 4),
+            new Shape (SMALL_I, 4)
+        ]
+    ],
+    [
+        [
+            [1, 6, 1, 6, 1],
+            [6, 1, 6, 1, 6],
+            [1, 6, 1, 6, 1],
+            [6, 1, 6, 1, 6],
+            [1, 6, 1, 6, 1]
+        ],
+        [
+            [1, 6, 6, 6, 1],
+            [1, 1, 1, 1, 1],
+            [1, 6, 6, 6, 1],
+            [1, 1, 1, 1, 1],
+            [1, 6, 6, 6, 1]
+        ],
+        [
+            new Shape(BIG_O, 6),
+            new Shape(BIG_O, 6),
+            new Shape(SMALL_O, 1),
+            new Shape(SMALL_O, 1),
+            new Shape(SMALL_O, 1),
+            new Shape(J, 1),
+            new Shape(BIG_J, 1),
+        ]
+    ],
+    [
         [
             [3, 3, 3, 3],
             [3, 3, 3, 3],
@@ -239,159 +277,119 @@ let levelInformation = [
             [3, 3, 3, 3]
         ],
         [
-            new Shape(L, 3),
-            new Shape(SMALL_J, 3),
-            new Shape (J, 3),
-            new Shape (SMALL_O, 3),
-            new Shape (SMALL_I, 3)
+            [3, 4, 4, 4],
+            [5, 5, 4, 1],
+            [1, 4, 5, 5],
+            [4, 4, 4, 3]
+        ],
+        [
+            new Shape(SMALL_T, 4),
+            new Shape(SMALL_T, 4),
+            new Shape(O, 1),
+            new Shape(O, 1),
+            new Shape(I, 5),
+            new Shape(I, 5)
         ]
     ],
     [
         [
-            [0, 5, 0, 5, 0],
-            [5, 0, 5, 0, 5],
-            [0, 5, 0, 5, 0],
-            [5, 0, 5, 0, 5],
-            [0, 5, 0, 5, 0]
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3]
         ],
         [
-            [0, 5, 5, 5, 0],
-            [0, 0, 0, 0, 0],
-            [0, 5, 5, 5, 0],
-            [0, 0, 0, 0, 0],
-            [0, 5, 5, 5, 0]
+            [3, 1, 1, 3, 3],
+            [4, 1, 5, 5, 5],
+            [4, 4, 5, 4, 4],
+            [5, 5, 5, 1, 4],
+            [3, 3, 1, 1, 3]
         ],
         [
-            new Shape(BIG_O, 5),
-            new Shape(BIG_O, 5),
-            new Shape(SMALL_O, 0),
-            new Shape(SMALL_O, 0),
-            new Shape(SMALL_O, 0),
-            new Shape(J, 0),
-            new Shape(BIG_J, 0),
+            new Shape(SMALL_T, 4),
+            new Shape(SMALL_T, 4),
+            new Shape(O, 1),
+            new Shape(O, 1),
+            new Shape(L, 5),
+            new Shape(I, 5)
         ]
     ],
     [
         [
-            [2, 2, 2, 2],
-            [2, 2, 2, 2],
-            [2, 2, 2, 2],
-            [2, 2, 2, 2]
+            [3, 3, 3, 3, 3, 4],
+            [3, 4, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 4, 3, 3],
+            [3, 4, 3, 3, 3, 3],
+            [3, 3, 3, 3, 4, 3],
         ],
         [
-            [2, 3, 3, 3],
-            [4, 4, 3, 0],
-            [0, 3, 4, 4],
-            [3, 3, 3, 2]
+            [6, 6, 6, 6, 6, 4],
+            [6, 4, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6, 6],
+            [6, 6, 6, 4, 6, 6],
+            [6, 4, 6, 6, 6, 6],
+            [6, 6, 6, 6, 4, 6]
         ],
         [
-            new Shape(SMALL_T, 3),
-            new Shape(SMALL_T, 3),
-            new Shape(O, 0),
-            new Shape(O, 0),
-            new Shape(I, 4),
-            new Shape(I, 4)
+            new Shape(O, 6),
+            new Shape(O, 6),
+            new Shape(BIG_O, 6),
+            new Shape(SMALL_L, 6),
+            new Shape(BIG_J, 6),
+            new Shape(SMALL_L, 6),
+            new Shape(J, 6)
         ]
     ],
     [
         [
-            [2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2]
+            [2, 2, 3, 2, 3, 2],
+            [2, 3, 2, 3, 2, 3],
+            [3, 2, 3, 2, 3, 2],
+            [2, 3, 2, 3, 2, 3],
+            [3, 2, 3, 2, 3, 2],
+            [2, 3, 2, 3, 2, 2]
         ],
         [
-            [2, 0, 0, 2, 2],
-            [3, 0, 4, 4, 4],
-            [3, 3, 4, 3, 3],
-            [4, 4, 4, 0, 3],
-            [2, 2, 0, 0, 2]
+            [1, 1, 2, 2, 3, 3],
+            [1, 1, 2, 2, 3, 3],
+            [1, 2, 3, 3, 1, 2],
+            [1, 2, 3, 3, 1, 2],
+            [3, 3, 1, 1, 2, 2],
+            [3, 3, 1, 1, 2, 2],
         ],
         [
-            new Shape(SMALL_T, 3),
-            new Shape(SMALL_T, 3),
-            new Shape(O, 0),
-            new Shape(O, 0),
-            new Shape(L, 4),
-            new Shape(I, 4)
-        ]
-    ],
-    [
-        [
-            [2, 2, 2, 2, 2, 3],
-            [2, 3, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 3, 2, 2],
-            [2, 3, 2, 2, 2, 2],
-            [2, 2, 2, 2, 3, 2],
-        ],
-        [
-            [5, 5, 5, 5, 5, 3],
-            [5, 3, 5, 5, 5, 5],
-            [5, 5, 5, 5, 5, 5],
-            [5, 5, 5, 3, 5, 5],
-            [5, 3, 5, 5, 5, 5],
-            [5, 5, 5, 5, 3, 5]
-        ],
-        [
-            new Shape(O, 5),
-            new Shape(O, 5),
-            new Shape(BIG_O, 5),
-            new Shape(SMALL_L, 5),
-            new Shape(BIG_J, 5),
-            new Shape(SMALL_L, 5),
-            new Shape(J, 5)
-        ]
-    ],
-    [
-        [
-            [1, 1, 2, 1, 2, 1],
-            [1, 2, 1, 2, 1, 2],
-            [2, 1, 2, 1, 2, 1],
-            [1, 2, 1, 2, 1, 2],
-            [2, 1, 2, 1, 2, 1],
-            [1, 2, 1, 2, 1, 1]
-        ],
-        [
-            [0, 0, 1, 1, 2, 2],
-            [0, 0, 1, 1, 2, 2],
-            [0, 1, 2, 2, 0, 1],
-            [0, 1, 2, 2, 0, 1],
-            [2, 2, 0, 0, 1, 1],
-            [2, 2, 0, 0, 1, 1],
-        ],
-        [
-            new Shape(SMALL_J, 0),
-            new Shape(SMALL_J, 0),
-            new Shape(J, 0),
-            new Shape(J, 0),
+            new Shape(SMALL_J, 1),
+            new Shape(SMALL_J, 1),
             new Shape(J, 1),
             new Shape(J, 1),
-            new Shape(TWO_BY_THREE, 1),
-            new Shape(BIG_O, 2),
-            new Shape(BIG_O, 2),
+            new Shape(J, 2),
+            new Shape(J, 2),
+            new Shape(TWO_BY_THREE, 2),
+            new Shape(BIG_O, 3),
+            new Shape(BIG_O, 3),
             
         ]
     ],
     [
         [
-            [0, 0, 1, 1],
-            [0, 0, 1, 1],
-            [0, 0, 1, 1],
-            [0, 0, 1, 1]
+            [1, 1, 2, 2],
+            [1, 1, 2, 2],
+            [1, 1, 2, 2],
+            [1, 1, 2, 2]
         ],
         [
-            [0, 0, 0, 0],
-            [0, 1, 1, 1],
-            [1, 1, 1, 0],
-            [0, 0, 0, 0]
+            [1, 1, 1, 1],
+            [1, 2, 2, 2],
+            [2, 2, 2, 1],
+            [1, 1, 1, 1]
         ],
         [
-            new Shape(O, 0),
-            new Shape(BIG_L, 0),
+            new Shape(O, 1),
             new Shape(BIG_L, 1),
-            new Shape(SMALL_I, 1)
+            new Shape(BIG_L, 2),
+            new Shape(SMALL_I, 2)
         ]
     ]
 ]
@@ -413,6 +411,7 @@ let previousMouseCoordinates;
 let history = [];
 let historyIndex = -1;
 let intervalsArray = [];
+let timerID;
 
 
 document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
@@ -437,7 +436,7 @@ function loadLevel(levelID) {
         currentGrid.push(tempRow);
     }
 
-    currentInventory = [];
+    currentInventory = []; 
     for (let i = 0; i < levelInformation[levelID][2].length; i++) {
         currentInventory.push(levelInformation[levelID][2][i].clone());
     }
@@ -455,7 +454,7 @@ function loadLevel(levelID) {
 
     let timer = document.getElementById("timer");
     let count = 0;
-    let timerID = setInterval(() => {
+    timerID = setInterval(() => {
         timer.innerText = `${Math.floor(count / 60)}:${count < 10 ? 0 : ""}${count % 60}`;
         count++;
     }, 1000);
@@ -546,8 +545,9 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
                 if (currentInventory[i].available && currentInventory[i].arr[r][c])
                 {
                     // draw SVG shape in shape of a square
+                    let colour = !currentInventory[i].colour ? currentInventory[i].arr[r][c] : currentInventory[i].colour; // if colour is 0, read the exact value of that tile; else, use the default
                     let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); // creates a polygon (ensures tag is self-closing)
-                    tempPolygon.setAttribute("fill", getColourFromID(currentInventory[i].colour));
+                    tempPolygon.setAttribute("fill", getColourFromID(colour));
                     tempPolygon.setAttribute("stroke", darkGray);
                     tempPolygon.setAttribute("stroke-width", 0.5);
                     tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
@@ -631,22 +631,22 @@ function clearAll()
 
 function getColourFromID(ID)
 {
-    if (ID == 0) return red;
-    else if (ID == 1) return orange;
-    else if (ID == 2) return yellow;
-    else if (ID == 3) return green;
-    else if (ID == 4) return blue;
-    else if (ID == 5) return purple;
+    if (ID == 1) return red;
+    else if (ID == 2) return orange;
+    else if (ID == 3) return yellow;
+    else if (ID == 4) return green;
+    else if (ID == 5) return blue;
+    else if (ID == 6) return purple;
 }
 
 function getIDFromColour(colour)
 {
-    if (colour == red) return 0;
-    else if (colour == orange) return 1;
-    else if (colour = yellow) return 2;
-    else if (colour == green) return 3;
-    else if (colour == blue) return 4;
-    else if (colour == purple) return 5;
+    if (colour == red) return 1;
+    else if (colour == orange) return 2;
+    else if (colour = yellow) return 3;
+    else if (colour == green) return 4;
+    else if (colour == blue) return 5;
+    else if (colour == purple) return 6;
 }
 
 function onPiecePickUp(ev) {
@@ -654,8 +654,20 @@ function onPiecePickUp(ev) {
     draggedSVG.initialStyle = draggedSVG.style;
 
     // draggedSVG.style.opacity = "100"; // code for repicking up pieces
+
+
+    // scales squares to proper size
     draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
     draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
+    
+    for (let polygon of draggedSVG.children)
+    {
+        polygon.style.display = "inline-block"; // makes squares no longer scale to parent
+    }
+
+
+    draggedSVG.style.width = window.innerWidth;
+    draggedSVG.style.height = window.innerHeight; // makes area in which mouse movement is read massive
 
     // flag to read mousemove event
     draggedSVG.beingDragged = true;
@@ -691,6 +703,7 @@ function onPieceMoving(ev)
         // moves center of piece to mouse cursor
         draggedSVG.style.left = (ev.clientX - parseInt(draggedSVG.style.width, 10) / 2) + "px";
         draggedSVG.style.top = (ev.clientY - parseInt(draggedSVG.style.height, 10) / 2) + "px";
+
         // console.log("being dragged");
 
         for (let r = 0; r < gridSquareCount; r++) // iterates through the grid, clearing outlines from every square
@@ -858,10 +871,7 @@ function onPieceDropOff(ev)
             if (winned) 
             {
                 // setTimeout(showMenu(), 2000);
-                for (let intervalID of intervalsArray)
-                {
-                    clearInterval(intervalID);
-                }
+                clearInterval(timerID); 
                 intervalsArray = [];
                 setTimeout(() => {
                     alert("WOOOOOOOOO");
