@@ -120,66 +120,7 @@ const purple = "#BAC3FF";
 const darkGray = "#37383A";
 const lightGray = "#CCCCCC";
 
-class Shape 
-{
-    constructor(arr, colour)
-    {
-        this.arr = arr;
-        this.colour = colour;
-        this.rotation = 0;
-    }
 
-    rotateArray(dir)
-    {
-        // dir will be "l" or "r"
-        
-        let temp = [];
-        for (let r = 0; r < this.arr[0].length; r++)
-        {
-            let tempRow = [];
-            for (let c = 0; c < this.arr.length; c++)
-            {
-                tempRow.push("-1");
-            }
-            temp.push(tempRow);
-        }
-
-        if (dir == "l")
-        {
-            let oldR = 0;
-            let oldC = this.arr[0].length - 1;
-            for (let r = 0; r < temp.length; r++)
-            {
-                for (let c = 0; c < temp[0].length; c++)
-                {
-                    temp[r][c] = this.arr[oldR][oldC];
-                    oldR++;
-                }
-                oldR = 0;
-                oldC--;
-            }
-
-            this.rotation -= 90;
-        }
-        else
-        {
-            let oldR = this.arr.length - 1;
-            let oldC = 0;
-            for (let r = 0; r < temp.length; r++)
-            {
-                for (let c = 0; c < temp[0].length; c++)
-                {
-                    temp[r][c] = this.arr[oldR][oldC];
-                    oldR--;
-                }
-                oldR = this.arr.length - 1;
-                oldC++;
-            }
-            this.rotation += 90;
-        }
-        this.arr = temp;
-    }
-}
 
 // list of references
 const gameInterfaceDiv = document.querySelector(".game-interface");
@@ -205,6 +146,7 @@ const goalCTX = goalCanvas.getContext("2d");
 goalCanvas.width = canvasResolution * scale; 
 goalCanvas.height = canvasResolution * scale;
 
+document.addEventListener("keydown", undoOrRedo);
 
 
 /* array containing all levels' information
@@ -242,19 +184,19 @@ goalCanvas.height = canvasResolution * scale;
  */
 let levelInformation = [
     [
-        [
+        [ // starting grid
             [2, 2, 2, 2],
             [2, 2, 2, 2],
             [2, 2, 2, 2],
             [2, 2, 2, 2]
         ],
-        [
+        [ // goal
             [2, 4, 4, 4],
             [4, 0, 3, 4],
             [4, 3, 0, 4],
             [4, 4, 4, 2]
         ],
-        [
+        [ // inventory
             new Shape(O, 0),
             new Shape(SMALL_L, 3),
             new Shape(SMALL_L, 3),
@@ -266,7 +208,7 @@ let levelInformation = [
     ]
 ]
 let levelID = 0;
-let currentGrid;
+let currentGrid = [];
 let currentInventory;
 let goalArray;
 const inventorySubSquareCount = 5; // number of grid squares per piece slot
@@ -280,46 +222,26 @@ let gridSquareCount;
 let squareHoveringOver = [-1, -1]; // the square a dragged piece is being hovered over
 let canDropOff = false; //variable that determines if a piece can be dropped off at squareHoveringOver
 let previousMouseCoordinates;
+let history = [];
+let historyIndex = -1;
 
 document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
 
 loadLevel(levelID);
 
 function loadLevel(levelID) {
-    // clearAll();
-    currentGrid = levelInformation[levelID][0];
-    goalArray = levelInformation[levelID][1];
-    currentInventory = levelInformation[levelID][2];
+    clearAll();
+    currentGrid = levelInformation[levelID][0].slice();
+    goalArray = levelInformation[levelID][1].slice();
+    currentInventory = levelInformation[levelID][2].slice();
     
     drawGrid();
-    
-    gridSquareCount = currentGrid.length; 
-    const squareSize = goalCanvas.width / gridSquareCount;
-    // draw goal
-    for (let r = 0; r < gridSquareCount; r++)
-    {
-        for (let c = 0; c < gridSquareCount; c++)
-        {
-            goalCTX.fillStyle = getColourFromID(goalArray[r][c]);
-            goalCTX.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
-        }
-    }
 
-    // draw goal gridlines
-    goalCTX.fillStyle = darkGray;
-    for (let r = 1; r < gridSquareCount; r++)
-    {
-        goalCTX.fillRect(0, r * squareSize - 12 * scale, goalCanvas.width, 24 * scale); // goal is 66% size of grid, so lines should be 1/66% times larger for even thickness
-    }
+    drawGoal();
 
-    for (let c = 1; c < gridSquareCount; c++)
-    {
-        goalCTX.fillRect(c * squareSize - 12 * scale, 0, 24 * scale, goalCanvas.width)
-    }
+    drawInventory();
 
-
-    drawInventory(inventorySquareCount);
-        
+    makeHistory();
 }
 
 function drawGrid()
@@ -350,7 +272,7 @@ function drawGrid()
     }
 }
 
-function drawInventory(inventorySquareCount) // inventorySquareCount is the number of pieces per row, which can be adjusted
+function drawInventory() // inventorySquareCount is the number of pieces per row, which can be adjusted
 {
     // create pieces array
     
@@ -365,13 +287,13 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
 
         for (let c = 0; c < inventorySquareCount; c++)
         {
-            let tempSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             let tempDiv = document.createElement("div");
-
+            
             tempDiv.classList.add("inventory-grid-square-holder");
             tempDiv.style.height = "100%";
             tempDiv.style.width = 100 / inventorySquareCount + "%";
-
+            
+            let tempSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             tempSVG.classList.add("inventory-grid-square");
             tempSVG.addEventListener("mousedown", onPiecePickUp);
             tempSVG.addEventListener("mousemove", onPieceMoving);
@@ -379,9 +301,10 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
             tempSVG.addEventListener("keydown", onKeyDown);
 
             tempSVG.beingDragged = false;
+            tempDiv.appendChild(tempSVG);
 
             tempArray.push(tempSVG);
-            tempDiv.appendChild(tempSVG);
+            
             tempRow.appendChild(tempDiv);
         }
 
@@ -402,7 +325,7 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
         {
             for (let c = 0; c < inventorySubSquareCount; c++)
             {
-                if (currentInventory[i].arr[r][c])
+                if (currentInventory[i].available && currentInventory[i].arr[r][c])
                 {
                     // draw SVG shape in shape of a square
                     let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); // creates a polygon (ensures tag is self-closing)
@@ -442,7 +365,29 @@ function drawInventory(inventorySquareCount) // inventorySquareCount is the numb
     for (let c = 1; c < inventorySquareCount; c++) {
         drawLine(inventoryCTX, c * inventorySquareSize, 0, c * inventorySquareSize, inventoryCanvasBackground.height);
     }
+}
 
+function drawGoal()
+{
+    gridSquareCount = currentGrid.length;
+    const squareSize = goalCanvas.width / gridSquareCount;
+    // draw goal
+    for (let r = 0; r < gridSquareCount; r++) {
+        for (let c = 0; c < gridSquareCount; c++) {
+            goalCTX.fillStyle = getColourFromID(goalArray[r][c]);
+            goalCTX.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
+        }
+    }
+
+    // draw goal gridlines
+    goalCTX.fillStyle = darkGray;
+    for (let r = 1; r < gridSquareCount; r++) {
+        goalCTX.fillRect(0, r * squareSize - 12 * scale, goalCanvas.width, 24 * scale); // goal is 66% size of grid, so lines should be 1/66% times larger for even thickness
+    }
+
+    for (let c = 1; c < gridSquareCount; c++) {
+        goalCTX.fillRect(c * squareSize - 12 * scale, 0, 24 * scale, goalCanvas.width)
+    }
 }
 
 function drawLine(context, startX, startY, endX, endY)
@@ -453,12 +398,13 @@ function drawLine(context, startX, startY, endX, endY)
     context.stroke();
 }
 
-// function clearAll()
-// {
-//     inventoryCanvasBackground.innerHTML = "";
-//     gridHolderDiv.innerHTML = "";
-//     goalCanvas.innerHTML = "";
-// }
+function clearAll()
+{
+    inventoryDivOverlay.innerHTML = "";
+    gridSVG.innerHTML = "";
+    goalCTX.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
+    inventoryCTX.clearRect(0, 0, inventoryCanvasBackground.width, inventoryCanvasBackground.height);
+}
 
 function getColourFromID(ID)
 {
@@ -484,7 +430,7 @@ function onPiecePickUp(ev) {
     let draggedSVG = ev.currentTarget;
     draggedSVG.initialStyle = draggedSVG.style;
 
-    draggedSVG.style.visibility = "visible";
+    // draggedSVG.style.opacity = "100"; // code for repicking up pieces
     draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
     draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
 
@@ -521,7 +467,7 @@ function onPieceMoving(ev)
 
         // moves center of piece to mouse cursor
         draggedSVG.style.left = (ev.clientX - parseInt(draggedSVG.style.width, 10) / 2) + "px";
-        draggedSVG.style.top = (ev.clientY - parseInt(draggedSVG.style.height) / 2) + "px";
+        draggedSVG.style.top = (ev.clientY - parseInt(draggedSVG.style.height, 10) / 2) + "px";
         // console.log("being dragged");
 
         for (let r = 0; r < gridSquareCount; r++) // iterates through the grid, clearing outlines from every square
@@ -604,12 +550,32 @@ function onPieceDropOff(ev)
                 for (let c = 0; c < inventorySubSquareCount; c++) {
                     if (draggedShape.arr[r][c]) {
                         gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.colour));
-                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] = draggedShape.colour;
+                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] =  draggedShape.colour;
                     }
                 }
             }
-            draggedSVG.style.visibility = "hidden";
+            draggedSVG.style.visibility = "hidden"; // makes it non-interactable
+            draggedShape.available = false;
+            makeHistory();
 
+            // code for if i want to make dropped pieces re-pickupable: it makes piece invisible but pick-uppable
+            // not implemented:
+                // redrawing grid after pickup (use mouse coords to check but unsure how to revert canvas)
+                // checking if a piece is underneath another piece
+            // draggedSVG.style.opacity = "0";
+            // let gridSquareSize = gridHolderDiv.offsetWidth / gridSquareCount;
+            // let baseX = gridHolderDiv.getBoundingClientRect().left;
+            // let baseY = gridHolderDiv.getBoundingClientRect().top;
+            
+            // draggedSVG.style.width = 0.98 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
+            // draggedSVG.style.height = 0.98 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
+            // draggedSVG.style.left = (gridSquareSize * (squareHoveringOver[1] + 0.5) + baseX - parseInt(draggedSVG.style.width, 10) / 2 ) + "px";
+            // draggedSVG.style.top = (gridSquareSize * (squareHoveringOver[0] + 0.5) + baseY - parseInt(draggedSVG.style.height, 10) / 2 ) + "px";
+
+            // draggedSVG.setAttribute("pointer-events", "none");
+
+
+            // check win
             let winned = true;
             outer:
             for (let r = 0; r < gridSquareCount; r++)
@@ -623,9 +589,6 @@ function onPieceDropOff(ev)
                     }
                 }
             }
-            console.log(currentGrid);
-            console.log(goalArray);
-
             if (winned) 
             {
                 // setTimeout(showMenu(), 2000);
@@ -657,12 +620,12 @@ function onKeyDown(ev)
     let draggedSVG = ev.currentTarget;
     if (ev.currentTarget.beingDragged)
     {
-        if (ev.key == "e" || ev.key == "d" || ev.key == "c" || ev.key == "ArrowRight") // right arrow key, e, d, or c
+        if (ev.key == "e" || ev.key == "d" || ev.key == "ArrowRight") // right arrow key, e, or d
         {
             draggedSVG.shape.rotateArray("r");
             draggedSVG.style.transform = `rotate(${draggedSVG.shape.rotation}deg)`; 
         }
-        else if (ev.key == "q" || ev.key == "a" || ev.key == "z" || ev.key == "ArrowLeft") // left arrow key, q, a or z
+        else if (ev.key == "q" || ev.key == "a" || ev.key == "ArrowLeft") // left arrow key, q, or a
         {
             draggedSVG.shape.rotateArray("l");
             draggedSVG.style.transform = `rotate(${draggedSVG.shape.rotation}deg)`;
@@ -671,21 +634,77 @@ function onKeyDown(ev)
     }
 }
 
-function onPieceEnterGridSquare(ev)
+function undoOrRedo(ev)
 {
-    // check if piece can be dropped off
-    console.log("piece entered");
-    
-    
-    
+    if (ev.ctrlKey && ev.key == "z") // undo
+    {
+        if (historyIndex > 0)
+        {
+            historyIndex--;
+            loadHistory();
+        }
+        ev.preventDefault();
+    }
+    else if (ev.ctrlKey && ev.key == "y") // redo
+    {
+        if (historyIndex < history.length - 1)
+        {
+            historyIndex++;
+            loadHistory();
+        }
+        ev.preventDefault();
+    }
+
 }
 
-function onPieceExitGridSquare(ev)
+function makeHistory()
 {
+    if (historyIndex < history.length - 1)
+    {
+        history = history.slice(0, historyIndex + 1); // removes all redo's after
+    }
+    let currentGridClone = []; // make clone of grid in history
+    for (let r = 0; r < currentGrid.length; r++)
+    {
+        let tempRow = [];
+        for (let c = 0; c < currentGrid.length; c++)
+        {
+            tempRow.push(currentGrid[r][c]);
+        }
+        currentGridClone.push(tempRow);
+    }
+    
+    let currentInventoryClone = [];
+    for (let i = 0; i < currentInventory.length; i++)
+    {
+        currentInventoryClone.push(currentInventory[i].clone());
+    }
 
+    history.push(new Log(currentGridClone, currentInventoryClone));
+    historyIndex++;
 }
 
-function onPieceDropOverGridSquare(ev)
+function loadHistory()
 {
+
+    currentGrid = []; // replace grid with history clone
+    for (let r = 0; r < history[historyIndex].grid.length; r++) {
+        let tempRow = [];
+        for (let c = 0; c < history[historyIndex].grid.length; c++) {
+            tempRow.push(history[historyIndex].grid[r][c]);
+        }
+        currentGrid.push(tempRow);
+    }
+
+
+    currentInventory = [];
+    for (let i = 0; i < history[historyIndex].inventory.length; i++) {
+        currentInventory.push(history[historyIndex].inventory[i].clone());
+    }
+
+    clearAll();
+    drawGrid();
+    drawInventory();
+    drawGoal();
 
 }
