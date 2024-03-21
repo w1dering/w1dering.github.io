@@ -455,7 +455,7 @@ function loadLevel(levelID) {
     let timer = document.getElementById("timer");
     let count = 0;
     timerID = setInterval(() => {
-        timer.innerText = `${Math.floor(count / 60)}:${count < 10 ? 0 : ""}${count % 60}`;
+        timer.innerText = `${Math.floor(count / 60)}:${count % 60 < 10 ? 0 : ""}${count % 60}`;
         count++;
     }, 1000);
     intervalsArray.push(timerID);
@@ -552,7 +552,7 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
                     tempPolygon.setAttribute("stroke-width", 0.5);
                     tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                         + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
-                    tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
+                    // tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
                     // thus, the effective hitbox is only the actual shape, not the 5x5 canvas around it
                     piecesSVGArray[baseR][baseC].appendChild(tempPolygon);
                 }
@@ -660,14 +660,14 @@ function onPiecePickUp(ev) {
     draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
     draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
     
-    for (let polygon of draggedSVG.children)
-    {
-        polygon.style.display = "inline-block"; // makes squares no longer scale to parent
-    }
+    // for (let polygon of draggedSVG.children)
+    // {
+    //     polygon.style.display = "inline-block"; // makes squares no longer scale to parent
+    // }
 
 
-    draggedSVG.style.width = window.innerWidth;
-    draggedSVG.style.height = window.innerHeight; // makes area in which mouse movement is read massive
+    // draggedSVG.style.width = window.innerWidth;
+    // draggedSVG.style.height = window.innerHeight; // makes area in which mouse movement is read massive
 
     // flag to read mousemove event
     draggedSVG.beingDragged = true;
@@ -679,7 +679,7 @@ function onPiecePickUp(ev) {
     
     // make svg appear in front of everything
     draggedSVG.style.zIndex = 9999;
-    draggedSVG.style.pointerEvents = "auto"; // this (along with setting it to none upon dropping) lets the player move the mouse within a 5x5 area, reducing the chance that you move the mouse too fast and drop the piece
+    // draggedSVG.style.pointerEvents = "auto"; // this (along with setting it to none upon dropping) lets the player move the mouse within a 5x5 area, reducing the chance that you move the mouse too fast and drop the piece
     draggedSVG.focus(); // focuses the piece, enabling keydown events
 
     draggedShape = draggedSVG.shape; // used to read what shape is being dragged
