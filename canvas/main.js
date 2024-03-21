@@ -224,6 +224,8 @@ let canDropOff = false; //variable that determines if a piece can be dropped off
 let previousMouseCoordinates;
 let history = [];
 let historyIndex = -1;
+let intervalsArray = [];
+
 
 document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
 
@@ -334,7 +336,7 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
                     tempPolygon.setAttribute("stroke-width", 0.5);
                     tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                         + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
-                   // tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
+                    tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
                     // thus, the effective hitbox is only the actual shape, not the 5x5 canvas around it
                     piecesSVGArray[baseR][baseC].appendChild(tempPolygon);
                 }
@@ -404,6 +406,10 @@ function clearAll()
     gridSVG.innerHTML = "";
     goalCTX.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
     inventoryCTX.clearRect(0, 0, inventoryCanvasBackground.width, inventoryCanvasBackground.height);
+    for (let id of intervalsArray)
+    {
+        clearTimeout(id);
+    }
 }
 
 function getColourFromID(ID)
@@ -546,32 +552,81 @@ function onPieceDropOff(ev)
                     gridPolygonArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
                 }
             }
-            for (let r = 0; r < inventorySubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
+
+            draggedSVG.removeEventListener("mousedown", onPiecePickUp);
+            draggedSVG.removeEventListener("mousemove", onPieceMoving);
+            draggedSVG.removeEventListener("mouseup", onPieceDropOff);
+            
+            
+            //draggedSVG.style.visibility = "hidden"; // makes it non-interactable
+            draggedShape.available = false;
+            
+            // code for if i want to make dropped pieces re-pickupable: it makes piece invisible but pick-uppable
+            // not implemented:
+            // redrawing grid after pickup (use mouse coords to check but unsure how to revert canvas)
+            // checking if a piece is underneath another piece
+            // draggedSVG.style.opacity = "0";
+            let gridSquareSize = gridHolderDiv.offsetWidth / gridSquareCount;
+            let baseX = gridHolderDiv.getBoundingClientRect().left;
+            let baseY = gridHolderDiv.getBoundingClientRect().top;
+            
+            draggedSVG.style.transform = `translate(${(gridSquareSize * (squareHoveringOver[1] + 0.5) + baseX - parseInt(draggedSVG.style.width, 10) / 2 ) - parseInt(draggedSVG.style.left, 10)}px, 
+            ${(gridSquareSize * (squareHoveringOver[0] + 0.5) + baseY - parseInt(draggedSVG.style.height, 10) / 2) - parseInt(draggedSVG.style.top, 10)}px) rotate(${draggedSVG.shape.rotation}deg)`;
+            
+            setTimeout(() => {
+                draggedSVG.style.animation = "fadeOut 0.5s";
+            }, 300);
+            setTimeout(() => {
+                draggedSVG.style.visibility = "hidden";
+            }, 800);
+            
+            let colour = draggedShape.colour;
+            let arr = draggedShape.arr;
+            draggedShape = null;
+            
+            for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid to outline colour
                 for (let c = 0; c < inventorySubSquareCount; c++) {
-                    if (draggedShape.arr[r][c]) {
-                        gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.colour));
-                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] =  draggedShape.colour;
+                    if (arr[r][c]) {
+                        gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(colour) + "80");
+                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] = colour;
                     }
                 }
             }
-            draggedSVG.style.visibility = "hidden"; // makes it non-interactable
-            draggedShape.available = false;
-            makeHistory();
-
-            // code for if i want to make dropped pieces re-pickupable: it makes piece invisible but pick-uppable
-            // not implemented:
-                // redrawing grid after pickup (use mouse coords to check but unsure how to revert canvas)
-                // checking if a piece is underneath another piece
-            // draggedSVG.style.opacity = "0";
-            // let gridSquareSize = gridHolderDiv.offsetWidth / gridSquareCount;
-            // let baseX = gridHolderDiv.getBoundingClientRect().left;
-            // let baseY = gridHolderDiv.getBoundingClientRect().top;
             
-            // draggedSVG.style.width = 0.98 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
-            // draggedSVG.style.height = 0.98 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
-            // draggedSVG.style.left = (gridSquareSize * (squareHoveringOver[1] + 0.5) + baseX - parseInt(draggedSVG.style.width, 10) / 2 ) + "px";
-            // draggedSVG.style.top = (gridSquareSize * (squareHoveringOver[0] + 0.5) + baseY - parseInt(draggedSVG.style.height, 10) / 2 ) + "px";
+            let start = Date.now();
+            let addedToArray = false;
+            let id = setInterval(() => {
+                if (!addedToArray)
+                {
+                    addedToArray = true;
+                    intervalsArray.push(id);
+                }
 
+                let interval = Date.now() - start;
+                for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
+                    for (let c = 0; c < inventorySubSquareCount; c++) {
+                        if (arr[r][c]) {
+                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(colour) + (Math.floor(interval / 500 * 127) + 128).toString(16));
+                        } // progressively fades the colour towards true colour
+                    }
+                }
+                if (interval > 500) 
+                {
+                    for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
+                        for (let c = 0; c < inventorySubSquareCount; c++) {
+                            if (arr[r][c]) {
+                                gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(colour));
+                            }
+                        }
+                    } // makes sure that the final colour is the true colour of the grid
+                    clearInterval(id); // breaks out of interval
+                }
+            }, 50);
+            
+            canDropOff = false;
+            squareHoveringOver = [-1, -1];
+            makeHistory();
+            
             // draggedSVG.setAttribute("pointer-events", "none");
 
 
@@ -610,8 +665,6 @@ function onPieceDropOff(ev)
                 draggedShape.rotateArray("r");
             }
         }
-
-        draggedShape = null;
     }
 }
 
