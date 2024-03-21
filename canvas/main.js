@@ -110,13 +110,31 @@ const BIG_I =
     [false, false, false, false, false]
 ];
 
+const SMALL_T =
+[
+    [false, false, false , false, false],
+    [false, false, true , false, false],
+    [false, true , true , true , false],
+    [false, false, false , false, false],
+    [false, false, false, false, false]
+]
+
+const TWO_BY_THREE =
+[
+    [false, false, false, false, false],
+    [false, true , true , false, false],
+    [false, true , true , false , false],
+    [false, true , true , false, false],
+    [false, false, false, false, false]
+]
+
 // colours
 const red = "#EDC9D4";
-const orange = "#FFD3C9";
+const orange = "#FFBB69";
 const yellow = "#FFF7CF";
 const green = "#7DDE92";
 const blue = "#C7E0FF";
-const purple = "#BAC3FF";
+const purple = "#C2A1FF";
 const darkGray = "#37383A";
 const lightGray = "#CCCCCC";
 
@@ -147,7 +165,7 @@ goalCanvas.width = canvasResolution * scale;
 goalCanvas.height = canvasResolution * scale;
 
 document.addEventListener("keydown", undoOrRedo);
-
+document.getElementById("level-button").addEventListener("click", chooseLevel);
 
 /* array containing all levels' information
  * the format is:
@@ -205,6 +223,175 @@ let levelInformation = [
             new Shape(SMALL_J, 4),
             new Shape(SMALL_J, 4),
         ]
+    ],
+    [
+        [
+            [2, 2, 2, 2],
+            [2, 3, 2, 2],
+            [2, 2, 2, 2],
+            [2, 2, 3, 2]
+        ],
+        [
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 3, 3]
+        ],
+        [
+            new Shape(L, 3),
+            new Shape(SMALL_J, 3),
+            new Shape (J, 3),
+            new Shape (SMALL_O, 3),
+            new Shape (SMALL_I, 3)
+        ]
+    ],
+    [
+        [
+            [0, 5, 0, 5, 0],
+            [5, 0, 5, 0, 5],
+            [0, 5, 0, 5, 0],
+            [5, 0, 5, 0, 5],
+            [0, 5, 0, 5, 0]
+        ],
+        [
+            [0, 5, 5, 5, 0],
+            [0, 0, 0, 0, 0],
+            [0, 5, 5, 5, 0],
+            [0, 0, 0, 0, 0],
+            [0, 5, 5, 5, 0]
+        ],
+        [
+            new Shape(BIG_O, 5),
+            new Shape(BIG_O, 5),
+            new Shape(SMALL_O, 0),
+            new Shape(SMALL_O, 0),
+            new Shape(SMALL_O, 0),
+            new Shape(J, 0),
+            new Shape(BIG_J, 0),
+        ]
+    ],
+    [
+        [
+            [2, 2, 2, 2],
+            [2, 2, 2, 2],
+            [2, 2, 2, 2],
+            [2, 2, 2, 2]
+        ],
+        [
+            [2, 3, 3, 3],
+            [4, 4, 3, 0],
+            [0, 3, 4, 4],
+            [3, 3, 3, 2]
+        ],
+        [
+            new Shape(SMALL_T, 3),
+            new Shape(SMALL_T, 3),
+            new Shape(O, 0),
+            new Shape(O, 0),
+            new Shape(I, 4),
+            new Shape(I, 4)
+        ]
+    ],
+    [
+        [
+            [2, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2]
+        ],
+        [
+            [2, 0, 0, 2, 2],
+            [3, 0, 4, 4, 4],
+            [3, 3, 4, 3, 3],
+            [4, 4, 4, 0, 3],
+            [2, 2, 0, 0, 2]
+        ],
+        [
+            new Shape(SMALL_T, 3),
+            new Shape(SMALL_T, 3),
+            new Shape(O, 0),
+            new Shape(O, 0),
+            new Shape(L, 4),
+            new Shape(I, 4)
+        ]
+    ],
+    [
+        [
+            [2, 2, 2, 2, 2, 3],
+            [2, 3, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2, 2],
+            [2, 2, 2, 3, 2, 2],
+            [2, 3, 2, 2, 2, 2],
+            [2, 2, 2, 2, 3, 2],
+        ],
+        [
+            [5, 5, 5, 5, 5, 3],
+            [5, 3, 5, 5, 5, 5],
+            [5, 5, 5, 5, 5, 5],
+            [5, 5, 5, 3, 5, 5],
+            [5, 3, 5, 5, 5, 5],
+            [5, 5, 5, 5, 3, 5]
+        ],
+        [
+            new Shape(O, 5),
+            new Shape(O, 5),
+            new Shape(BIG_O, 5),
+            new Shape(SMALL_L, 5),
+            new Shape(BIG_J, 5),
+            new Shape(SMALL_L, 5),
+            new Shape(J, 5)
+        ]
+    ],
+    [
+        [
+            [1, 1, 2, 1, 2, 1],
+            [1, 2, 1, 2, 1, 2],
+            [2, 1, 2, 1, 2, 1],
+            [1, 2, 1, 2, 1, 2],
+            [2, 1, 2, 1, 2, 1],
+            [1, 2, 1, 2, 1, 1]
+        ],
+        [
+            [0, 0, 1, 1, 2, 2],
+            [0, 0, 1, 1, 2, 2],
+            [0, 1, 2, 2, 0, 1],
+            [0, 1, 2, 2, 0, 1],
+            [2, 2, 0, 0, 1, 1],
+            [2, 2, 0, 0, 1, 1],
+        ],
+        [
+            new Shape(SMALL_J, 0),
+            new Shape(SMALL_J, 0),
+            new Shape(J, 0),
+            new Shape(J, 0),
+            new Shape(J, 1),
+            new Shape(J, 1),
+            new Shape(TWO_BY_THREE, 1),
+            new Shape(BIG_O, 2),
+            new Shape(BIG_O, 2),
+            
+        ]
+    ],
+    [
+        [
+            [0, 0, 1, 1],
+            [0, 0, 1, 1],
+            [0, 0, 1, 1],
+            [0, 0, 1, 1]
+        ],
+        [
+            [0, 0, 0, 0],
+            [0, 1, 1, 1],
+            [1, 1, 1, 0],
+            [0, 0, 0, 0]
+        ],
+        [
+            new Shape(O, 0),
+            new Shape(BIG_L, 0),
+            new Shape(BIG_L, 1),
+            new Shape(SMALL_I, 1)
+        ]
     ]
 ]
 let levelID = 0;
@@ -217,10 +404,10 @@ let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount
 let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
 let piecesSVGArray;
 let gridPolygonArray;
-let draggedShape = null;
+let draggedShape;
 let gridSquareCount;
-let squareHoveringOver = [-1, -1]; // the square a dragged piece is being hovered over
-let canDropOff = false; //variable that determines if a piece can be dropped off at squareHoveringOver
+let squareHoveringOver; // the square a dragged piece is being hovered over
+let canDropOff; //variable that determines if a piece can be dropped off at squareHoveringOver
 let previousMouseCoordinates;
 let history = [];
 let historyIndex = -1;
@@ -232,10 +419,30 @@ document.addEventListener('contextmenu', event => event.preventDefault()); // di
 loadLevel(levelID);
 
 function loadLevel(levelID) {
+    history = [];
+    historyIndex = -1;
+    intervalsArray = [];
+    squareHoveringOver = [-1, -1];
+    canDropOff = false;
+    draggedShape = null;
+    
     clearAll();
-    currentGrid = levelInformation[levelID][0].slice();
+    currentGrid = []; // replace grid with history clone
+    for (let r = 0; r < levelInformation[levelID][0].length; r++) {
+        let tempRow = [];
+        for (let c = 0; c < levelInformation[levelID][0].length; c++) {
+            tempRow.push(levelInformation[levelID][0][r][c]);
+        }
+        currentGrid.push(tempRow);
+    }
+
+    currentInventory = [];
+    for (let i = 0; i < levelInformation[levelID][2].length; i++) {
+        currentInventory.push(levelInformation[levelID][2][i].clone());
+    }
+
+
     goalArray = levelInformation[levelID][1].slice();
-    currentInventory = levelInformation[levelID][2].slice();
     
     drawGrid();
 
@@ -647,7 +854,9 @@ function onPieceDropOff(ev)
             if (winned) 
             {
                 // setTimeout(showMenu(), 2000);
-                alert("WOOHOOOOOOO");
+                setTimeout(() => {
+                    alert("WOOOOOOOOO");
+                }, 1000);
             }
         }
         else // returns piece to inventory slot
@@ -760,4 +969,13 @@ function loadHistory()
     drawInventory();
     drawGoal();
 
+}
+
+function chooseLevel(ev)
+{
+    let response = prompt("choose levelID from 0 to 7");
+    if (!isNaN(parseInt(response)) && parseInt(response) <= 7 && parseInt(response) >= 0)
+    {
+        loadLevel(response);
+    }
 }
