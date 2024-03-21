@@ -1,4 +1,5 @@
 // common shapes
+
 const SMALL_L = [
     [false, false, false, false, false],
     [false, false, true , false, false],
@@ -421,12 +422,12 @@ loadLevel(levelID);
 function loadLevel(levelID) {
     history = [];
     historyIndex = -1;
-    intervalsArray = [];
     squareHoveringOver = [-1, -1];
     canDropOff = false;
     draggedShape = null;
     
     clearAll();
+
     currentGrid = []; // replace grid with history clone
     for (let r = 0; r < levelInformation[levelID][0].length; r++) {
         let tempRow = [];
@@ -451,6 +452,14 @@ function loadLevel(levelID) {
     drawInventory();
 
     makeHistory();
+
+    let timer = document.getElementById("timer");
+    let count = 0;
+    let timerID = setInterval(() => {
+        timer.innerText = `${Math.floor(count / 60)}:${count < 10 ? 0 : ""}${count % 60}`;
+        count++;
+    }, 1000);
+    intervalsArray.push(timerID);
 }
 
 function drawGrid()
@@ -613,10 +622,11 @@ function clearAll()
     gridSVG.innerHTML = "";
     goalCTX.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
     inventoryCTX.clearRect(0, 0, inventoryCanvasBackground.width, inventoryCanvasBackground.height);
-    for (let id of intervalsArray)
+    for (let intervalID of intervalsArray)
     {
-        clearTimeout(id);
+        clearInterval(intervalID);
     }
+    intervalsArray = [];
 }
 
 function getColourFromID(ID)
@@ -801,14 +811,7 @@ function onPieceDropOff(ev)
             }
             
             let start = Date.now();
-            let addedToArray = false;
             let id = setInterval(() => {
-                if (!addedToArray)
-                {
-                    addedToArray = true;
-                    intervalsArray.push(id);
-                }
-
                 let interval = Date.now() - start;
                 for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
                     for (let c = 0; c < inventorySubSquareCount; c++) {
@@ -829,6 +832,7 @@ function onPieceDropOff(ev)
                     clearInterval(id); // breaks out of interval
                 }
             }, 50);
+            intervalsArray.push(id);
             
             canDropOff = false;
             squareHoveringOver = [-1, -1];
@@ -854,6 +858,11 @@ function onPieceDropOff(ev)
             if (winned) 
             {
                 // setTimeout(showMenu(), 2000);
+                for (let intervalID of intervalsArray)
+                {
+                    clearInterval(intervalID);
+                }
+                intervalsArray = [];
                 setTimeout(() => {
                     alert("WOOOOOOOOO");
                 }, 1000);
