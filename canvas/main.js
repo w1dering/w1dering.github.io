@@ -168,6 +168,9 @@ goalCanvas.height = canvasResolution * scale;
 document.addEventListener("keydown", undoOrRedo);
 document.getElementById("level-button").addEventListener("click", chooseLevel);
 
+const forPopupDiv = document.getElementById("for-popup");
+const popupSVG = document.getElementById("popup");
+
 /* array containing all levels' information
  * the format is:
  * [0]: 2d array containing original layout; each element is a NUMBER
@@ -411,7 +414,10 @@ let previousMouseCoordinates;
 let history = [];
 let historyIndex = -1;
 let intervalsArray = [];
+let timer;
 let timerID;
+
+
 
 
 document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
@@ -452,11 +458,11 @@ function loadLevel(levelID) {
 
     makeHistory();
 
-    let timer = document.getElementById("timer");
-    let count = 0;
+    timer = document.getElementById("timer");
+    let timeTaken = 1;
     timerID = setInterval(() => {
-        timer.innerText = `${Math.floor(count / 60)}:${count % 60 < 10 ? 0 : ""}${count % 60}`;
-        count++;
+        timer.innerText = `${Math.floor(timeTaken / 60)}:${timeTaken % 60 < 10 ? 0 : ""}${timeTaken % 60}`;
+        timeTaken++;
     }, 1000);
     intervalsArray.push(timerID);
 }
@@ -652,6 +658,8 @@ function getIDFromColour(colour)
 function onPiecePickUp(ev) {
     let draggedSVG = ev.currentTarget;
     draggedSVG.initialStyle = draggedSVG.style;
+
+    previousMouseCoordinates = [ev.clientX, ev.clientY];
 
     // draggedSVG.style.opacity = "100"; // code for repicking up pieces
 
@@ -873,8 +881,12 @@ function onPieceDropOff(ev)
                 // setTimeout(showMenu(), 2000);
                 clearInterval(timerID); 
                 intervalsArray = [];
+                popup.style.transform = "translate(0%, -20%)"; // readies the popup for the slide-down transition
                 setTimeout(() => {
-                    alert("WOOOOOOOOO");
+                    forPopupDiv.style.visibility = "visible";
+                    forPopupDiv.style.animation = "fadeIn 0.5s"; // fades the popup in
+                    popup.style.transform = "translate(0%, 0%)"; // shifts popup downwards
+                    document.getElementById("popup-timer").textContent = `Time: ${timer.innerText}`;
                 }, 1000);
             }
         }

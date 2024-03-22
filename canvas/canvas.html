@@ -15,12 +15,27 @@
     </head>
 
     <body>
+        <div id="for-popup">
+            <svg id="popup-background">
+                <rect width="100%" height="100%" x="0" y="0" fill="#00000080"></rect>
+            </svg>
+            <div id="popup">
+                <svg viewBox = "0 0 200 200">
+                    <text x="50%" y="12%" text-anchor="middle" class="coiny-bold" style="font-size: 30px; font-size: 3.2vmin">Solved!</text>
+                    <text id="popup-timer" x="50%" y="22%" text-anchor="middle" class="coiny" style="font-size: 20px; font-size: 2.1vmin"></text>
+                </svg>
+                
+                <button class="popup-button">
+                    <p class="coiny">Level List</p>
+                </button>
+            </div>
+        </div>
         <div class="level-header">
-            <h2 class="coiny level-title" style="font-size: 70px; font-size: 8vmin; color: #37383A;">Level X</h2>
+            <h2 class="coiny-bold level-title" style="font-size: 70px; font-size: 8vmin; color: #37383A;">Level X</h2>
         </div>
         <div class="game-interface">
             <div class="inventory">
-                <h3 class="coiny inventory-title" style="font-size: 35px; font-size: 4vmin; color: #37383A;">Inventory</h3>
+                <h3 class="coiny-bold inventory-title" style="font-size: 35px; font-size: 4vmin; color: #37383A;">Inventory</h3>
                 <div id="inventory-canvas">
                     <canvas id="inventory-canvas-background"></canvas>
                     <div id="inventory-div-overlay"></div>
@@ -31,7 +46,7 @@
             </div>
 
             <div class="goal">
-                <h3 class="coiny goal-title" style="font-size: 35px; font-size: 4vmin; color: #37383A;">Make this!</h3>
+                <h3 class="coiny-bold goal-title" style="font-size: 35px; font-size: 4vmin; color: #37383A;">Make this!</h3>
                 <canvas id="goal-canvas"></canvas>
                 <div class="goal-buttons">
                     <p>ctrl + z: undo</p>

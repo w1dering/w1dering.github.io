@@ -19,14 +19,27 @@ html, body
     100% {opacity: 0;}
 }
 
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+
 *:focus {
     outline: none; /* removes outline from focused elements */
 }
 
-.coiny
+.coiny-bold
 {
     font-family: "Coiny", system-ui;
     font-weight: 300;
+    font-style: normal;
+}
+
+.coiny 
+{
+    font-family: "Coiny", system-ui;
+    font-weight: 100;
     font-style: normal;
 }
 
@@ -165,4 +178,49 @@ body
 {
     height: 16.6%;
     flex: 1 4 auto;
+}
+
+#for-popup
+{
+    visibility: hidden;
+    position: fixed;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: 99999;
+    justify-content: center;
+    align-items: center;
+}
+
+#popup-background
+{
+    flex: 1 1 0;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+}
+
+#popup
+{
+    flex: 1 1 0;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    height: 60%;
+    aspect-ratio: 1;
+    color: #37383A;
+    transition: transform 0.5s ease;
+    background-color: #cd7009;
+    border-radius: 10%;
+}
+
+.popup-button
+{
+    font-size: 15px;
+    font-size: 1.6vmin;
+    position: absolute;
+    background-color: #cd7009;
+    top: 60%;
+    flex: 1 1 0;
 }
