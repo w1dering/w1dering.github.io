@@ -1,10 +1,33 @@
 class Shape {
     constructor(arr, colour) {
-        this.arr = arr;
+        this.arr = [];
+        for (let r = 0; r < arr.length; r++) // deep clones arr
+        {
+            let tempRow = [];
+            for (let c = 0; c < arr[r].length; c++)
+            {
+                tempRow.push(arr[r][c]);
+            }
+            this.arr.push(tempRow);
+        }
         this.colour = colour; // 0 means customizable, anything else means all squares are that colour
         this.rotation = 0;
         this.available = true;
+        if (this.colour) // if its not 0; i.e. not customizable
+        {
+            for (let r = 0; r < this.arr.length; r++)
+            {
+                for (let c = 0; c < this.arr[r].length; c++)
+                {
+                    if (this.arr[r][c])
+                    {
+                        this.arr[r][c] = this.colour;
+                    }
+                }
+            }
+        }
     }
+
 
     rotateArray(dir) {
         // dir will be "l" or "r"

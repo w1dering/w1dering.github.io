@@ -129,6 +129,33 @@ const TWO_BY_THREE =
     [0, 0, 0, 0, 0]
 ]
 
+const DIAGONAL =
+[
+    [0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0]
+]
+
+const SMALL_DIAGONAL =
+[
+    [0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0]
+]
+
+const BIG_DIAGONAL =
+[
+    [1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0]
+]
+
 // colours
 const red = "#EDC9D4";
 const orange = "#FFBB69";
@@ -143,6 +170,7 @@ const lightGray = "#CCCCCC";
 
 // list of references
 const gameInterfaceDiv = document.querySelector(".game-interface");
+const levelTitleHeader = document.querySelector(".level-title");
 
 let canvasResolution = 1440;
 let scale = 1;
@@ -166,10 +194,16 @@ goalCanvas.width = canvasResolution * scale;
 goalCanvas.height = canvasResolution * scale;
 
 document.addEventListener("keydown", undoOrRedo);
-document.getElementById("level-button").addEventListener("click", chooseLevel);
+document.querySelectorAll(".level-button").forEach((button) => {
+    button.addEventListener("click", chooseLevel);
+    
+})
 
 const forPopupDiv = document.getElementById("for-popup");
+const forPopupDivOriginalStyle = forPopupDiv.style;
 const popupSVG = document.getElementById("popup");
+// const popupButton = document.getElementById("level-list");
+
 
 /* array containing all levels' information
  * the format is:
@@ -394,6 +428,112 @@ let levelInformation = [
             new Shape(BIG_L, 2),
             new Shape(SMALL_I, 2)
         ]
+    ],
+    [
+        [
+            [1, 1, 5, 1, 1],
+            [1, 1, 1, 1, 5],
+            [5, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 5, 1, 1]
+        ],
+        [
+            [2, 2, 5, 2, 2],
+            [2, 2, 2, 2, 5],
+            [5, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2],
+            [2, 2, 5, 2, 2],
+        ],
+        [
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 2, 0, 2, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 0, 0, 0],
+                ], 0),
+            new Shape(SMALL_T, 2),
+            new Shape(DIAGONAL, 2),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 2, 0, 2, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 2, 0, 2, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(L, 2),
+            new Shape(SMALL_O, 2),
+            new Shape(SMALL_DIAGONAL, 2)
+        ]
+    ],
+    [
+        [
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+
+        ],
+        [
+            [4, 4, 4, 4, 4],
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+            [6, 6, 6, 6, 6],
+        ],
+        [
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 2, 3, 4, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 3, 4, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 1, 0, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 1, 1, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 2, 0, 0],
+                    [0, 4, 3, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 2, 2, 2, 0],
+                    [0, 3, 3, 3, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 0], 
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 0, 3, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0)
+        ]
     ]
 ]
 let levelID = 0;
@@ -432,6 +572,7 @@ function loadLevel(levelID) {
     draggedShape = null;
     
     clearAll();
+    resetIntervals();
 
     currentGrid = []; // replace grid with history clone
     for (let r = 0; r < levelInformation[levelID][0].length; r++) {
@@ -459,12 +600,18 @@ function loadLevel(levelID) {
     makeHistory();
 
     timer = document.getElementById("timer");
-    let timeTaken = 1;
+    let timeTaken = 0;
+
+    timer.innerText = `${Math.floor(timeTaken / 60)}:${timeTaken % 60 < 10 ? 0 : ""}${timeTaken % 60}`;
+    timeTaken++;
+
     timerID = setInterval(() => {
         timer.innerText = `${Math.floor(timeTaken / 60)}:${timeTaken % 60 < 10 ? 0 : ""}${timeTaken % 60}`;
         timeTaken++;
     }, 1000);
     intervalsArray.push(timerID);
+
+    levelTitleHeader.innerText = `Level ${(parseInt(levelID) + 1)}`;
 }
 
 function drawGrid()
@@ -551,7 +698,7 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
                 if (currentInventory[i].available && currentInventory[i].arr[r][c])
                 {
                     // draw SVG shape in shape of a square
-                    let colour = !currentInventory[i].colour ? currentInventory[i].arr[r][c] : currentInventory[i].colour; // if colour is 0, read the exact value of that tile; else, use the default
+                    let colour = currentInventory[i].arr[r][c]; // read the colour of the tile
                     let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); // creates a polygon (ensures tag is self-closing)
                     tempPolygon.setAttribute("fill", getColourFromID(colour));
                     tempPolygon.setAttribute("stroke", darkGray);
@@ -628,11 +775,26 @@ function clearAll()
     gridSVG.innerHTML = "";
     goalCTX.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
     inventoryCTX.clearRect(0, 0, inventoryCanvasBackground.width, inventoryCanvasBackground.height);
-    for (let intervalID of intervalsArray)
-    {
+    forPopupDiv.style = forPopupDivOriginalStyle; // resets style and animation of popup
+}
+
+function resetIntervals()
+{
+    for (let intervalID of intervalsArray) {
         clearInterval(intervalID);
     }
     intervalsArray = [];
+}
+
+function resetNonTimerIntervals()
+{
+    for (let intervalID of intervalsArray) {
+        if (intervalID != timerID)
+        {
+            clearInterval(intervalID);
+        }
+    }
+    intervalsArray = [timerID];
 }
 
 function getColourFromID(ID)
@@ -762,7 +924,7 @@ function onPieceMoving(ev)
                 for (let r = 0; r < inventorySubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
                     for (let c = 0; c < inventorySubSquareCount; c++) {
                         if (draggedShape.arr[r][c]) {
-                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.colour) + "80");
+                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.arr[r][c]) + "80");
                         }
                     }
                 }
@@ -818,15 +980,14 @@ function onPieceDropOff(ev)
                 draggedSVG.style.visibility = "hidden";
             }, 800);
             
-            let colour = draggedShape.colour;
             let arr = draggedShape.arr;
             draggedShape = null;
             
             for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid to outline colour
                 for (let c = 0; c < inventorySubSquareCount; c++) {
                     if (arr[r][c]) {
-                        gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(colour) + "80");
-                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] = colour;
+                        gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]) + "80");
+                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] = arr[r][c];
                     }
                 }
             }
@@ -837,7 +998,7 @@ function onPieceDropOff(ev)
                 for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
                     for (let c = 0; c < inventorySubSquareCount; c++) {
                         if (arr[r][c]) {
-                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(colour) + (Math.floor(interval / 500 * 127) + 128).toString(16));
+                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]) + (Math.floor(interval / 500 * 127) + 128).toString(16));
                         } // progressively fades the colour towards true colour
                     }
                 }
@@ -846,11 +1007,11 @@ function onPieceDropOff(ev)
                     for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
                         for (let c = 0; c < inventorySubSquareCount; c++) {
                             if (arr[r][c]) {
-                                gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(colour));
+                                gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]));
                             }
                         }
-                    } // makes sure that the final colour is the true colour of the grid
-                    clearInterval(id); // breaks out of interval
+                    } // makes sure that the final colour is the true colour of the grid, rather than some mathematical imperfection
+                    clearInterval(id); // stops the fading process
                 }
             }, 50);
             intervalsArray.push(id);
@@ -996,6 +1157,7 @@ function loadHistory()
     }
 
     clearAll();
+    resetNonTimerIntervals();
     drawGrid();
     drawInventory();
     drawGoal();
@@ -1004,8 +1166,8 @@ function loadHistory()
 
 function chooseLevel(ev)
 {
-    let response = prompt("choose levelID from 0 to 7");
-    if (!isNaN(parseInt(response)) && parseInt(response) <= 7 && parseInt(response) >= 0)
+    let response = prompt(`choose levelID from 0 to ${levelInformation.length - 1}`);
+    if (!isNaN(parseInt(response)) && parseInt(response) <= levelInformation.length - 1 && parseInt(response) >= 0)
     {
         loadLevel(response);
     }
