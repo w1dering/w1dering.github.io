@@ -534,6 +534,29 @@ let levelInformation = [
                     [0, 0, 0, 0, 0],
                 ]),
         ]
+    ],
+    [
+        [
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1],
+            [1, 1, 1, 1]
+        ],
+        [
+            [4, 3, 6, 2],
+            [4, 3, 4, 4],
+            [3, 3, 3, 2],
+            [5, 3, 5, 5]
+        ],
+        [
+            new Shape(BIG_I, 2),
+            new Shape(BIG_I, 3),
+            new Shape(BIG_I, 3),
+            new Shape(BIG_I, 4),
+            new Shape(BIG_I, 4),
+            new Shape(BIG_I, 5),
+            new Shape(BIG_I, 6)
+        ]
     ]
 ]
 let levelID = 0;
