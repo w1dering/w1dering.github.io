@@ -196,7 +196,6 @@ goalCanvas.height = canvasResolution * scale;
 document.addEventListener("keydown", undoOrRedo);
 document.querySelectorAll(".level-button").forEach((button) => {
     button.addEventListener("click", chooseLevel);
-    
 })
 
 const forPopupDiv = document.getElementById("for-popup");
@@ -1097,12 +1096,12 @@ function onKeyDown(ev)
     let draggedSVG = ev.currentTarget;
     if (ev.currentTarget.beingDragged)
     {
-        if (ev.key == "e" || ev.key == "d" || ev.key == "ArrowRight") // right arrow key, e, or d
+        if (ev.key == "e" || ev.key == "E" || ev.key == "d" || ev.key == "D" || ev.key == "ArrowRight") // right arrow key, e, or d
         {
             draggedSVG.shape.rotateArray("r");
             draggedSVG.style.transform = `rotate(${draggedSVG.shape.rotation}deg)`; 
         }
-        else if (ev.key == "q" || ev.key == "a" || ev.key == "ArrowLeft") // left arrow key, q, or a
+        else if (ev.key == "q" || ev.key == "Q" || ev.key == "a" || ev.key == "A" || ev.key == "ArrowLeft") // left arrow key, q, or a
         {
             draggedSVG.shape.rotateArray("l");
             draggedSVG.style.transform = `rotate(${draggedSVG.shape.rotation}deg)`;

@@ -34,6 +34,7 @@ html, body
     font-family: "Coiny", system-ui;
     font-weight: 300;
     font-style: normal;
+    color: #37383A;
 }
 
 .coiny 
@@ -41,6 +42,7 @@ html, body
     font-family: "Coiny", system-ui;
     font-weight: 100;
     font-style: normal;
+    color: #37383A;
 }
 
 body
@@ -56,9 +58,28 @@ body
 {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     width: 100%;
     height: 32%;
+    text-align: center;
+}
+
+.level-title
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 5 1 0;
+    width: 100%;
+}
+
+#timer
+{
+    flex: 1 5 0;
+    font-size: 35px;
+    font-size: 4vmin;
+    width: 100%;
 }
 
 .game-interface
@@ -178,6 +199,17 @@ body
 {
     height: 16.6%;
     flex: 1 4 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2%;
+}
+
+
+.help-button
+{
+    flex: 1 1 0;
+    height: 70%;
 }
 
 #for-popup
@@ -215,7 +247,7 @@ body
     border-radius: 10%;
 }
 
-.level-button
+.level-button, .help-button
 {
     font-size: 30px;
     font-size: 3.2vmin;

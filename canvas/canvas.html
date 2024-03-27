@@ -29,7 +29,9 @@
             </div>
         </div>
         <div class="level-header">
-            <h2 class="coiny-bold level-title" style="font-size: 70px; font-size: 8vmin; color: #37383A;">Level X</h2>
+            <h2 class="coiny-bold level-title" style="font-size: 70px; font-size: 8vmin;">Level X</h2>
+            <p id="timer" class="coiny-bold"></p>
+
         </div>
         <div class="game-interface">
             <div class="inventory">
@@ -47,12 +49,8 @@
                 <h3 class="coiny-bold goal-title" style="font-size: 35px; font-size: 4vmin; color: #37383A;">Make this!</h3>
                 <canvas id="goal-canvas"></canvas>
                 <div class="goal-buttons">
-                    <p>ctrl + z: undo</p>
-                    <p>ctrl + y: redo</p>
-                    <p>q OR a OR left arrow: rotate ccw</p>
-                    <p>e OR d OR right arrow: rotate cw</p>
-                    <button class="level-button coiny" style="width: 100%; height: 70%; position: static">choose level</button>
-                    <p id="timer"></p>
+                    <button class="level-button coiny" style="height: 70%; position: static; border-radius: 10px;">Level</button>
+                    <button class="help-button coiny" style="height: 70%; position: static; border-radius: 10px;">?</button>
                 </div>
             </div>
     </body>
