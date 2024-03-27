@@ -196,11 +196,18 @@ goalCanvas.height = canvasResolution * scale;
 document.addEventListener("keydown", undoOrRedo);
 document.querySelectorAll(".level-button").forEach((button) => {
     button.addEventListener("click", chooseLevel);
-})
+});
 
 document.querySelector(".next-button").addEventListener("click", () => {
     loadLevel(parseInt(levelID) + 1);
-})
+});
+
+document.querySelector(".help-button").addEventListener("click", () => {
+    alert("Drag pieces from the inventory onto the board to transform it into the goal.\n" +
+    "Placing a piece will fully override the colours present on the board.\n" + 
+    "While dragging pieces, use q, a, or the left arrow to rotate counterclockwise, and e, d, or the right arrow to rotate clockwise.\n" +
+    "Use Ctrl + Z to undo and Ctrl + Y to redo.\n");
+});
 
 const forPopupDiv = document.getElementById("for-popup");
 const forPopupDivOriginalStyle = forPopupDiv.style;
@@ -535,7 +542,7 @@ let levelInformation = [
                     [0, 0, 2, 0, 0],
                     [0, 0, 3, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]),
+                ], 0),
         ]
     ],
     [
@@ -560,8 +567,84 @@ let levelInformation = [
             new Shape(BIG_I, 5),
             new Shape(BIG_I, 6)
         ]
+    ],
+    [
+        [
+            [1, 1, 1, 1, 1],
+            [1, 2, 2, 2, 1],
+            [1, 2, 3, 2, 1],
+            [1, 2, 2, 2, 1],
+            [1, 1, 1, 1, 1]
+        ],
+        [
+            [1, 2, 1, 2, 1],
+            [2, 1, 3, 1, 2],
+            [2, 3, 2, 3, 2],
+            [2, 1, 3, 1, 2],
+            [1, 2, 1, 2, 1],
+        ],
+        [
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 2, 2, 0],
+                    [0, 2, 2, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 2, 2, 0],
+                    [0, 2, 2, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 2, 1, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 2, 2, 0, 0],
+                    [0, 0, 2, 2, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 3, 2, 0, 0],
+                    [0, 2, 3, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 3, 0, 0],
+                    [0, 3, 3, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                ]
+            )
+        ]
     ]
-]
+];
+let dailyLevelInformation;
 let levelID = 0;
 let currentGrid = [];
 let currentInventory;
@@ -582,15 +665,32 @@ let historyIndex = -1;
 let intervalsArray = [];
 let timer;
 let timerID;
+let canUndoOrRedo = true;
 
 
-
-
-document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
 
 loadLevel(levelID);
+document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
 
 function loadLevel(loadedLevelID) {
+    canUndoOrRedo = true;
+    forPopupDiv.style.animation = "fadeOut 0.5s"; // fades the popup in
+    popupSVG.style.transform = "translate(0%, -20%)"; // shifts popup downwards
+
+    setTimeout(() => {
+        forPopupDiv.style = forPopupDivOriginalStyle; // resets style and animation of popup
+    }, 400);
+
+    let currentLevel;
+    if (loadedLevelID > -1)
+    {
+        currentLevel = levelInformation[loadedLevelID];
+    }
+    else
+    {
+        currentLevel = levelInformation[loadedLevelID]; // ADD DAILY LEVELS
+    }
+    
     levelID = JSON.parse(JSON.stringify(loadedLevelID)); // deep copy so it takes the value rather than the reference
     history = [];
     historyIndex = -1;
@@ -602,21 +702,21 @@ function loadLevel(loadedLevelID) {
     resetIntervals();
 
     currentGrid = []; // replace grid with history clone
-    for (let r = 0; r < levelInformation[loadedLevelID][0].length; r++) {
+    for (let r = 0; r < currentLevel[0].length; r++) {
         let tempRow = [];
-        for (let c = 0; c < levelInformation[loadedLevelID][0].length; c++) {
-            tempRow.push(levelInformation[loadedLevelID][0][r][c]);
+        for (let c = 0; c < currentLevel[0].length; c++) {
+            tempRow.push(currentLevel[0][r][c]);
         }
         currentGrid.push(tempRow);
     }
 
     currentInventory = []; 
-    for (let i = 0; i < levelInformation[loadedLevelID][2].length; i++) {
-        currentInventory.push(levelInformation[loadedLevelID][2][i].clone());
+    for (let i = 0; i < currentLevel[2].length; i++) {
+        currentInventory.push(currentLevel[2][i].clone());
     }
 
 
-    goalArray = levelInformation[loadedLevelID][1].slice();
+    goalArray = currentLevel[1].slice();
     
     drawGrid();
 
@@ -802,7 +902,6 @@ function clearAll()
     gridSVG.innerHTML = "";
     goalCTX.clearRect(0, 0, goalCanvas.width, goalCanvas.height);
     inventoryCTX.clearRect(0, 0, inventoryCanvasBackground.width, inventoryCanvasBackground.height);
-    forPopupDiv.style = forPopupDivOriginalStyle; // resets style and animation of popup
 }
 
 function resetIntervals()
@@ -1066,14 +1165,14 @@ function onPieceDropOff(ev)
             }
             if (winned) 
             {
+                canUndoOrRedo = false;
                 // setTimeout(showMenu(), 2000);
                 clearInterval(timerID); 
                 intervalsArray = [];
-                popup.style.transform = "translate(0%, -20%)"; // readies the popup for the slide-down transition
                 setTimeout(() => {
                     forPopupDiv.style.visibility = "visible";
                     forPopupDiv.style.animation = "fadeIn 0.5s"; // fades the popup in
-                    popup.style.transform = "translate(0%, 0%)"; // shifts popup downwards
+                    popupSVG.style.transform = "translate(0%, 0%)"; // shifts popup downwards
                     document.getElementById("popup-timer").textContent = `Time: ${timer.innerText}`;
                 }, 1000);
             }
@@ -1117,25 +1216,27 @@ function onKeyDown(ev)
 
 function undoOrRedo(ev)
 {
-    if (ev.ctrlKey && ev.key == "z") // undo
+    if (canUndoOrRedo)
     {
-        if (historyIndex > 0)
+        if (ev.ctrlKey && ev.key == "z") // undo
         {
-            historyIndex--;
-            loadHistory();
+            if (historyIndex > 0)
+            {
+                historyIndex--;
+                loadHistory();
+            }
+            ev.preventDefault();
         }
-        ev.preventDefault();
-    }
-    else if (ev.ctrlKey && ev.key == "y") // redo
-    {
-        if (historyIndex < history.length - 1)
+        else if (ev.ctrlKey && ev.key == "y") // redo
         {
-            historyIndex++;
-            loadHistory();
+            if (historyIndex < history.length - 1)
+            {
+                historyIndex++;
+                loadHistory();
+            }
+            ev.preventDefault();
         }
-        ev.preventDefault();
     }
-
 }
 
 function makeHistory()
@@ -1193,9 +1294,10 @@ function loadHistory()
 
 function chooseLevel(ev)
 {
-    let response = prompt(`choose levelID from 0 to ${levelInformation.length - 1}`);
-    if (!isNaN(parseInt(response)) && parseInt(response) <= levelInformation.length - 1 && parseInt(response) >= 0)
+    let response = prompt(`Choose level from 1 to ${levelInformation.length}`); // 0 for daily eventually
+    if (!isNaN(parseInt(response)) && parseInt(response) <= levelInformation.length && parseInt(response) > 0)
     {
-        loadLevel(response);
+        loadLevel(parseInt(response) - 1);
     }
 }
+

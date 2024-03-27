@@ -242,8 +242,8 @@ body
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 60%;
-    aspect-ratio: 1;
+    height: 30%;
+    aspect-ratio: 2;
     color: #37383A;
     transition: transform 0.5s ease;
     background-color: #cd7009;
@@ -269,16 +269,16 @@ body
 .next-button,
 .editor-button
 {
-    height: 30%;
+    height: 80%;
     width: auto;
-    aspect-ratio: 1;
 }
 
 #button-holder
 {
     /* position: absolute; */
     display: flex;
-    flex: 1 1 0;
     margin-inline: 10%;
     gap: 2%;
+    align-items: center;
+    height: 30%;
 }
