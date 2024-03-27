@@ -19,18 +19,22 @@
             <svg id="popup-background">
                 <rect width="100%" height="100%" x="0" y="0" fill="#00000080"></rect>
             </svg>
-            <div id="popup">
-                <svg viewBox = "0 0 200 200">
-                    <text x="50%" y="12%" text-anchor="middle" class="coiny-bold" style="font-size: 30px; font-size: 3.2vmin">Solved!</text>
-                    <text id="popup-timer" x="50%" y="22%" text-anchor="middle" class="coiny" style="font-size: 20px; font-size: 2.1vmin"></text>
+            <div id="popup" style="flex: 1 1 0">
+                <svg viewBox = "0 0 100 200" style="flex: 1 1 0">
+                    <text x="50%" y="30%" text-anchor="middle" class="coiny-bold" style="font-size: 70px; font-size: 7.4vmin">Solved!</text>
+                    <text id="popup-timer" x="50%" y="72%" text-anchor="middle" class="coiny" style="font-size: 40px; font-size: 4.2vmin">Time:</text>
                 </svg>
                 
-                <button class="level-button coiny">Level List</button>
+                <div id="button-holder">
+                    <button class="editor-button coiny">Edit</button>
+                    <button class="level-button coiny" style="height:30%">Levels</button>
+                    <button class="next-button coiny">Next</button>
+                </div>
             </div>
         </div>
         <div class="level-header">
             <h2 class="coiny-bold level-title" style="font-size: 70px; font-size: 8vmin;">Level X</h2>
-            <p id="timer" class="coiny-bold"></p>
+            <p id="timer" class="coiny-bold">Time: </p>
 
         </div>
         <div class="game-interface">

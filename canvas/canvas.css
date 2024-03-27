@@ -103,7 +103,9 @@ body
 {
     flex: 1 5 auto;
     height: 16.7%;
-    align-self: center;
+    aspect-ratio: 5;
+    align-self: end;
+    text-align: center;
 }
 
 #inventory-canvas
@@ -238,6 +240,7 @@ body
     flex: 1 1 0;
     position: fixed;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     height: 60%;
     aspect-ratio: 1;
@@ -247,16 +250,35 @@ body
     border-radius: 10%;
 }
 
-.level-button, .help-button
+.level-button,
+.help-button,
+.next-button,
+.editor-button
 {
     font-size: 30px;
     font-size: 3.2vmin;
-    position: absolute;
     background-color: #cd7009;
     top: 60%;
     flex: 1 1 0;
     border: 2px solid #37383A;
-    border-radius: 15px;
+    border-radius: 10%;
     width: 30%;
     height: 15%;
+}
+
+.next-button,
+.editor-button
+{
+    height: 30%;
+    width: auto;
+    aspect-ratio: 1;
+}
+
+#button-holder
+{
+    /* position: absolute; */
+    display: flex;
+    flex: 1 1 0;
+    margin-inline: 10%;
+    gap: 2%;
 }

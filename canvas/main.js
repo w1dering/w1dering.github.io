@@ -198,6 +198,10 @@ document.querySelectorAll(".level-button").forEach((button) => {
     button.addEventListener("click", chooseLevel);
 })
 
+document.querySelector(".next-button").addEventListener("click", () => {
+    loadLevel(parseInt(levelID) + 1);
+})
+
 const forPopupDiv = document.getElementById("for-popup");
 const forPopupDivOriginalStyle = forPopupDiv.style;
 const popupSVG = document.getElementById("popup");
@@ -586,7 +590,8 @@ document.addEventListener('contextmenu', event => event.preventDefault()); // di
 
 loadLevel(levelID);
 
-function loadLevel(levelID) {
+function loadLevel(loadedLevelID) {
+    levelID = JSON.parse(JSON.stringify(loadedLevelID)); // deep copy so it takes the value rather than the reference
     history = [];
     historyIndex = -1;
     squareHoveringOver = [-1, -1];
@@ -597,21 +602,21 @@ function loadLevel(levelID) {
     resetIntervals();
 
     currentGrid = []; // replace grid with history clone
-    for (let r = 0; r < levelInformation[levelID][0].length; r++) {
+    for (let r = 0; r < levelInformation[loadedLevelID][0].length; r++) {
         let tempRow = [];
-        for (let c = 0; c < levelInformation[levelID][0].length; c++) {
-            tempRow.push(levelInformation[levelID][0][r][c]);
+        for (let c = 0; c < levelInformation[loadedLevelID][0].length; c++) {
+            tempRow.push(levelInformation[loadedLevelID][0][r][c]);
         }
         currentGrid.push(tempRow);
     }
 
     currentInventory = []; 
-    for (let i = 0; i < levelInformation[levelID][2].length; i++) {
-        currentInventory.push(levelInformation[levelID][2][i].clone());
+    for (let i = 0; i < levelInformation[loadedLevelID][2].length; i++) {
+        currentInventory.push(levelInformation[loadedLevelID][2][i].clone());
     }
 
 
-    goalArray = levelInformation[levelID][1].slice();
+    goalArray = levelInformation[loadedLevelID][1].slice();
     
     drawGrid();
 
@@ -633,7 +638,7 @@ function loadLevel(levelID) {
     }, 1000);
     intervalsArray.push(timerID);
 
-    levelTitleHeader.innerText = `Level ${(parseInt(levelID) + 1)}`;
+    levelTitleHeader.innerText = `Level ${(parseInt(loadedLevelID) + 1)}`;
 }
 
 function drawGrid()
