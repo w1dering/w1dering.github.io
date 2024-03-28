@@ -642,6 +642,122 @@ let levelInformation = [
                 ]
             )
         ]
+    ],
+    [
+        [
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+            [3, 3, 3, 3],
+        ],
+        [
+            [1, 4, 4, 4],
+            [1, 1, 4, 1],
+            [2, 1, 1, 4],
+            [2, 1, 2, 3]   
+        ],
+        [
+            new Shape(L, 1),
+            new Shape(J, 1),
+            new Shape(SMALL_L, 2),
+            new Shape(SMALL_J, 4),
+            new Shape(I, 4),
+            new Shape(SMALL_I, 2),
+            new Shape(DIAGONAL, 1),
+        ]
+    ],
+    [
+        [
+            [3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3]
+        ],
+        [
+            [1, 1, 1, 1, 1, 1],
+            [1, 2, 2, 2, 2, 1],
+            [1, 2, 5, 5, 2, 1],
+            [1, 2, 5, 5, 2, 1],
+            [1, 2, 2, 2, 2, 1],
+            [1, 1, 1, 1, 1, 1],
+        ],
+        [
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 2, 0, 0, 0],
+                    [0, 0, 0, 5, 0],
+                    [0, 0, 5, 5, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 1, 1, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 2, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),  
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 2, 0],
+                    [0, 0, 2, 2, 0],
+                    [0, 2, 2, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 5, 0, 1, 0],
+                    [0, 0, 0, 1, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 2, 0, 0],
+                    [0, 1, 2, 0, 0],
+                    [0, 1, 2, 0, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 5, 0],
+                    [0, 1, 0, 5, 0],
+                    [0, 1, 0, 5, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+            new Shape(
+                [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 5, 0],
+                    [0, 1, 0, 5, 0],
+                    [0, 1, 0, 5, 0],
+                    [0, 0, 0, 0, 0]
+                ], 0),
+
+        ]
     ]
 ];
 let dailyLevelInformation;
@@ -649,12 +765,13 @@ let levelID = 0;
 let currentGrid = [];
 let currentInventory;
 let goalArray;
-const inventorySubSquareCount = 5; // number of grid squares per piece slot
+const inventorySubSquareCount = 7; // number of grid squares per piece slot
+const pieceSubSquareCount = inventorySubSquareCount - 2; // the size of the pieces's internal array
 let inventorySquareCount = 3;
 let inventorySquareSize = inventoryCanvasBackground.width / inventorySquareCount; // size of square each piece is allocated
 let inventorySubSquareSize = inventorySquareSize / inventorySubSquareCount; // size of each grid square within each square above
 let piecesSVGArray;
-let gridPolygonArray;
+let gridRectArray;
 let draggedShape;
 let gridSquareCount;
 let squareHoveringOver; // the square a dragged piece is being hovered over
@@ -746,26 +863,27 @@ function drawGrid()
     const gridSquareCount = currentGrid.length; // number of squares in the grid and goal 
     gridSVG.setAttributeNS(null, "viewBox", `0 0 ${10 * gridSquareCount} ${10 * gridSquareCount}`);
     
-    gridPolygonArray = [];
+    gridRectArray = [];
     for (let r = 0; r < gridSquareCount; r++)
     {
         let tempRow = [];
         for (let c = 0; c < gridSquareCount; c++)
         {
-            let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            tempPolygon.setAttribute("fill", getColourFromID(currentGrid[r][c]));
-            tempPolygon.setAttribute("stroke", darkGray);
-            tempPolygon.setAttribute("stroke-width", 0.5);
-            tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
-                + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
-
-            tempPolygon.x = c;
-            tempPolygon.y = r;
+            let tempRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            tempRect.setAttribute("fill", getColourFromID(currentGrid[r][c]));
+            tempRect.setAttribute("stroke", darkGray);
+            tempRect.setAttribute("stroke-width", 0.5);
+            tempRect.setAttribute("x", c * 10);
+            tempRect.setAttribute("y", r * 10);
+            tempRect.setAttribute("width", 10);
+            tempRect.setAttribute("height", 10);
+            tempRect.c = c;
+            tempRect.r = r;
              
-            gridSVG.appendChild(tempPolygon);
-            tempRow.push(tempPolygon);
+            gridSVG.appendChild(tempRect);
+            tempRow.push(tempRect);
         }
-        gridPolygonArray.push(tempRow);
+        gridRectArray.push(tempRow);
     }
 }
 
@@ -818,23 +936,28 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
         piecesSVGArray[baseR][baseC].setAttributeNS(null, "viewBox", `0 0 ${10 * inventorySubSquareCount} ${10 * inventorySubSquareCount}`); // sets viewBox to be 50x50
         //piecesSVGArray[baseR][baseC].setAttribute("pointer-events", "none"); // see below: pointerEvents = "auto"
         piecesSVGArray[baseR][baseC].setAttribute("tabindex", "0"); // allows the pieces to be focused
-        for (let r = 0; r < inventorySubSquareCount; r++)
+        for (let r = 0; r < currentInventory[i].arr.length; r++)
         {
-            for (let c = 0; c < inventorySubSquareCount; c++)
+            for (let c = 0; c < currentInventory[i].arr[r].length; c++)
             {
                 if (currentInventory[i].available && currentInventory[i].arr[r][c])
                 {
                     // draw SVG shape in shape of a square
                     let colour = currentInventory[i].arr[r][c]; // read the colour of the tile
-                    let tempPolygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); // creates a polygon (ensures tag is self-closing)
-                    tempPolygon.setAttribute("fill", getColourFromID(colour));
-                    tempPolygon.setAttribute("stroke", darkGray);
-                    tempPolygon.setAttribute("stroke-width", 0.5);
-                    tempPolygon.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
+                    let tempRect = document.createElementNS("http://www.w3.org/2000/svg", "rect"); // creates a rect (ensures tag is self-closing)
+                    tempRect.setAttribute("fill", getColourFromID(colour));
+                    tempRect.setAttribute("stroke", darkGray);
+                    tempRect.setAttribute("stroke-width", 0.5);
+                    tempRect.setAttribute("x", (c + 1) * 10);
+                    tempRect.setAttribute("y", (r + 1) * 10);
+                    tempRect.setAttribute("width", 10);
+                    tempRect.setAttribute("height", 10);
+
+                    tempRect.setAttribute("points", (c * 10) + "," + (r * 10) + " " + (c * 10) + "," + ((r + 1) * 10) + " "
                         + ((c + 1) * 10) + "," + ((r + 1) * 10) + " " + ((c + 1) * 10) + "," + (r * 10));
-                    // tempPolygon.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only polygons can be selected
+                    // tempRect.style.pointerEvents = "auto"; // in tandem with setting SVG pointers-event to none above, only rect can be selected
                     // thus, the effective hitbox is only the actual shape, not the 5x5 canvas around it
-                    piecesSVGArray[baseR][baseC].appendChild(tempPolygon);
+                    piecesSVGArray[baseR][baseC].appendChild(tempRect);
                 }
             }
         }
@@ -844,12 +967,12 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
     // draw subsquare grid lines
     inventoryCTX.strokeStyle = lightGray + "80"; // adds 50% opacity
     inventoryCTX.lineWidth = scale * 8;
-    for (let r = 1; r < inventorySubSquareCount * inventorySquareCount; r++) {
-        drawLine(inventoryCTX, 0, r * inventorySubSquareSize, inventoryCanvasBackground.width, r * inventorySubSquareSize);
+    for (let r = 0; r < inventorySubSquareCount * inventorySquareCount; r++) {
+        drawLine(inventoryCTX, 0, (r) * inventorySubSquareSize, inventoryCanvasBackground.width, (r) * inventorySubSquareSize);
     }
 
-    for (let c = 1; c < inventorySubSquareCount * inventorySquareCount; c++) {
-        drawLine(inventoryCTX, c * inventorySubSquareSize, 0, c * inventorySubSquareSize, inventoryCanvasBackground.height);
+    for (let c = 0; c < inventorySubSquareCount * inventorySquareCount; c++) {
+        drawLine(inventoryCTX, (c) * inventorySubSquareSize, 0, (c) * inventorySubSquareSize, inventoryCanvasBackground.height);
     }
 
     // draw square grid lines
@@ -956,9 +1079,9 @@ function onPiecePickUp(ev) {
     draggedSVG.style.width = 0.8 * ((gridHolderDiv.offsetWidth / currentGrid.length) * inventorySubSquareCount) + "px"; // ensures size of one square in the dragImage is the same as one square in the grid
     draggedSVG.style.height = 0.8 * ((gridHolderDiv.offsetHeight / currentGrid.length) * inventorySubSquareCount) + "px";
     
-    // for (let polygon of draggedSVG.children)
+    // for (let rect of draggedSVG.children)
     // {
-    //     polygon.style.display = "inline-block"; // makes squares no longer scale to parent
+    //     rect.style.display = "inline-block"; // makes squares no longer scale to parent
     // }
 
 
@@ -1005,7 +1128,7 @@ function onPieceMoving(ev)
         for (let r = 0; r < gridSquareCount; r++) // iterates through the grid, clearing outlines from every square
         {
             for (let c = 0; c < gridSquareCount; c++) {
-                gridPolygonArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
+                gridRectArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
             }
         }
 
@@ -1028,15 +1151,15 @@ function onPieceMoving(ev)
         }
 
         if (!(squareHoveringOver[0] == -1 && squareHoveringOver[1] == -1)) {
-            let targetSquare = gridPolygonArray[squareHoveringOver[0]][squareHoveringOver[1]];
+            let targetSquare = gridRectArray[squareHoveringOver[0]][squareHoveringOver[1]];
 
             canDropOff = true; // iterates through the 5x5 array of the piece to see if the piece can be dropped without it going out of bounds
             outer:
-            for (let r = 0; r < inventorySubSquareCount; r++) {
-                for (let c = 0; c < inventorySubSquareCount; c++) {
+            for (let r = 0; r < pieceSubSquareCount; r++) {
+                for (let c = 0; c < pieceSubSquareCount; c++) {
                     if (draggedShape.arr[r][c]) {
-                        if (targetSquare.x + (c - 2) < 0 || targetSquare.x + (c - 2) >= currentGrid.length ||
-                            targetSquare.y + (r - 2) < 0 || targetSquare.y + (r - 2) >= currentGrid.length) // subtract 2 because the center of the 5x5 piece is (2, 2)
+                        if (targetSquare.c + (c - 2) < 0 || targetSquare.c + (c - 2) >= currentGrid.length ||
+                            targetSquare.r + (r - 2) < 0 || targetSquare.r + (r - 2) >= currentGrid.length) // subtract 2 because the center of the 5x5 piece is (2, 2)
                         {
                             canDropOff = false;
                             break outer;
@@ -1046,11 +1169,11 @@ function onPieceMoving(ev)
             }
 
             if (canDropOff) {
-                
-                for (let r = 0; r < inventorySubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
-                    for (let c = 0; c < inventorySubSquareCount; c++) {
+                for (let r = 0; r < pieceSubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
+                    for (let c = 0; c < pieceSubSquareCount; c++) {
                         if (draggedShape.arr[r][c]) {
-                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.arr[r][c]) + "80");
+                            console.log(targetSquare.r + (r - 2));
+                            gridRectArray[targetSquare.r + (r - 2)][targetSquare.c + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.arr[r][c]) + "80");
                         }
                     }
                 }
@@ -1071,11 +1194,11 @@ function onPieceDropOff(ev)
 
         if (canDropOff && !(squareHoveringOver[0] == -1 && squareHoveringOver[1] == -1)) // drops piece into grid
         {
-            let targetSquare = gridPolygonArray[squareHoveringOver[0]][squareHoveringOver[1]];
+            let targetSquare = gridRectArray[squareHoveringOver[0]][squareHoveringOver[1]];
             for (let r = 0; r < gridSquareCount; r++) // iterates through the grid, clearing outlines from every square
             {
                 for (let c = 0; c < gridSquareCount; c++) {
-                    gridPolygonArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
+                    gridRectArray[r][c].setAttribute("fill", getColourFromID(currentGrid[r][c]));
                 }
             }
 
@@ -1109,11 +1232,11 @@ function onPieceDropOff(ev)
             let arr = draggedShape.arr;
             draggedShape = null;
             
-            for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid to outline colour
-                for (let c = 0; c < inventorySubSquareCount; c++) {
+            for (let r = 0; r < pieceSubSquareCount; r++) { // changes colour of grid to outline colour
+                for (let c = 0; c < pieceSubSquareCount; c++) {
                     if (arr[r][c]) {
-                        gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]) + "80");
-                        currentGrid[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)] = arr[r][c];
+                        gridRectArray[targetSquare.r + (r - 2)][targetSquare.c + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]) + "80");
+                        currentGrid[targetSquare.r + (r - 2)][targetSquare.c + (c - 2)] = arr[r][c];
                     }
                 }
             }
@@ -1121,19 +1244,19 @@ function onPieceDropOff(ev)
             let start = Date.now();
             let id = setInterval(() => {
                 let interval = Date.now() - start;
-                for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
-                    for (let c = 0; c < inventorySubSquareCount; c++) {
+                for (let r = 0; r < pieceSubSquareCount; r++) { // changes colour of grid
+                    for (let c = 0; c < pieceSubSquareCount; c++) {
                         if (arr[r][c]) {
-                            gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]) + (Math.floor(interval / 500 * 127) + 128).toString(16));
+                            gridRectArray[targetSquare.r + (r - 2)][targetSquare.c + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]) + (Math.floor(interval / 500 * 127) + 128).toString(16));
                         } // progressively fades the colour towards true colour
                     }
                 }
                 if (interval > 500) 
                 {
-                    for (let r = 0; r < inventorySubSquareCount; r++) { // changes colour of grid
-                        for (let c = 0; c < inventorySubSquareCount; c++) {
+                    for (let r = 0; r < pieceSubSquareCount; r++) { // changes colour of grid
+                        for (let c = 0; c < pieceSubSquareCount; c++) {
                             if (arr[r][c]) {
-                                gridPolygonArray[targetSquare.y + (r - 2)][targetSquare.x + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]));
+                                gridRectArray[targetSquare.r + (r - 2)][targetSquare.c + (c - 2)].setAttribute("fill", getColourFromID(arr[r][c]));
                             }
                         }
                     } // makes sure that the final colour is the true colour of the grid, rather than some mathematical imperfection
