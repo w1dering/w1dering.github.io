@@ -193,10 +193,12 @@ const goalCTX = goalCanvas.getContext("2d");
 goalCanvas.width = canvasResolution * scale; 
 goalCanvas.height = canvasResolution * scale;
 
-document.addEventListener("keydown", undoOrRedo);
-document.querySelectorAll(".level-button").forEach((button) => {
-    button.addEventListener("click", chooseLevel);
-});
+document.addEventListener("keydown", undoRedoRestart);
+document.querySelector(".level-button").addEventListener("click", chooseLevel);
+
+document.querySelector(".popup-level-button").addEventListener("click", chooseLevel);
+
+document.querySelector(".restart-button").addEventListener("click", confirmRestartLevel);
 
 document.querySelector(".next-button").addEventListener("click", () => {
     loadLevel(parseInt(levelID) + 1);
@@ -206,7 +208,8 @@ document.querySelector(".help-button").addEventListener("click", () => {
     alert("Drag pieces from the inventory onto the board to transform it into the goal.\n" +
     "Placing a piece will fully override the colours present on the board.\n" + 
     "While dragging pieces, use q, a, or the left arrow to rotate counterclockwise, and e, d, or the right arrow to rotate clockwise.\n" +
-    "Use Ctrl + Z to undo and Ctrl + Y to redo.\n");
+    "Use Ctrl + Z to undo and Ctrl + Y to redo.\n" +
+    "Use Shift + R to quickly restart the level and Ctrl + Enter to quickly choose a level.");
 });
 
 const forPopupDiv = document.getElementById("for-popup");
@@ -1337,7 +1340,7 @@ function onKeyDown(ev)
     }
 }
 
-function undoOrRedo(ev)
+function undoRedoRestart(ev)
 {
     if (canUndoOrRedo)
     {
@@ -1359,6 +1362,15 @@ function undoOrRedo(ev)
             }
             ev.preventDefault();
         }
+    }
+
+    if (ev.key == "R") // shift R restarts the level
+    {
+        confirmRestartLevel();
+    }
+    else if (ev.ctrlKey && ev.key == "Enter")
+    {  
+        chooseLevel();
     }
 }
 
@@ -1424,3 +1436,9 @@ function chooseLevel(ev)
     }
 }
 
+function confirmRestartLevel()
+{
+    if (confirm("Restart the level?")) {
+        loadLevel(levelID);
+    }
+}
