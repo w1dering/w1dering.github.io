@@ -193,7 +193,7 @@ const goalCTX = goalCanvas.getContext("2d");
 goalCanvas.width = canvasResolution * scale; 
 goalCanvas.height = canvasResolution * scale;
 
-document.addEventListener("keydown", undoRedoRestart);
+document.addEventListener("keydown", shortcutHandler);
 document.querySelector(".level-button").addEventListener("click", chooseLevel);
 
 document.querySelector(".popup-level-button").addEventListener("click", chooseLevel);
@@ -209,7 +209,7 @@ document.querySelector(".help-button").addEventListener("click", () => {
     "Placing a piece will fully override the colours present on the board.\n" + 
     "While dragging pieces, use q, a, or the left arrow to rotate counterclockwise, and e, d, or the right arrow to rotate clockwise.\n" +
     "Use Ctrl + Z to undo and Ctrl + Y to redo.\n" +
-    "Use Shift + R to quickly restart the level and Ctrl + Enter to quickly choose a level.");
+    "Use Shift + R to quickly restart the level, Ctrl + Enter to quickly choose a level, and Ctrl + Shift + Alt + Arrow Key to move between levels");
 });
 
 const forPopupDiv = document.getElementById("for-popup");
@@ -249,520 +249,7 @@ const popupSVG = document.getElementById("popup");
         * array format: 2d bool array, true means tile is there, false means tile isn't
     * [1]: colour by number
  */
-let levelInformation = [
-    [
-        [ // starting grid
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 3, 3]
-        ],
-        [ // goal
-            [3, 5, 5, 5],
-            [5, 1, 4, 5],
-            [5, 4, 1, 5],
-            [5, 5, 5, 3]
-        ],
-        [ // inventory
-            new Shape(O, 1),
-            new Shape(SMALL_L, 4),
-            new Shape(SMALL_L, 4),
-            new Shape(SMALL_J, 5),
-            new Shape(SMALL_J, 5),
-            new Shape(SMALL_J, 5),
-            new Shape(SMALL_J, 5),
-        ]
-    ],
-    [
-        [
-            [3, 3, 3, 3],
-            [3, 4, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 4, 3]
-        ],
-        [
-            [4, 4, 4, 4],
-            [4, 4, 4, 4],
-            [4, 4, 4, 4],
-            [4, 4, 4, 4]
-        ],
-        [
-            new Shape(L, 4),
-            new Shape(SMALL_J, 4),
-            new Shape (J, 4),
-            new Shape (SMALL_O, 4),
-            new Shape (SMALL_I, 4)
-        ]
-    ],
-    [
-        [
-            [1, 6, 1, 6, 1],
-            [6, 1, 6, 1, 6],
-            [1, 6, 1, 6, 1],
-            [6, 1, 6, 1, 6],
-            [1, 6, 1, 6, 1]
-        ],
-        [
-            [1, 6, 6, 6, 1],
-            [1, 1, 1, 1, 1],
-            [1, 6, 6, 6, 1],
-            [1, 1, 1, 1, 1],
-            [1, 6, 6, 6, 1]
-        ],
-        [
-            new Shape(BIG_O, 6),
-            new Shape(BIG_O, 6),
-            new Shape(SMALL_O, 1),
-            new Shape(SMALL_O, 1),
-            new Shape(SMALL_O, 1),
-            new Shape(J, 1),
-            new Shape(BIG_J, 1),
-        ]
-    ],
-    [
-        [
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 3, 3]
-        ],
-        [
-            [3, 4, 4, 4],
-            [5, 5, 4, 1],
-            [1, 4, 5, 5],
-            [4, 4, 4, 3]
-        ],
-        [
-            new Shape(SMALL_T, 4),
-            new Shape(SMALL_T, 4),
-            new Shape(O, 1),
-            new Shape(O, 1),
-            new Shape(I, 5),
-            new Shape(I, 5)
-        ]
-    ],
-    [
-        [
-            [3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3]
-        ],
-        [
-            [3, 1, 1, 3, 3],
-            [4, 1, 5, 5, 5],
-            [4, 4, 5, 4, 4],
-            [5, 5, 5, 1, 4],
-            [3, 3, 1, 1, 3]
-        ],
-        [
-            new Shape(SMALL_T, 4),
-            new Shape(SMALL_T, 4),
-            new Shape(O, 1),
-            new Shape(O, 1),
-            new Shape(L, 5),
-            new Shape(I, 5)
-        ]
-    ],
-    [
-        [
-            [3, 3, 3, 3, 3, 4],
-            [3, 4, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3, 3],
-            [3, 3, 3, 4, 3, 3],
-            [3, 4, 3, 3, 3, 3],
-            [3, 3, 3, 3, 4, 3],
-        ],
-        [
-            [6, 6, 6, 6, 6, 4],
-            [6, 4, 6, 6, 6, 6],
-            [6, 6, 6, 6, 6, 6],
-            [6, 6, 6, 4, 6, 6],
-            [6, 4, 6, 6, 6, 6],
-            [6, 6, 6, 6, 4, 6]
-        ],
-        [
-            new Shape(O, 6),
-            new Shape(O, 6),
-            new Shape(BIG_O, 6),
-            new Shape(SMALL_L, 6),
-            new Shape(BIG_J, 6),
-            new Shape(SMALL_L, 6),
-            new Shape(J, 6)
-        ]
-    ],
-    [
-        [
-            [2, 2, 3, 2, 3, 2],
-            [2, 3, 2, 3, 2, 3],
-            [3, 2, 3, 2, 3, 2],
-            [2, 3, 2, 3, 2, 3],
-            [3, 2, 3, 2, 3, 2],
-            [2, 3, 2, 3, 2, 2]
-        ],
-        [
-            [1, 1, 2, 2, 3, 3],
-            [1, 1, 2, 2, 3, 3],
-            [1, 2, 3, 3, 1, 2],
-            [1, 2, 3, 3, 1, 2],
-            [3, 3, 1, 1, 2, 2],
-            [3, 3, 1, 1, 2, 2],
-        ],
-        [
-            new Shape(SMALL_J, 1),
-            new Shape(SMALL_J, 1),
-            new Shape(J, 1),
-            new Shape(J, 1),
-            new Shape(J, 2),
-            new Shape(J, 2),
-            new Shape(TWO_BY_THREE, 2),
-            new Shape(BIG_O, 3),
-            new Shape(BIG_O, 3),
-            
-        ]
-    ],
-    [
-        [
-            [1, 1, 2, 2],
-            [1, 1, 2, 2],
-            [1, 1, 2, 2],
-            [1, 1, 2, 2]
-        ],
-        [
-            [1, 1, 1, 1],
-            [1, 2, 2, 2],
-            [2, 2, 2, 1],
-            [1, 1, 1, 1]
-        ],
-        [
-            new Shape(O, 1),
-            new Shape(BIG_L, 1),
-            new Shape(BIG_L, 2),
-            new Shape(SMALL_I, 2)
-        ]
-    ],
-    [
-        [
-            [1, 1, 5, 1, 1],
-            [1, 1, 1, 1, 5],
-            [5, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1],
-            [1, 1, 5, 1, 1]
-        ],
-        [
-            [2, 2, 5, 2, 2],
-            [2, 2, 2, 2, 5],
-            [5, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2],
-            [2, 2, 5, 2, 2],
-        ],
-        [
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 2, 0, 2, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 0, 0, 0],
-                ], 0),
-            new Shape(SMALL_T, 2),
-            new Shape(DIAGONAL, 2),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 2, 0, 2, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 2, 0, 2, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(L, 2),
-            new Shape(SMALL_O, 2),
-            new Shape(SMALL_DIAGONAL, 2)
-        ]
-    ],
-    [
-        [
-            [6, 6, 6, 6, 6],
-            [6, 6, 6, 6, 6],
-            [6, 6, 6, 6, 6],
-            [6, 6, 6, 6, 6],
-            [6, 6, 6, 6, 6],
-
-        ],
-        [
-            [3, 2, 2, 3, 2],
-            [2, 1, 2, 1, 1],
-            [1, 1, 2, 3, 2],
-            [2, 1, 2, 1, 1],
-            [3, 2, 3, 2, 1]
-        ],
-        [
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 2, 3, 2, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 3, 2, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 1, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 1, 1, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 2, 0, 0],
-                    [0, 2, 3, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 1, 1, 0],
-                    [0, 2, 2, 2, 0],
-                    [0, 3, 3, 3, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 3, 0, 0],
-                    [0, 0, 0, 0, 0],
-                ], 0),
-        ]
-    ],
-    [
-        [
-            [1, 1, 1, 1],
-            [1, 1, 1, 1],
-            [1, 1, 1, 1],
-            [1, 1, 1, 1]
-        ],
-        [
-            [4, 3, 6, 2],
-            [4, 3, 4, 4],
-            [3, 3, 3, 2],
-            [5, 3, 5, 5]
-        ],
-        [
-            new Shape(BIG_I, 2),
-            new Shape(BIG_I, 3),
-            new Shape(BIG_I, 3),
-            new Shape(BIG_I, 4),
-            new Shape(BIG_I, 4),
-            new Shape(BIG_I, 5),
-            new Shape(BIG_I, 6)
-        ]
-    ],
-    [
-        [
-            [1, 1, 1, 1, 1],
-            [1, 2, 2, 2, 1],
-            [1, 2, 3, 2, 1],
-            [1, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1]
-        ],
-        [
-            [1, 2, 1, 2, 1],
-            [2, 1, 3, 1, 2],
-            [2, 3, 2, 3, 2],
-            [2, 1, 3, 1, 2],
-            [1, 2, 1, 2, 1],
-        ],
-        [
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 0, 1, 0],
-                    [0, 1, 0, 1, 0],
-                    [0, 1, 1, 1, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 2, 2, 0],
-                    [0, 2, 2, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 2, 2, 0],
-                    [0, 2, 2, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 2, 1, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 2, 2, 0, 0],
-                    [0, 0, 2, 2, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 3, 2, 0, 0],
-                    [0, 2, 3, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 3, 0, 0],
-                    [0, 3, 3, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                ]
-            )
-        ]
-    ],
-    [
-        [
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-            [3, 3, 3, 3],
-        ],
-        [
-            [1, 4, 4, 4],
-            [1, 1, 4, 1],
-            [2, 1, 1, 4],
-            [2, 1, 2, 3]   
-        ],
-        [
-            new Shape(L, 1),
-            new Shape(J, 1),
-            new Shape(SMALL_L, 2),
-            new Shape(SMALL_J, 4),
-            new Shape(I, 4),
-            new Shape(SMALL_I, 2),
-            new Shape(DIAGONAL, 1),
-        ]
-    ],
-    [
-        [
-            [3, 3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3, 3],
-            [3, 3, 3, 3, 3, 3]
-        ],
-        [
-            [1, 1, 1, 1, 1, 1],
-            [1, 2, 2, 2, 2, 1],
-            [1, 2, 5, 5, 2, 1],
-            [1, 2, 5, 5, 2, 1],
-            [1, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 1],
-        ],
-        [
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 2, 0, 0, 0],
-                    [0, 0, 0, 5, 0],
-                    [0, 0, 5, 5, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 1, 1, 0],
-                    [0, 1, 1, 1, 0],
-                    [0, 1, 1, 1, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 1, 1, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 2, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),  
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 2, 0],
-                    [0, 0, 2, 2, 0],
-                    [0, 2, 2, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0],
-                    [0, 5, 0, 1, 0],
-                    [0, 0, 0, 1, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 2, 0, 0],
-                    [0, 1, 2, 0, 0],
-                    [0, 1, 2, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 0, 5, 0],
-                    [0, 1, 0, 5, 0],
-                    [0, 1, 0, 5, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-            new Shape(
-                [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 0, 5, 0],
-                    [0, 1, 0, 5, 0],
-                    [0, 1, 0, 5, 0],
-                    [0, 0, 0, 0, 0]
-                ], 0),
-
-        ]
-    ]
-];
+let levelInformation = new LevelInformation();
 let dailyLevelInformation;
 let levelID = 0;
 let currentGrid = [];
@@ -793,6 +280,10 @@ loadLevel(levelID);
 document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
 
 function loadLevel(loadedLevelID) {
+    if (loadedLevelID < 0 || loadedLevelID > levelInformation.length - 1)
+    {
+        return;
+    }
     canUndoOrRedo = true;
     forPopupDiv.style.animation = "fadeOut 0.5s"; // fades the popup in
     popupSVG.style.transform = "translate(0%, -20%)"; // shifts popup downwards
@@ -1175,7 +666,6 @@ function onPieceMoving(ev)
                 for (let r = 0; r < pieceSubSquareCount; r++) { // gives a faded outline of the piece being dropped into valid square
                     for (let c = 0; c < pieceSubSquareCount; c++) {
                         if (draggedShape.arr[r][c]) {
-                            console.log(targetSquare.r + (r - 2));
                             gridRectArray[targetSquare.r + (r - 2)][targetSquare.c + (c - 2)].setAttribute("fill", getColourFromID(draggedShape.arr[r][c]) + "80");
                         }
                     }
@@ -1340,7 +830,7 @@ function onKeyDown(ev)
     }
 }
 
-function undoRedoRestart(ev)
+function shortcutHandler(ev)
 {
     if (canUndoOrRedo)
     {
@@ -1371,6 +861,17 @@ function undoRedoRestart(ev)
     else if (ev.ctrlKey && ev.key == "Enter")
     {  
         chooseLevel();
+    }
+    else if (ev.ctrlKey && ev.shiftKey && ev.altKey)
+    {
+        if (ev.key == "ArrowRight")
+        {
+            loadLevel(levelID + 1);
+        }
+        else if (ev.key == "ArrowLeft")
+        {
+            loadLevel(levelID - 1);
+        }
     }
 }
 
@@ -1439,6 +940,8 @@ function chooseLevel(ev)
 function confirmRestartLevel()
 {
     if (confirm("Restart the level?")) {
-        loadLevel(levelID);
+        historyIndex = 0;
+        history = [history[0]];
+        loadHistory();
     }
 }
