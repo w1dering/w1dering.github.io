@@ -406,7 +406,6 @@ function drawInventory() // inventorySquareCount is the number of pieces per row
             tempSVG.classList.add("inventory-grid-square");
             tempSVG.addEventListener("mousedown", onPiecePickUp);
             tempSVG.addEventListener("mousemove", onPieceMoving);
-            tempSVG.addEventListener("mouseup", onPieceDropOff);
             tempSVG.addEventListener("keydown", onKeyDown);
 
             tempSVG.beingDragged = false;
@@ -564,6 +563,10 @@ function onPiecePickUp(ev) {
     let draggedSVG = ev.currentTarget;
     draggedSVG.initialStyle = draggedSVG.style;
 
+    setTimeout(() => {
+        draggedSVG.addEventListener("mouseup", onPieceDropOff);
+    }, 200);
+
     previousMouseCoordinates = [ev.clientX, ev.clientY];
 
     // draggedSVG.style.opacity = "100"; // code for repicking up pieces
@@ -680,6 +683,7 @@ function onPieceDropOff(ev)
     if (ev.currentTarget.beingDragged)
     {
         let draggedSVG = ev.currentTarget;
+        draggedSVG.removeEventListener("mouseup", onPieceDropOff);
         // check if piece can be placed into grid
         ev.currentTarget.beingDragged = false;
         draggedSVG.style.zIndex = 0;
@@ -697,7 +701,6 @@ function onPieceDropOff(ev)
 
             draggedSVG.removeEventListener("mousedown", onPiecePickUp);
             draggedSVG.removeEventListener("mousemove", onPieceMoving);
-            draggedSVG.removeEventListener("mouseup", onPieceDropOff);
             
             
             //draggedSVG.style.visibility = "hidden"; // makes it non-interactable
