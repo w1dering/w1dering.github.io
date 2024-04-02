@@ -205,7 +205,7 @@ document.querySelector(".next-button").addEventListener("click", () => {
 });
 
 document.querySelector(".help-button").addEventListener("click", () => {
-    alert("Drag pieces from the inventory onto the board to transform it into the goal.\n" +
+    alert("Drag or click pieces from the inventory onto the board to transform it into the goal.\n" +
     "Placing a piece will fully override the colours present on the board.\n" + 
     "While dragging pieces, use q, a, or the left arrow to rotate counterclockwise, and e, d, or the right arrow to rotate clockwise.\n" +
     "Use Ctrl + Z to undo and Ctrl + Y to redo.\n" +
@@ -563,7 +563,9 @@ function onPiecePickUp(ev) {
     let draggedSVG = ev.currentTarget;
     draggedSVG.initialStyle = draggedSVG.style;
 
+    draggedSVG.removeEventListener("mousedown", onPiecePickUp);
     setTimeout(() => {
+        console.log("mouseup added");
         draggedSVG.addEventListener("mouseup", onPieceDropOff);
     }, 200);
 
@@ -684,6 +686,9 @@ function onPieceDropOff(ev)
     {
         let draggedSVG = ev.currentTarget;
         draggedSVG.removeEventListener("mouseup", onPieceDropOff);
+        draggedSVG.addEventListener("mousedown", onPiecePickUp);
+
+        console.log("mouseup removed");
         // check if piece can be placed into grid
         ev.currentTarget.beingDragged = false;
         draggedSVG.style.zIndex = 0;
