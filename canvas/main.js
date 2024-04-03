@@ -563,10 +563,10 @@ function onPiecePickUp(ev) {
     let draggedSVG = ev.currentTarget;
     draggedSVG.initialStyle = draggedSVG.style;
 
-    draggedSVG.removeEventListener("mousedown", onPiecePickUp);
+    draggedSVG.removeEventListener("mousedown", onPiecePickUp); // prevents another piece from being picked up
     setTimeout(() => {
         console.log("mouseup added");
-        draggedSVG.addEventListener("mouseup", onPieceDropOff);
+        draggedSVG.addEventListener("mouseup", onPieceDropOff); // pieces can be click-moved if the click is less than 0.2s
     }, 200);
 
     previousMouseCoordinates = [ev.clientX, ev.clientY];
@@ -685,7 +685,7 @@ function onPieceDropOff(ev)
     if (ev.currentTarget.beingDragged)
     {
         let draggedSVG = ev.currentTarget;
-        draggedSVG.removeEventListener("mouseup", onPieceDropOff);
+        draggedSVG.removeEventListener("mouseup", onPieceDropOff); // disables dropping pieces off while re-enabling picking them up
         draggedSVG.addEventListener("mousedown", onPiecePickUp);
 
         console.log("mouseup removed");
