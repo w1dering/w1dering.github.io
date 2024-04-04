@@ -253,8 +253,7 @@ body
 }
 
 .popup-level-button,
-.next-button,
-.editor-button
+.next-button
 {
     font-size: 30px;
     font-size: 1.6vw;
@@ -267,8 +266,7 @@ body
     height: 15%;
 }
 
-.next-button,
-.editor-button
+.next-button
 {
     height: 80%;
     width: auto;

@@ -277,6 +277,7 @@ let canUndoOrRedo = true;
 
 
 loadLevel(levelID);
+loadHistory(historyIndex);
 document.addEventListener("contextmenu", event => event.preventDefault()); // disables right click menu from appearing on right click
 window.onresize = (event) => {
     console.log("window size changed");
