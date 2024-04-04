@@ -78,30 +78,29 @@ body
 {
     flex: 1 5 0;
     font-size: 35px;
-    font-size: 4vmin;
+    font-size: 2vw;
     width: 100%;
 }
 
 .game-interface
 {
     display: flex;
-    align-items: center;
+    align-items: end;
     width: 60%;
-    height: 45%;
+    margin-left: 2.5%;
 }
 
 .inventory
 {
     margin-right: -0.4%;
+    flex: 3 4 0;
     height: 100%;
-    width: 30%;
     display: flex;
     flex-direction: column;
 }
 
 .inventory-title
 {
-    flex: 1 5 auto;
     height: 16.7%;
     aspect-ratio: 5;
     align-self: end;
@@ -111,7 +110,6 @@ body
 #inventory-canvas
 {
     position: relative;
-    flex: 5 1 auto;
     height: 83.3%;
     aspect-ratio: 1;
     align-self: end;
@@ -168,14 +166,17 @@ body
 
 #grid-holder
 {
-    height: 100%;
-    aspect-ratio: 1;
+    flex: 4 3 auto;
+    min-width: 0;
+    padding-bottom: 0%;
     border: 0.6vmin solid #37383A;
+    display: flex;
 }
 
 .goal
 {
-    height: 100%;
+    flex: 3 4 0;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     margin-left: 5%;
@@ -192,19 +193,20 @@ body
 
 .goal-title
 {
-    height: 16.6%;
+    height: 15%;
     align-self: center;
     flex: 1 4 auto;
 }
 
 .goal-buttons
 {
-    height: 16.6%;
+    height: 15%;
     flex: 1 4 auto;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2%;
+    margin-top: 3.3%;
 }
 
 
@@ -255,7 +257,7 @@ body
 .editor-button
 {
     font-size: 30px;
-    font-size: 3.2vmin;
+    font-size: 1.6vw;
     background-color: #cd7009;
     top: 60%;
     flex: 1 1 0;
@@ -286,11 +288,11 @@ body
 {
     height: 70%;
     position: static;
-    border-radius: 10px;
+    border-radius: 0.7vw;
     background-color: #cd7009;
     top: 60%;
     border: 2px solid #37383A;
-    font-size: 120%;
+    font-size: 1.5vw;
 }
 
 .level-button, .restart-button

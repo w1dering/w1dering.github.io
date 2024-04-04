@@ -288,6 +288,7 @@ window.onresize = (event) => {
     {
         windowSizeAlert.style.visibility = "hidden";
     }
+    loadHistory(historyIndex); // refreshes canvas size to prevent a glitch in which loading a level with a smaller window size then resizing would cause the grid to not resize
 }
 
 function loadLevel(loadedLevelID) {
