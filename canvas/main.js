@@ -215,8 +215,8 @@ document.querySelector(".help-button").addEventListener("click", () => {
 const forPopupDiv = document.getElementById("for-popup");
 const forPopupDivOriginalStyle = forPopupDiv.style;
 const popupSVG = document.getElementById("popup");
-// const popupButton = document.getElementById("level-list");
 
+const windowSizeAlert = document.getElementById("window-size-alert");
 
 /* array containing all levels' information
  * the format is:
@@ -277,7 +277,18 @@ let canUndoOrRedo = true;
 
 
 loadLevel(levelID);
-document.addEventListener('contextmenu', event => event.preventDefault()); // disables right click menu from appearing on right click
+document.addEventListener("contextmenu", event => event.preventDefault()); // disables right click menu from appearing on right click
+window.onresize = (event) => {
+    console.log("window size changed");
+    if (window.innerWidth < window.innerHeight)
+    {
+        windowSizeAlert.style.visibility = "visible";
+    }
+    else
+    {
+        windowSizeAlert.style.visibility = "hidden";
+    }
+}
 
 function loadLevel(loadedLevelID) {
     if (loadedLevelID < 0 || loadedLevelID > levelInformation.length - 1)
