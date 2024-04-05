@@ -171,6 +171,7 @@ body
     padding-bottom: 0%;
     border: 0.6vmin solid #37383A;
     display: flex;
+    aspect-ratio: 1;
 }
 
 .goal
