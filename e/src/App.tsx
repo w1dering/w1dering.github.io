@@ -1,18 +1,60 @@
 import { useEffect, useState } from "react";
 
-interface APIType {
-    userId: number;
-    id: number;
-    title: string;
-    body: string;
+interface APICall {
+	id: string;
+	object: string;
+	created: number;
+	model: string;
+	choices: {
+		index: number;
+		message: {
+			role: string;
+			content: string;
+			refusal: string | null;
+		};
+		finish_reason: string;
+	}[];
+	usage: {
+		prompt_tokens: number;
+		completion_tokens: number;
+		total_tokens: number;
+		prompt_tokens_details: {
+			text_tokens: number;
+			audio_tokens: number;
+			image_tokens: number;
+			cached_tokens: number;
+		};
+	};
+	system_fingerprint: string;
 }
 
 const App = () => {
-	const [data, setData] = useState<APIType[]>([]);
+	const [data, setData] = useState<APICall>();
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		fetch("https://jsonplaceholder.typicode.com/posts")
+		const apiKey = import.meta.env.VITE_REACT_APP_X_AI_API_KEY;
+
+		const requestData = {
+			messages: [
+				{
+					role: "user",
+					content: "what is 1+1",
+				},
+			],
+			model: "grok-beta",
+			stream: false,
+			temperature: 0,
+		};
+
+		fetch("https://api.x.ai/v1/chat/completions", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${apiKey}`,
+			},
+			body: JSON.stringify(requestData),
+		})
 			.then((response) => {
 				setLoading(true);
 				return response.json();
@@ -26,25 +68,12 @@ const App = () => {
 			});
 	}, []);
 
+	if (loading) return <div>Loading...</div>;
+
 	return (
 		<>
 			<h1>API Test:</h1>
-			{loading && "Data is loading"}
-			{!loading && (
-				<>
-					<h1>API Data:</h1>
-					<ul>
-						{data.map((item) => {
-							return (<ul>
-                                <h1>User ID: {item.userId}</h1>
-                                <h2>id: {item.id}</h2>
-                                <h3>{item.title}</h3>
-                                <h4>{item.body}</h4>
-                            </ul>)
-						})}
-					</ul>
-				</>
-			)}
+			<ul>{data && data["choices"].map((choice) => choice["message"]["content"])}</ul>
 		</>
 	);
 };
