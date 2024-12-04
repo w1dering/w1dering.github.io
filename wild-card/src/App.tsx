@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FlashcardStudying from "./components/FlashcardStudying/FlashcardStudying";
 import Toolbar from "./components/Toolbar/Toolbar";
+import "./App.css"
 
 interface APICall {
 	id: string;
@@ -86,10 +87,10 @@ const App = () => {
 	];
 
 	return (
-		<>
+		<div id="app">
 			<Toolbar/>
 			<FlashcardStudying flashcardData={flashcardData} />
-		</>
+		</div>
 	);
 };
 

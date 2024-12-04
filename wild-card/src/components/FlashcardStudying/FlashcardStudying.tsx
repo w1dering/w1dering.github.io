@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Flashcard from "../Flashcard/Flashcard";
+import "./FlashcardStudying.css"
 
 interface FlashcardData {
 	question: string;
@@ -86,7 +87,9 @@ const FlashcardStudying = ({ flashcardData }: Props) => {
 		};
 	}, []);
 
-	return <>{currentFlashcard}</>;
+	return (<div id="flashcard-studying">
+		{currentFlashcard}
+	</div>);
 };
 
 export default FlashcardStudying;

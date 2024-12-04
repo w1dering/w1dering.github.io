@@ -1,10 +1,12 @@
+import "./FlashcardSegment.css"
+
 interface Props {
     content: string;
 }
 
 const FlashcardSegment = (props: Props) => {
     const CONTENT = props.content;
-    return <h1>{props.content}</h1>
+    return <div className="flashcard-segment">{props.content}</div>
 }
 
 export default FlashcardSegment;
