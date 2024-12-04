@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import FlashcardStudying from "./components/FlashcardStudying/FlashcardStudying";
+import Toolbar from "./components/Toolbar/Toolbar";
 
 interface APICall {
 	id: string;
@@ -47,33 +49,46 @@ const App = () => {
 			temperature: 0,
 		};
 
-		fetch("https://api.x.ai/v1/chat/completions", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${apiKey}`,
-			},
-			body: JSON.stringify(requestData),
-		})
-			.then((response) => {
-				setLoading(true);
-				return response.json();
-			})
-			.then((json) => {
-				setData(json);
-				setLoading(false);
-			})
-			.catch((error) => {
-				console.error("error: ", error);
-			});
+		// fetch("https://api.x.ai/v1/chat/completions", {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Content-Type": "application/json",
+		// 		Authorization: `Bearer ${apiKey}`,
+		// 	},
+		// 	body: JSON.stringify(requestData),
+		// })
+		// 	.then((response) => {
+		// 		setLoading(true);
+		// 		return response.json();
+		// 	})
+		// 	.then((json) => {
+		// 		setData(json);
+		// 		setLoading(false);
+		// 	})
+		// 	.catch((error) => {
+		// 		console.error("error: ", error);
+		// 	});
 	}, []);
 
-	if (loading) return <div>Loading...</div>;
+	const flashcardData = [
+		{
+			question: "a",
+			answer: "b",
+		},
+		{
+			question: "c",
+			answer: "d",
+		},
+		{
+			question: "e",
+			answer: "f",
+		},
+	];
 
 	return (
 		<>
-			<h1>API Test:</h1>
-			<ul>{data && data["choices"].map((choice) => choice["message"]["content"])}</ul>
+			<Toolbar/>
+			<FlashcardStudying flashcardData={flashcardData} />
 		</>
 	);
 };
