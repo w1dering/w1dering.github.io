@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth"
+
 import FlashcardStudying from "./components/FlashcardStudying/FlashcardStudying";
 import Toolbar from "./components/Toolbar/Toolbar";
 import "./App.css"
+import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 interface APICall {
 	id: string;
@@ -30,6 +35,28 @@ interface APICall {
 	};
 	system_fingerprint: string;
 }
+
+const firebaseConfig = {
+	apiKey: "AIzaSyAIvh4twxFK568O3gER-tCZO6Vds8aRKoY",
+	authDomain: "wild-card-137a7.firebaseapp.com",
+	projectId: "wild-card-137a7",
+	storageBucket: "wild-card-137a7.firebasestorage.app",
+	messagingSenderId: "157515566093",
+	appId: "1:157515566093:web:36415df01d8ab297b95944",
+	measurementId: "G-8N0LM32Y15",
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+/*
+const auth = getAuth(app)
+onAuthStateChanged(auth, user => {
+	console.log("You are logged in as", user);
+})
+ 
+signInWithPopup(auth, new GoogleAuthProvider())
+*/
 
 const App = () => {
 	const [data, setData] = useState<APICall>();
