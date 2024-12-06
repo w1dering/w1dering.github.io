@@ -1,0 +1,4 @@
+#sidebar {
+    grid-area: sidebar;
+}
+/* maybe make this absolute position so content can be fully centered*/

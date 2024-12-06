@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth"
-
-import FlashcardStudying from "./components/FlashcardStudying/FlashcardStudying";
-import Toolbar from "./components/Toolbar/Toolbar";
-import "./App.css"
+import { getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth/web-extension";
+
+import {
+	BrowserRouter as Router,
+	Route,
+	Routes,
+	Link,
+	useParams,
+} from "react-router-dom";
+
+import DeckSession from "./components/DeskSession/DeckSession";
+import Header from "./components/Header/Header";
+import DeckList from "./components/DeckList/DeckList";
+import Sidebar from "./components/Sidebar/Sidebar";
+
+import "./App.css";
+import Flashcard from "./components/Flashcard/Flashcard";
 
 interface APICall {
 	id: string;
@@ -58,8 +70,53 @@ onAuthStateChanged(auth, user => {
 signInWithPopup(auth, new GoogleAuthProvider())
 */
 
+const tempData = [
+	{
+		name: "test1",
+		flashcardData: [
+			{
+				question: "a1",
+				answer: "b1",
+				rating: 0,
+			},
+			{
+				question: "c1",
+				answer: "d1",
+				rating: 1,
+			},
+			{
+				question: "e1",
+				answer: "f1",
+				rating: 2,
+			},
+		],
+	},
+	{
+		name: "test2",
+		flashcardData: [
+			{
+				question: "a2",
+				answer: "b2",
+				rating: 3,
+			},
+			{
+				question: "c2",
+				answer: "d2",
+				rating: 4,
+			},
+			{
+				question: "e2",
+				answer: "f2",
+				rating: 5,
+			},
+		],
+	},
+];
+
+const data = tempData;
+
 const App = () => {
-	const [data, setData] = useState<APICall>();
+	const [APIdata, setAPIData] = useState<APICall>(); // rename once you include api calls
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -96,28 +153,40 @@ const App = () => {
 		// 	.catch((error) => {
 		// 		console.error("error: ", error);
 		// 	});
-	}, []);
-
-	const flashcardData = [
-		{
-			question: "a",
-			answer: "b",
-		},
-		{
-			question: "c",
-			answer: "d",
-		},
-		{
-			question: "e",
-			answer: "f",
-		},
-	];
+	}, );
 
 	return (
-		<div id="app">
-			<Toolbar/>
-			<FlashcardStudying flashcardData={flashcardData} />
-		</div>
+		<Router>
+			<div id="app">
+				<Header />
+				<Sidebar />
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<DeckList
+								entries={data.map((entry) => ({
+									name: entry.name,
+									cards: entry.flashcardData.length,
+								}))}
+							/>
+						}
+					/>
+
+					<Route
+						path="/deck/:deckId"
+						element={
+							<DeckSession
+								getDeckData={(id: string) => {
+									let index = data.find((entry) => entry.name === id);
+									return index ? index.flashcardData : null;
+								}}
+							/>
+						}
+					/>
+				</Routes>
+			</div>
+		</Router>
 	);
 };
 

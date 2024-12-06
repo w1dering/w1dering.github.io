@@ -1,17 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Flashcard from "../Flashcard/Flashcard";
-import "./FlashcardStudying.css"
+import "./DeckSession.css"
 
 interface FlashcardData {
-	question: string;
-	answer: string;
+	question: string,
+	answer: string,
+	rating: number;
 }
 
 interface Props {
-	flashcardData: FlashcardData[];
+	getDeckData: (id: string) => FlashcardData[] | null;
 }
 
-const FlashcardStudying = ({ flashcardData }: Props) => {
+const DeckSession = ({ getDeckData }: Props) => {
+
+	const { deckId } = useParams();
+	const deckData: FlashcardData[] | null = getDeckData(deckId!);
+
+	if (!deckData) {
+		return <h1>Deck is null</h1>;
+	} else if (deckData.length === 0) {
+		return <h1>Deck is empty</h1>;
+	}
+
 	const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
@@ -23,8 +35,8 @@ const FlashcardStudying = ({ flashcardData }: Props) => {
 
 	const currentFlashcard = (
 		<Flashcard
-			question={flashcardData[currentFlashcardIndex].question}
-			answer={flashcardData[currentFlashcardIndex].answer}
+			question={deckData[currentFlashcardIndex].question}
+			answer={deckData[currentFlashcardIndex].answer}
 			showAnswer={currentFlashcardShowAnswer}
 		/>
 	);
@@ -51,7 +63,7 @@ const FlashcardStudying = ({ flashcardData }: Props) => {
 				case "ArrowRight":
 					if (!isRightPressed) {
 						setCurrentFlashcardIndex((prevFlashcardIndex) =>
-							Math.min(prevFlashcardIndex + 1, flashcardData.length - 1)
+							Math.min(prevFlashcardIndex + 1, deckData.length - 1)
 						);
 						setCurrentFlashcardShowAnswer(false);
 					}
@@ -87,9 +99,9 @@ const FlashcardStudying = ({ flashcardData }: Props) => {
 		};
 	}, []);
 
-	return (<div id="flashcard-studying">
-		{currentFlashcard}
-	</div>);
+	return (<div id="deck-session">
+		{currentFlashcard} 
+	</div>); // add ratings and back button
 };
 
-export default FlashcardStudying;
+export default DeckSession;
