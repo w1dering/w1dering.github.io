@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Flashcard from "../Flashcard/Flashcard";
-import "./DeckSession.css"
+
+import "./DeckSession.css";
 
 interface FlashcardData {
-	question: string,
-	answer: string,
+	question: string;
+	answer: string;
 	rating: number;
 }
 
@@ -14,9 +15,8 @@ interface Props {
 }
 
 const DeckSession = ({ getDeckData }: Props) => {
-
 	const { deckId } = useParams();
-	let deckData: FlashcardData[] | null = getDeckData(deckId!);
+	const [deckData, setDeckData] = useState(getDeckData(deckId!));
 
 	if (!deckData) {
 		return <h1>Deck is null</h1>;
@@ -24,30 +24,34 @@ const DeckSession = ({ getDeckData }: Props) => {
 		return <h1>Deck is empty</h1>;
 	}
 
-	
-
 	const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
-	const [currentFlashcardRating, setCurrentFlashcardRating] = useState(
-		deckData[currentFlashcardIndex].rating
-	);
-
 	const updateFlashcardRating = (rating: number) => {
-		deckData[currentFlashcardIndex].rating = rating;
-		setCurrentFlashcardRating(rating);
+		const updatedDeck = [...deckData];
+		updatedDeck[currentFlashcardIndex] = {
+			...updatedDeck[currentFlashcardIndex],
+			rating,
+		};
+
+		setDeckData(updatedDeck);
 	};
 
 	// tracks key presses to prevent them from being pressed every frame
 	let isSpacePressed = false;
 	let isLeftPressed = false;
 	let isRightPressed = false;
+	let is1Pressed = false;
+	let is2Pressed = false;
+	let is3Pressed = false;
+	let is4Pressed = false;
+	let is5Pressed = false;
 
 	const currentFlashcard = (
 		<Flashcard
 			question={deckData[currentFlashcardIndex].question}
 			answer={deckData[currentFlashcardIndex].answer}
-			rating={currentFlashcardRating}
+			rating={deckData[currentFlashcardIndex].rating}
 			showAnswer={currentFlashcardShowAnswer}
 			updateCardRating={updateFlashcardRating}
 		/>
@@ -82,7 +86,36 @@ const DeckSession = ({ getDeckData }: Props) => {
 					}
 					isRightPressed = true;
 					break;
-				default:
+				case "Digit1":
+					if (!is1Pressed) {
+						updateFlashcardRating(1);
+					}
+					is1Pressed = true;
+					break;
+				case "Digit2":
+					if (!is2Pressed) {
+						updateFlashcardRating(2);
+					}
+					is2Pressed = true;
+					break;
+				case "Digit3":
+					if (!is3Pressed) {
+						updateFlashcardRating(3);
+					}
+					is3Pressed = true;
+					break;
+				case "Digit4":
+					if (!is4Pressed) {
+						updateFlashcardRating(4);
+					}
+					is4Pressed = true;
+					break;
+				case "Digit5":
+					if (!is5Pressed) {
+						updateFlashcardRating(5);
+						console.log("5 pressed");
+					}
+					is5Pressed = true;
 					break;
 			}
 		};
@@ -98,7 +131,20 @@ const DeckSession = ({ getDeckData }: Props) => {
 				case "ArrowRight":
 					isRightPressed = false;
 					break;
-				default:
+				case "Digit1":
+					is1Pressed = false;
+					break;
+				case "Digit2":
+					is2Pressed = false;
+					break;
+				case "Digit3":
+					is3Pressed = false;
+					break;
+				case "Digit4":
+					is4Pressed = false;
+					break;
+				case "Digit5":
+					is5Pressed = false;
 					break;
 			}
 		};
@@ -110,13 +156,9 @@ const DeckSession = ({ getDeckData }: Props) => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
 		};
-	}, []);
+	}, [currentFlashcardIndex]);
 
-	return (
-		<div id="deck-session">
-			{currentFlashcard}
-		</div>
-	); // add ratings and back button
+	return <div id="deck-session">{currentFlashcard}</div>; // add ratings and back button
 };
 
 export default DeckSession;

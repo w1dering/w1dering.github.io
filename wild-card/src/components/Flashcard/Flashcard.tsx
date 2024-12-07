@@ -32,7 +32,7 @@ const Flashcard = ({ question, answer, rating, showAnswer, updateCardRating }: P
 				colour={getColourFromRating(rating)}
 			/>
 			<FlashcardAnswer
-				content={answer}
+				content={showAnswer ? answer : ""}
 				visible={showAnswer}
 				colour={getColourFromRating(rating)}
 			/>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState } from "react";
 
 interface Props {
 	text: string;
@@ -10,9 +10,7 @@ interface Props {
 const Button = ({ text, fn, id = "", className = "" }: Props) => {
 	return (
 		<button
-			onClick={() =>
-				fn({ text, id, className })
-			}
+			onClick={() => fn({ text, id, className })}
 			id={id}
 			className={className}
 		>
