@@ -1,0 +1,26 @@
+.flashcard-rate-bar-button {
+    flex: 1;
+    height: 100%;
+    border-radius: 15%;
+    border: 2px solid gray;
+}
+
+#flashcard-rate-bar-button-1 {
+    background-color: #6E6BA2;
+}
+
+#flashcard-rate-bar-button-2 {
+    background-color: #8B93BF;
+}
+
+#flashcard-rate-bar-button-3 {
+    background-color: #8096ED;
+}
+
+#flashcard-rate-bar-button-4 {
+    background-color: #8DC2ED;
+}
+
+#flashcard-rate-bar-button-5 {
+    background-color: #7AD2BF;
+}

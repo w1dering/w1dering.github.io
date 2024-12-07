@@ -1,4 +1,9 @@
 #sidebar {
     grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    border: 2px solid black;
 }
 /* maybe make this absolute position so content can be fully centered*/

@@ -1,0 +1,13 @@
+.flashcard-answer {
+    transition: transform 0.4s ease-out;
+    z-index: 1;
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    background-color: #F5F9FA;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}

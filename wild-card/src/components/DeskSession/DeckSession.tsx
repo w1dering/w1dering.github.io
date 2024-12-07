@@ -16,7 +16,7 @@ interface Props {
 const DeckSession = ({ getDeckData }: Props) => {
 
 	const { deckId } = useParams();
-	const deckData: FlashcardData[] | null = getDeckData(deckId!);
+	let deckData: FlashcardData[] | null = getDeckData(deckId!);
 
 	if (!deckData) {
 		return <h1>Deck is null</h1>;
@@ -24,9 +24,19 @@ const DeckSession = ({ getDeckData }: Props) => {
 		return <h1>Deck is empty</h1>;
 	}
 
+	
+
 	const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
+	const [currentFlashcardRating, setCurrentFlashcardRating] = useState(
+		deckData[currentFlashcardIndex].rating
+	);
+
+	const updateFlashcardRating = (rating: number) => {
+		deckData[currentFlashcardIndex].rating = rating;
+		setCurrentFlashcardRating(rating);
+	};
 
 	// tracks key presses to prevent them from being pressed every frame
 	let isSpacePressed = false;
@@ -37,9 +47,12 @@ const DeckSession = ({ getDeckData }: Props) => {
 		<Flashcard
 			question={deckData[currentFlashcardIndex].question}
 			answer={deckData[currentFlashcardIndex].answer}
+			rating={currentFlashcardRating}
 			showAnswer={currentFlashcardShowAnswer}
+			updateCardRating={updateFlashcardRating}
 		/>
 	);
+
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			switch (event.code) {
@@ -99,9 +112,11 @@ const DeckSession = ({ getDeckData }: Props) => {
 		};
 	}, []);
 
-	return (<div id="deck-session">
-		{currentFlashcard} 
-	</div>); // add ratings and back button
+	return (
+		<div id="deck-session">
+			{currentFlashcard}
+		</div>
+	); // add ratings and back button
 };
 
 export default DeckSession;
