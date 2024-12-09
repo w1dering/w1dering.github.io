@@ -2,7 +2,7 @@ import { useState } from "react";
 
 interface Props {
 	text: string;
-	fn: (props: Omit<Props, "fn">) => void;
+	fn: (e: React.MouseEvent<HTMLButtonElement>) => void;
 	id?: string;
 	className?: string;
 }
@@ -10,7 +10,7 @@ interface Props {
 const Button = ({ text, fn, id = "", className = "" }: Props) => {
 	return (
 		<button
-			onClick={() => fn({ text, id, className })}
+			onClick={(e) => fn(e)}
 			id={id}
 			className={className}
 		>
