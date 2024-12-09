@@ -1,6 +1,5 @@
 import "./FlashcardRateBar.css";
 import Button from "../Button/Button";
-import FlashcardRateBarButton from "../FlashcardRateBarButton/FlashcardRateBarButton"
 
 interface Props {
     buttonsEnabled: boolean;
@@ -12,35 +11,40 @@ const FlashcardRateBar = ({buttonsEnabled, updateCardRating} : Props) => {
 			<div id="flashcard-rate-bar">
 				<p>Rate your knowledge of this card</p>
 				<div id="flashcard-rate-bar-button-container">
-					<FlashcardRateBarButton
-						value={1}
-						fn={updateCardRating}
+					<Button
+						content={"1"}
+						fn={() => updateCardRating(1)}
 						className="flashcard-rate-bar-button"
 						id="flashcard-rate-bar-button-1"
+						enabled={buttonsEnabled}
 					/>
-					<FlashcardRateBarButton
-						value={2}
-						fn={updateCardRating}
+					<Button
+						content={"2"}
+						fn={() => updateCardRating(2)}
 						className="flashcard-rate-bar-button"
 						id="flashcard-rate-bar-button-2"
+						enabled={buttonsEnabled}
 					/>
-					<FlashcardRateBarButton
-						value={3}
-						fn={updateCardRating}
+					<Button
+						content={"3"}
+						fn={() => updateCardRating(3)}
 						className="flashcard-rate-bar-button"
 						id="flashcard-rate-bar-button-3"
+						enabled={buttonsEnabled}
 					/>
-					<FlashcardRateBarButton
-						value={4}
-						fn={updateCardRating}
+					<Button
+						content={"4"}
+						fn={() => updateCardRating(4)}
 						className="flashcard-rate-bar-button"
 						id="flashcard-rate-bar-button-4"
+						enabled={buttonsEnabled}
 					/>
-					<FlashcardRateBarButton
-						value={5}
-						fn={updateCardRating}
+					<Button
+						content={"5"}
+						fn={() => updateCardRating(5)}
 						className="flashcard-rate-bar-button"
 						id="flashcard-rate-bar-button-5"
+						enabled={buttonsEnabled}
 					/>
 				</div>
 			</div>

@@ -28,7 +28,7 @@ const DeckListEntry = ({ name, cards }: Props) => {
 				{cards !== 1 && "s"}
 			</div>
 			<Button
-				text="edit"
+				content="edit"
 				fn={(e: React.MouseEvent<HTMLButtonElement>) => {
 					e.stopPropagation();
 					editDeck();

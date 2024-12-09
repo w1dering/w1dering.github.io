@@ -9,7 +9,7 @@ const Sidebar = () => {
 	return (
 		<div id="sidebar">
 			<p>im a sidebar!</p>
-			<Button text="home" fn={() => navigate("/")} />
+			<Button content="home" fn={() => navigate("/")} />
 		</div>
 	);
 };
