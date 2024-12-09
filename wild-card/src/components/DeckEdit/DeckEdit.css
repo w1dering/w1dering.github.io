@@ -1,0 +1,7 @@
+#deck-edit {
+    grid-area: content;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}

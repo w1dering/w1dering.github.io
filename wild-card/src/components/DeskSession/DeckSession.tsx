@@ -4,37 +4,41 @@ import Flashcard from "../Flashcard/Flashcard";
 
 import "./DeckSession.css";
 
-interface FlashcardData {
-	question: string;
-	answer: string;
-	rating: number;
+interface DeckData {
+	name: string;
+	deck: {
+		question: string;
+		answer: string;
+		rating: number;
+	}[];
 }
 
 interface Props {
-	getDeckData: (id: string) => FlashcardData[] | null;
+	getDeckData: (id: string) => DeckData | undefined;
+	updateData: (
+		deckName: string,
+		cardIndex: number,
+		toUpdate: string,
+		newContent: string | number
+	) => void;
 }
 
-const DeckSession = ({ getDeckData }: Props) => {
+const DeckSession = ({ getDeckData, updateData }: Props) => {
 	const { deckId } = useParams();
-	const [deckData, setDeckData] = useState(getDeckData(deckId!));
-
+	const deckData = getDeckData(deckId!);
+	
 	if (!deckData) {
 		return <h1>Deck is null</h1>;
-	} else if (deckData.length === 0) {
+	} else if (deckData.deck.length === 0) {
 		return <h1>Deck is empty</h1>;
 	}
+	const deck = deckData?.deck;
 
 	const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
 	const updateFlashcardRating = (rating: number) => {
-		const updatedDeck = [...deckData];
-		updatedDeck[currentFlashcardIndex] = {
-			...updatedDeck[currentFlashcardIndex],
-			rating,
-		};
-
-		setDeckData(updatedDeck);
+		updateData(deckData.name, currentFlashcardIndex, "rating", rating);
 	};
 
 	// tracks key presses to prevent them from being pressed every frame
@@ -49,9 +53,9 @@ const DeckSession = ({ getDeckData }: Props) => {
 
 	const currentFlashcard = (
 		<Flashcard
-			question={deckData[currentFlashcardIndex].question}
-			answer={deckData[currentFlashcardIndex].answer}
-			rating={deckData[currentFlashcardIndex].rating}
+			question={deck[currentFlashcardIndex].question}
+			answer={deck[currentFlashcardIndex].answer}
+			rating={deck[currentFlashcardIndex].rating}
 			showAnswer={currentFlashcardShowAnswer}
 			updateCardRating={updateFlashcardRating}
 		/>
@@ -80,7 +84,7 @@ const DeckSession = ({ getDeckData }: Props) => {
 				case "ArrowRight":
 					if (!isRightPressed) {
 						setCurrentFlashcardIndex((prevFlashcardIndex) =>
-							Math.min(prevFlashcardIndex + 1, deckData.length - 1)
+							Math.min(prevFlashcardIndex + 1, deck.length - 1)
 						);
 						setCurrentFlashcardShowAnswer(false);
 					}

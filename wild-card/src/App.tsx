@@ -16,6 +16,7 @@ import DeckSession from "./components/DeskSession/DeckSession";
 import Header from "./components/Header/Header";
 import DeckList from "./components/DeckList/DeckList";
 import Sidebar from "./components/Sidebar/Sidebar";
+import DeckEdit from "./components/DeckEdit/DeckEdit";
 
 import "./App.css";
 import Flashcard from "./components/Flashcard/Flashcard";
@@ -70,12 +71,10 @@ onAuthStateChanged(auth, user => {
 signInWithPopup(auth, new GoogleAuthProvider())
 */
 
-
-
 const tempData = [
 	{
 		name: "test1",
-		flashcardData: [
+		deck: [
 			{
 				question: "a1",
 				answer: "b1",
@@ -95,7 +94,7 @@ const tempData = [
 	},
 	{
 		name: "test2",
-		flashcardData: [
+		deck: [
 			{
 				question: "a2",
 				answer: "b2",
@@ -115,11 +114,58 @@ const tempData = [
 	},
 ];
 
-const data = tempData;
-
 const App = () => {
 	const [APIdata, setAPIData] = useState<APICall>(); // rename once you include api calls
 	const [loading, setLoading] = useState(true);
+	const [data, setData] = useState(tempData);
+
+	const updateData = (
+		deckName: string,
+		cardIndex: number,
+		toUpdate: string,	
+		newContent: string | number
+	) => {
+		setData((prevData) => {
+			const currentIndex = prevData.findIndex(
+				(entry) => entry.name === deckName
+			);
+			if (currentIndex === -1) {
+				console.log("deck update failed; deck name not found");
+				return prevData;
+			}
+			
+			const updatedDeck = [...prevData[currentIndex].deck];
+			switch (toUpdate) {
+				case "question":
+					updatedDeck[cardIndex] = {
+						...updatedDeck[cardIndex],
+						question: newContent as string,
+					};
+					break;
+				case "answer":
+					updatedDeck[cardIndex] = {
+						...updatedDeck[cardIndex],
+						answer: newContent as string,
+					};
+					break;
+				case "rating":
+					updatedDeck[cardIndex] = {
+						...updatedDeck[cardIndex],
+						rating: newContent as number,
+					};
+					break;
+				default:
+					console.log("update card passed invalid toUpdate");
+					break;
+			}
+			const updatedData = [...prevData];
+			updatedData[currentIndex] = {
+				...prevData[currentIndex],
+				deck: updatedDeck,
+			};
+			return updatedData;
+		});
+	};
 
 	useEffect(() => {
 		const apiKey = import.meta.env.VITE_REACT_APP_X_AI_API_KEY;
@@ -155,7 +201,7 @@ const App = () => {
 		// 	.catch((error) => {
 		// 		console.error("error: ", error);
 		// 	});
-	}, );
+	});
 
 	return (
 		<Router>
@@ -169,7 +215,7 @@ const App = () => {
 							<DeckList
 								entries={data.map((entry) => ({
 									name: entry.name,
-									cards: entry.flashcardData.length,
+									cards: entry.deck.length,
 								}))}
 							/>
 						}
@@ -179,10 +225,21 @@ const App = () => {
 						path="/deck/:deckId"
 						element={
 							<DeckSession
-								getDeckData={(id: string) => {
-									let index = data.find((entry) => entry.name === id);
-									return index ? index.flashcardData : null;
-								}}
+								getDeckData={(id: string) =>
+									data.find((entry) => entry.name === id)
+								}
+								updateData={updateData}
+							/>
+						}
+					/>
+					<Route
+						path="/edit/:deckId"
+						element={
+							<DeckEdit
+								getDeckData={(id: string) =>
+									data.find((entry) => entry.name === id)
+								}
+								updateData={updateData}
 							/>
 						}
 					/>
