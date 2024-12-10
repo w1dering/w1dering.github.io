@@ -11,5 +11,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: gray;
+    background-color:#F5F9FA;;
+    height: 80%;
+}
+
+#deck-edit-add-flashcard-button {
+    width: 40%;
+    height: 10%;
 }

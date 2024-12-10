@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import DeckEditEntry from "../DeckEditEntry/DeckEditEntry";
 
 import "./DeckEdit.css";
+import Button from "../Button/Button";
 
 interface DeckData {
 	name: string;
@@ -21,22 +22,26 @@ interface Props {
 		toUpdate: string,
 		newContent: string | number
 	) => void;
+	addFlashcard: (deckName: string) => void;
+	deleteFlashcard: (deckName: string, cardIndex: number) => void;
 }
 
-const DeckEdit = ({ getDeckData, updateData }: Props) => {
+const DeckEdit = ({ getDeckData, updateData, addFlashcard, deleteFlashcard}: Props) => {
 	const { deckId } = useParams();
 	const deckData = getDeckData(deckId!);
 
 	if (!deckData) {
 		return <h1>Deck is null</h1>;
-	} else if (deckData.deck.length === 0) {
-		return <h1>Deck is empty</h1>;
 	}
 
 	const deck = deckData.deck;
 
 	const updateCard = (cardIndex: number, toUpdate: string, newContent: string | number) => {
 		updateData(deckData.name, cardIndex, toUpdate, newContent);
+	}
+
+	const deleteCard = (cardIndex: number) => {
+		deleteFlashcard(deckData.name, cardIndex);
 	}
 
 	return (
@@ -49,8 +54,10 @@ const DeckEdit = ({ getDeckData, updateData }: Props) => {
 					rating={flashcard.rating}
 					updateCard={updateCard}
 					index={index}
+					deleteCard={deleteCard}
 				/>
 			))}
+			<Button content="Add Flashcard" fn={() => addFlashcard(deckData.name)} id="deck-edit-add-flashcard-button"/>
 		</div>
 	);
 };

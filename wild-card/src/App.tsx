@@ -19,7 +19,6 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import DeckEdit from "./components/DeckEdit/DeckEdit";
 
 import "./App.css";
-import Flashcard from "./components/Flashcard/Flashcard";
 
 interface APICall {
 	id: string;
@@ -122,10 +121,11 @@ const App = () => {
 	const updateData = (
 		deckName: string,
 		cardIndex: number,
-		toUpdate: string,	
+		toUpdate: string,
 		newContent: string | number
 	) => {
 		setData((prevData) => {
+			// consider switching to use param, but if you want to obfuscate the url, it won't work; this is valid
 			const currentIndex = prevData.findIndex(
 				(entry) => entry.name === deckName
 			);
@@ -133,7 +133,7 @@ const App = () => {
 				console.log("deck update failed; deck name not found");
 				return prevData;
 			}
-			
+
 			const updatedDeck = [...prevData[currentIndex].deck];
 			switch (toUpdate) {
 				case "question":
@@ -166,6 +166,52 @@ const App = () => {
 			return updatedData;
 		});
 	};
+
+	const addFlashcard = (deckName: string) => {
+		setData((prevData) => {
+			const currentIndex = prevData.findIndex(
+				(entry) => entry.name === deckName
+			);
+			if (currentIndex === -1) {
+				console.log("deck update failed; deck name not found");
+				return prevData;
+			}
+			const updatedDeck = [...prevData[currentIndex].deck];
+
+			updatedDeck.push({
+				question: "",
+				answer: "",
+				rating: 0,
+			});
+			const updatedData = [...prevData];
+			updatedData[currentIndex] = {
+				...prevData[currentIndex],
+				deck: updatedDeck,
+			}
+			return updatedData;
+		});
+	};
+
+	const deleteFlashcard = (deckName: string, cardIndex: number) => {
+		setData((prevData) => {
+			const currentIndex = prevData.findIndex(
+				(entry) => entry.name === deckName
+			);
+			if (currentIndex === -1) {
+				console.log("deck update failed; deck name not found");
+				return prevData;
+			}
+			const updatedDeck = [...prevData[currentIndex].deck];
+
+			updatedDeck.splice(cardIndex, 1);
+			const updatedData = [...prevData];
+			updatedData[currentIndex] = {
+				...prevData[currentIndex],
+				deck: updatedDeck,
+			};
+			return updatedData;
+		});
+	}
 
 	useEffect(() => {
 		const apiKey = import.meta.env.VITE_REACT_APP_X_AI_API_KEY;
@@ -240,6 +286,8 @@ const App = () => {
 									data.find((entry) => entry.name === id)
 								}
 								updateData={updateData}
+								addFlashcard={addFlashcard}
+								deleteFlashcard={deleteFlashcard}
 							/>
 						}
 					/>

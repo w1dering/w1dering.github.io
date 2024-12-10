@@ -91,31 +91,31 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 					isRightPressed = true;
 					break;
 				case "Digit1":
-					if (!is1Pressed) {
+					if (!is1Pressed && currentFlashcardShowAnswer) {
 						updateFlashcardRating(1);
 					}
 					is1Pressed = true;
 					break;
 				case "Digit2":
-					if (!is2Pressed) {
+					if (!is2Pressed && currentFlashcardShowAnswer) {
 						updateFlashcardRating(2);
 					}
 					is2Pressed = true;
 					break;
 				case "Digit3":
-					if (!is3Pressed) {
+					if (!is3Pressed && currentFlashcardShowAnswer) {
 						updateFlashcardRating(3);
 					}
 					is3Pressed = true;
 					break;
 				case "Digit4":
-					if (!is4Pressed) {
+					if (!is4Pressed && currentFlashcardShowAnswer) {
 						updateFlashcardRating(4);
 					}
 					is4Pressed = true;
 					break;
 				case "Digit5":
-					if (!is5Pressed) {
+					if (!is5Pressed && currentFlashcardShowAnswer) {
 						updateFlashcardRating(5);
 						console.log("5 pressed");
 					}
@@ -160,9 +160,9 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 			window.removeEventListener("keydown", handleKeyDown);
 			window.removeEventListener("keyup", handleKeyUp);
 		};
-	}, [currentFlashcardIndex]);
+	}, [currentFlashcardIndex, currentFlashcardShowAnswer]);
 
-	return <div id="deck-session">{currentFlashcard}</div>; // add ratings and back button
+	return <div id="deck-session">{currentFlashcard}</div>;
 };
 
 export default DeckSession;

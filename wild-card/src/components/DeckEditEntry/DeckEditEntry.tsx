@@ -1,18 +1,27 @@
+import Button from "../Button/Button";
 import "./DeckEditEntry.css";
 
 interface Props {
 	question: string;
 	answer: string;
 	rating: number;
-    index: number;
+	index: number;
 	updateCard: (
 		cardIndex: number,
 		toUpdate: string,
 		newContent: string | number
 	) => void;
+	deleteCard: (cardIndex: number) => void;
 }
 
-const DeckEditEntry = ({ question, answer, rating, index, updateCard }: Props) => {
+const DeckEditEntry = ({
+	question,
+	answer,
+	rating,
+	index,
+	updateCard,
+	deleteCard,
+}: Props) => {
 	return (
 		<div className="deck-edit-entry">
 			<input
@@ -34,6 +43,7 @@ const DeckEditEntry = ({ question, answer, rating, index, updateCard }: Props) =
 				}}
 			></input>
 			<div>rating: {rating}</div>
+			<Button content="Delete card" fn={() => deleteCard(index)}></Button>
 		</div>
 	);
 };
