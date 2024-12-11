@@ -26,7 +26,7 @@ interface Props {
 const DeckSession = ({ getDeckData, updateData }: Props) => {
 	const { deckId } = useParams();
 	const deckData = getDeckData(deckId!);
-	
+
 	if (!deckData) {
 		return <h1>Deck is null</h1>;
 	} else if (deckData.deck.length === 0) {
@@ -74,19 +74,25 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 					break;
 				case "ArrowLeft":
 					if (!isLeftPressed) {
-						setCurrentFlashcardIndex((prevFlashcardIndex) =>
-							Math.max(prevFlashcardIndex - 1, 0)
-						);
-						setCurrentFlashcardShowAnswer(false);
+						setCurrentFlashcardIndex((prevFlashcardIndex) => {
+							if (prevFlashcardIndex != 0) {
+								setCurrentFlashcardShowAnswer(false);
+								return prevFlashcardIndex - 1;
+							}
+							return prevFlashcardIndex;
+						});
 					}
 					isLeftPressed = true;
 					break;
 				case "ArrowRight":
 					if (!isRightPressed) {
-						setCurrentFlashcardIndex((prevFlashcardIndex) =>
-							Math.min(prevFlashcardIndex + 1, deck.length - 1)
-						);
-						setCurrentFlashcardShowAnswer(false);
+						setCurrentFlashcardIndex((prevFlashcardIndex) => {
+							if (prevFlashcardIndex != deck.length - 1) {
+								setCurrentFlashcardShowAnswer(false);
+								return prevFlashcardIndex + 1;
+							}
+							return prevFlashcardIndex;
+						});
 					}
 					isRightPressed = true;
 					break;
@@ -117,7 +123,6 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 				case "Digit5":
 					if (!is5Pressed && currentFlashcardShowAnswer) {
 						updateFlashcardRating(5);
-						console.log("5 pressed");
 					}
 					is5Pressed = true;
 					break;

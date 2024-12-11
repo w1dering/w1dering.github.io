@@ -14,36 +14,31 @@ const FlashcardRateBar = ({buttonsEnabled, updateCardRating} : Props) => {
 					<Button
 						content={"1"}
 						fn={() => updateCardRating(1)}
-						className="flashcard-rate-bar-button"
-						id="flashcard-rate-bar-button-1"
+						className="flashcard-rate-bar-button rate-button-1"
 						enabled={buttonsEnabled}
 					/>
 					<Button
 						content={"2"}
 						fn={() => updateCardRating(2)}
-						className="flashcard-rate-bar-button"
-						id="flashcard-rate-bar-button-2"
+						className="flashcard-rate-bar-button rate-button-2"
 						enabled={buttonsEnabled}
 					/>
 					<Button
 						content={"3"}
 						fn={() => updateCardRating(3)}
-						className="flashcard-rate-bar-button"
-						id="flashcard-rate-bar-button-3"
+						className="flashcard-rate-bar-button rate-button-3"
 						enabled={buttonsEnabled}
 					/>
 					<Button
 						content={"4"}
 						fn={() => updateCardRating(4)}
-						className="flashcard-rate-bar-button"
-						id="flashcard-rate-bar-button-4"
+						className="flashcard-rate-bar-button rate-button-4" 
 						enabled={buttonsEnabled}
 					/>
 					<Button
 						content={"5"}
 						fn={() => updateCardRating(5)}
-						className="flashcard-rate-bar-button"
-						id="flashcard-rate-bar-button-5"
+						className="flashcard-rate-bar-button rate-button-5"
 						enabled={buttonsEnabled}
 					/>
 				</div>

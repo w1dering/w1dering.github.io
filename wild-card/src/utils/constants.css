@@ -1,0 +1,23 @@
+:root {
+    --rate-button-1: #6E6BA2;
+    --rate-button-2: #8B93BF;
+    --rate-button-3: #8096ED;
+    --rate-button-4: #8DC2ED;
+    --rate-button-5: #7AD2BF;
+}
+
+.rate-button-1 {
+    background-color: var(--rate-button-1);
+}
+.rate-button-2 {
+    background-color: var(--rate-button-2);
+}
+.rate-button-3 {
+    background-color: var(--rate-button-3);
+}
+.rate-button-4 {
+    background-color: var(--rate-button-4);
+}
+.rate-button-5 {
+    background-color: var(--rate-button-5);
+}
