@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Flashcard from "../Flashcard/Flashcard";
 
 import "./DeckSession.css";
+import DummyFlashcard from "../DummyFlashcard/DummyFlashcard";
 
 interface DeckData {
 	name: string;
@@ -37,8 +38,108 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 	const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
-	const updateFlashcardRating = (rating: number) => {
+	const [playingPopOffAnimation, setPlayingPopoffAnimation] = useState(false);
+	let currentFlashcard: React.ReactElement = <></>;
+	let dummyFlashcard: React.ReactElement = <></>;
+
+	// called whenever a rate-button is pressed: moves to the next card
+	const goNextCard = (rating: number) => {
 		updateData(deckData.name, currentFlashcardIndex, "rating", rating);
+		setPlayingPopoffAnimation(true);
+
+		setCurrentFlashcardIndex(() => chooseNextCard());
+
+		currentFlashcard = (
+			<Flashcard
+				question={deck[currentFlashcardIndex].question}
+				answer={deck[currentFlashcardIndex].answer}
+				rating={deck[currentFlashcardIndex].rating}
+				showAnswer={currentFlashcardShowAnswer}
+				updateCardRating={goNextCard}
+			/>
+		);
+
+		console.log("timeout started");
+		let timer = setTimeout(() => {
+			console.log("timeout fired");
+			setPlayingPopoffAnimation(false);
+			clearTimeout(timer);
+		}, 700);
+	};
+
+	let cardsStudiedThisSession = 0;
+	let averageRating = deck.reduce((acc, cur) => acc + cur.rating, 0);
+
+	// lastInstancesOfCard[i] is the last time the card at index i was called
+	// this value is compared to cardsStudiedThisSession
+	const lastInstancesOfCard = Array(deck.length).fill(0);
+
+	// returns the index of the card that should be given next, given the rating and last instances of the deck
+	const chooseNextCard = () => {
+		cardsStudiedThisSession++;
+		if (deck.length == 1) {
+			return 0;
+		}
+		/* algorithm for picking card:
+		average rating of cards is calculated, and for each card, the deviation from the average rating is picked
+		each card then receives "weight":
+		- each card receives a base of 100 / (deck size) weight
+		- each card gains: 
+		  - 1 weight for each 0.1 rating below the average it is
+		  - -1 weight for each 0.1 rating above the average it is
+		  - -inf weight if it's 1.5 rating above the average
+		the weights are then adjusted based on how long it's been since the card last appeared
+		- 1 (cards before): 0*
+		- 2: 0.1*
+		- 3: 0.4*
+		- 4: 0.7*;
+		- 5: 1*
+		each one after 5 increases weight multiplier by 0.1
+		*/
+		let totalWeight = 0;
+		lastInstancesOfCard[currentFlashcardIndex] = cardsStudiedThisSession;
+		const cardWeights = deck.map((card, index) => {
+			if (
+				card.rating > averageRating + 1.5 ||
+				index === currentFlashcardIndex
+			) {
+				return 0;
+			}
+			let weight = 100.0 / deck.length;
+			weight += (averageRating - card.rating) * 0.1;
+			let multiplier;
+			switch (cardsStudiedThisSession - lastInstancesOfCard[index]) {
+				case 2:
+					multiplier = 0.1;
+					break;
+				case 3:
+					multiplier = 0.4;
+					break;
+				case 4:
+					multiplier = 0.7;
+					break;
+				default:
+					multiplier =
+						1.0 +
+						0.1 * (cardsStudiedThisSession - lastInstancesOfCard[index]);
+					break;
+			}
+			weight *= multiplier;
+			totalWeight += weight;
+			return weight;
+		});
+
+		// randomly determine a card based on weights
+		let rand = Math.random() * totalWeight;
+		for (let i = 0; i < cardWeights.length; i++) {
+			rand -= cardWeights[i];
+			if (rand <= 0) {
+				return i;
+			}
+		}
+
+		console.log("decksession: rand did not select an index");
+		return 0;
 	};
 
 	// tracks key presses to prevent them from being pressed every frame
@@ -51,15 +152,22 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 	let is4Pressed = false;
 	let is5Pressed = false;
 
-	const currentFlashcard = (
+	currentFlashcard = (
 		<Flashcard
 			question={deck[currentFlashcardIndex].question}
 			answer={deck[currentFlashcardIndex].answer}
 			rating={deck[currentFlashcardIndex].rating}
 			showAnswer={currentFlashcardShowAnswer}
-			updateCardRating={updateFlashcardRating}
+			updateCardRating={goNextCard}
 		/>
 	);
+
+	dummyFlashcard = (<DummyFlashcard
+		question={deck[currentFlashcardIndex].question}
+		answer={deck[currentFlashcardIndex].answer}
+		rating={deck[currentFlashcardIndex].rating}
+		show={playingPopOffAnimation}
+	/>);
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -98,31 +206,31 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 					break;
 				case "Digit1":
 					if (!is1Pressed && currentFlashcardShowAnswer) {
-						updateFlashcardRating(1);
+						goNextCard(1);
 					}
 					is1Pressed = true;
 					break;
 				case "Digit2":
 					if (!is2Pressed && currentFlashcardShowAnswer) {
-						updateFlashcardRating(2);
+						goNextCard(2);
 					}
 					is2Pressed = true;
 					break;
 				case "Digit3":
 					if (!is3Pressed && currentFlashcardShowAnswer) {
-						updateFlashcardRating(3);
+						goNextCard(3);
 					}
 					is3Pressed = true;
 					break;
 				case "Digit4":
 					if (!is4Pressed && currentFlashcardShowAnswer) {
-						updateFlashcardRating(4);
+						goNextCard(4);
 					}
 					is4Pressed = true;
 					break;
 				case "Digit5":
 					if (!is5Pressed && currentFlashcardShowAnswer) {
-						updateFlashcardRating(5);
+						goNextCard(5);
 					}
 					is5Pressed = true;
 					break;
@@ -167,7 +275,10 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		};
 	}, [currentFlashcardIndex, currentFlashcardShowAnswer]);
 
-	return <div id="deck-session">{currentFlashcard}</div>;
+	return <div id="deck-session">
+		{dummyFlashcard}
+		{currentFlashcard}
+	</div>;
 };
 
 export default DeckSession;

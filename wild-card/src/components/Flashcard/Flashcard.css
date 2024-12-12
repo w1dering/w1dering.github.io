@@ -1,3 +1,16 @@
+@keyframes popOut {
+    0%{
+        visibility: visible;
+        transform: translateX(10%), translateY(-10%);
+    }
+    50%{
+        transform: translateX(-100%);
+    }
+    100%{
+        visibility: hidden;
+    }
+}
+
 .flashcard {
     display: flex;
     justify-content: start;
@@ -6,4 +19,32 @@
     gap: 5%;
     width: 40%;
     height: 90%;
+    z-index: 0;
+}
+
+.flashcard-dummy {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 80%;
+    gap: 5%;
+    animation-duration: 0.8s;
+}
+
+.flashcard-question-answer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 80%;
+    gap: 5%;
+}
+
+.flashcard-question-answer-dummy {
+    position: absolute;
+    z-index: 1;
 }

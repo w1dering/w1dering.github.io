@@ -11,7 +11,7 @@ const FlashcardAnswer = ({ content, visible, colour = "#c9c9c9"}: Props) => {
 		<div
 			className="flashcard-answer"
 			style={{
-				transform: visible ? "translateY(0%)" : "translateY(-113%)",
+				transform: visible ? "translateY(0%)" : "translateY(-110%)",
 				borderLeft: `20px solid ${colour}`,
 			}}
 		>

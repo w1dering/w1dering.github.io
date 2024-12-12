@@ -97,7 +97,6 @@ const DeckEditEntry = ({
 					updateCard(index, "question", e.target.value);
 					return e.target.value;
 				}}
-				rows={1}
 			/>
 			<textarea
 				value={answer}

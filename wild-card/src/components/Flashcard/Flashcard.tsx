@@ -14,8 +14,13 @@ interface Props {
 	updateCardRating: (rating: number) => void;
 }
 
-
-const Flashcard = ({ question, answer, rating, showAnswer, updateCardRating }: Props) => {
+const Flashcard = ({
+	question,
+	answer,
+	rating,
+	showAnswer,
+	updateCardRating,
+}: Props) => {
 	return (
 		<div className="flashcard">
 			<FlashcardQuestion
