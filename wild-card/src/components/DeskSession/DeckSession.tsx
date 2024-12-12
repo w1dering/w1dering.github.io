@@ -36,6 +36,7 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 	const deck = deckData?.deck;
 
 	const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
+	const [dummyFlashcardIndex, setDummyFlashcardIndex] = useState(0);
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
 	const [playingPopOffAnimation, setPlayingPopoffAnimation] = useState(false);
@@ -44,24 +45,34 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 
 	// called whenever a rate-button is pressed: moves to the next card
 	const goNextCard = (rating: number) => {
+		setDummyFlashcardIndex(currentFlashcardIndex);
+		
 		updateData(deckData.name, currentFlashcardIndex, "rating", rating);
 		setPlayingPopoffAnimation(true);
 
 		setCurrentFlashcardIndex(() => chooseNextCard());
+		setCurrentFlashcardShowAnswer(false);
 
-		currentFlashcard = (
-			<Flashcard
-				question={deck[currentFlashcardIndex].question}
-				answer={deck[currentFlashcardIndex].answer}
-				rating={deck[currentFlashcardIndex].rating}
-				showAnswer={currentFlashcardShowAnswer}
-				updateCardRating={goNextCard}
-			/>
-		);
+		const styles: CSSStyleDeclaration = getComputedStyle(document.getElementById("flashcard-question-answer")!);
+		const dummy: HTMLElement | null = document.getElementById("flashcard-dummy");
+		if (!dummy) {
+			console.log("dummy not found");
+			return;
+		}
+		for (const property of styles) {
+			dummy.style.setProperty(
+				property,
+				styles.getPropertyValue(property)
+			);
+		}
+		dummy.style.position = "absolute";
+		dummy.style.zIndex = "1";
+		dummy.style.animationDuration = "0.7s";
+		dummy.style.animationName = "popOut";
+		dummy.style.animationFillMode = "forwards"; // flashcard will maintain its end-of-animation state
 
-		console.log("timeout started");
 		let timer = setTimeout(() => {
-			console.log("timeout fired");
+			dummy.style.visibility = "hidden";
 			setPlayingPopoffAnimation(false);
 			clearTimeout(timer);
 		}, 700);
@@ -158,16 +169,21 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 			answer={deck[currentFlashcardIndex].answer}
 			rating={deck[currentFlashcardIndex].rating}
 			showAnswer={currentFlashcardShowAnswer}
+			showAnswerCard={!playingPopOffAnimation}
 			updateCardRating={goNextCard}
 		/>
 	);
 
-	dummyFlashcard = (<DummyFlashcard
-		question={deck[currentFlashcardIndex].question}
-		answer={deck[currentFlashcardIndex].answer}
-		rating={deck[currentFlashcardIndex].rating}
-		show={playingPopOffAnimation}
-	/>);
+	dummyFlashcard = (
+		<DummyFlashcard
+			question={deck[dummyFlashcardIndex].question}
+			answer={deck[dummyFlashcardIndex].answer}
+			rating={deck[dummyFlashcardIndex].rating}
+			show={playingPopOffAnimation}
+		/>
+	);
+
+	
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -276,6 +292,7 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 	}, [currentFlashcardIndex, currentFlashcardShowAnswer]);
 
 	return <div id="deck-session">
+		<div id="background-block"></div>
 		{dummyFlashcard}
 		{currentFlashcard}
 	</div>;

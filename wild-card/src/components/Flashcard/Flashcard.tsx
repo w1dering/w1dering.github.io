@@ -11,6 +11,7 @@ interface Props {
 	answer: string;
 	rating: number;
 	showAnswer: boolean;
+	showAnswerCard: boolean;
 	updateCardRating: (rating: number) => void;
 }
 
@@ -19,19 +20,23 @@ const Flashcard = ({
 	answer,
 	rating,
 	showAnswer,
+	showAnswerCard,
 	updateCardRating,
 }: Props) => {
 	return (
-		<div className="flashcard">
-			<FlashcardQuestion
-				content={question}
-				colour={getColourFromRating(rating)}
-			/>
-			<FlashcardAnswer
-				content={showAnswer ? answer : ""}
-				visible={showAnswer}
-				colour={getColourFromRating(rating)}
-			/>
+		<div id="flashcard">
+			<div id="flashcard-question-answer">
+				<FlashcardQuestion
+					content={question}
+					colour={getColourFromRating(rating)}
+				/>
+				<FlashcardAnswer
+					content={showAnswer ? answer : ""}
+					visible={showAnswer}
+					colour={getColourFromRating(rating)}
+					show={showAnswerCard}
+				/>
+			</div>
 			<FlashcardRateBar
 				buttonsEnabled={showAnswer}
 				updateCardRating={updateCardRating}

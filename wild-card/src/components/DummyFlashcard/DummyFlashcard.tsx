@@ -15,23 +15,23 @@ interface Props {
 
 const DummyFlashcard = ({ question, answer, rating, show }: Props) => {
 	return (
-		<div className="flashcard-dummy" style={{visibility: show ? "visible" : "hidden"}}>
-			<div
-				className="flashcard-question-answer-dummy"
-				style={{
-					animationName: "popOut",
-				}}
-			>
-				<FlashcardQuestion
-					content={question}
-					colour={getColourFromRating(rating)}
-				/>
-				<FlashcardAnswer
-					content={answer}
-					visible={true}
-					colour={getColourFromRating(rating)}
-				/>
-			</div>
+		<div
+			id="flashcard-dummy"
+			style={{
+				visibility: show ? "visible" : "hidden",
+                position: "absolute"
+			}}
+		>
+			<FlashcardQuestion
+				content={question}
+				colour={getColourFromRating(rating)}
+			/>
+			<FlashcardAnswer
+				content={answer}
+				visible={true}
+				colour={getColourFromRating(rating)}
+                show={true}
+			/>
 		</div>
 	);
 };

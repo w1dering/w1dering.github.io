@@ -1,7 +1,20 @@
 #deck-session {
     grid-area: content;
+    position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     flex-direction: column;
+    height: 95%;
+    top: 5%;
+}
+
+#background-block {
+    position: absolute;
+    height: 100%;
+    width: 15%;
+    left: 0;
+    top: -5%;
+    background-color: white;
+    z-index: 100;
 }
