@@ -12,9 +12,9 @@ const FlashcardAnswer = ({ content, visible, colour = "#c9c9c9", show}: Props) =
 		<div
 			className="flashcard-answer"
 			style={{
+				transition: show ? "transform 0.4s ease-out" : "none",
 				transform: visible ? "translateY(0%)" : "translateY(-110.5%)",
 				borderLeft: `20px solid ${colour}`,
-				visibility: show ? "visible" : "hidden"
 			}}
 		>
 			{content}

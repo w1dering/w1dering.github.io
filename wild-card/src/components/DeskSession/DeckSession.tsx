@@ -67,15 +67,15 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		}
 		dummy.style.position = "absolute";
 		dummy.style.zIndex = "1";
-		dummy.style.animationDuration = "0.7s";
+		dummy.style.animationDuration = "0.5s";
 		dummy.style.animationName = "popOut";
 		dummy.style.animationFillMode = "forwards"; // flashcard will maintain its end-of-animation state
 
-		let timer = setTimeout(() => {
+		let timerTurnOffPopoff = setTimeout(() => {
 			dummy.style.visibility = "hidden";
 			setPlayingPopoffAnimation(false);
-			clearTimeout(timer);
-		}, 700);
+			clearTimeout(timerTurnOffPopoff);
+		}, 5);
 	};
 
 	let cardsStudiedThisSession = 0;
