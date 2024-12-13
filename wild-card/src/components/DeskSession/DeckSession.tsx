@@ -40,30 +40,34 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 	const [currentFlashcardShowAnswer, setCurrentFlashcardShowAnswer] =
 		useState(false);
 	const [playingPopOffAnimation, setPlayingPopoffAnimation] = useState(false);
+	const [cardsStudiedThisSession, setCardsStudiedThisSession] = useState(0);
+	const [lastInstancesOfCard, setLastInstancesOfCard] = useState(
+		Array(deck.length).fill(0)
+	);
 	let currentFlashcard: React.ReactElement = <></>;
 	let dummyFlashcard: React.ReactElement = <></>;
 
 	// called whenever a rate-button is pressed: moves to the next card
 	const goNextCard = (rating: number) => {
 		setDummyFlashcardIndex(currentFlashcardIndex);
-		
+
 		updateData(deckData.name, currentFlashcardIndex, "rating", rating);
 		setPlayingPopoffAnimation(true);
 
 		setCurrentFlashcardIndex(() => chooseNextCard());
 		setCurrentFlashcardShowAnswer(false);
 
-		const styles: CSSStyleDeclaration = getComputedStyle(document.getElementById("flashcard-question-answer")!);
-		const dummy: HTMLElement | null = document.getElementById("flashcard-dummy");
+		const styles: CSSStyleDeclaration = getComputedStyle(
+			document.getElementById("flashcard-question-answer")!
+		);
+		const dummy: HTMLElement | null =
+			document.getElementById("flashcard-dummy");
 		if (!dummy) {
 			console.log("dummy not found");
 			return;
 		}
 		for (const property of styles) {
-			dummy.style.setProperty(
-				property,
-				styles.getPropertyValue(property)
-			);
+			dummy.style.setProperty(property, styles.getPropertyValue(property));
 		}
 		dummy.style.position = "absolute";
 		dummy.style.zIndex = "1";
@@ -78,16 +82,20 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		}, 5);
 	};
 
-	let cardsStudiedThisSession = 0;
 	let averageRating = deck.reduce((acc, cur) => acc + cur.rating, 0);
 
 	// lastInstancesOfCard[i] is the last time the card at index i was called
 	// this value is compared to cardsStudiedThisSession
-	const lastInstancesOfCard = Array(deck.length).fill(0);
 
 	// returns the index of the card that should be given next, given the rating and last instances of the deck
 	const chooseNextCard = () => {
-		cardsStudiedThisSession++;
+		let currentCardsStudiedThisSession = cardsStudiedThisSession;
+		console.log(currentCardsStudiedThisSession);
+		averageRating =
+			deck.reduce((acc, cur) => acc + cur.rating, 0) / deck.length;
+		setCardsStudiedThisSession(
+			(prevCardsStudiedThisSession) => prevCardsStudiedThisSession + 1
+		);
 		if (deck.length == 1) {
 			return 0;
 		}
@@ -108,7 +116,11 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		each one after 5 increases weight multiplier by 0.1
 		*/
 		let totalWeight = 0;
-		lastInstancesOfCard[currentFlashcardIndex] = cardsStudiedThisSession;
+		setLastInstancesOfCard((prev) => {
+			const newArray = [...prev];
+			newArray[currentFlashcardIndex] = currentCardsStudiedThisSession;
+			return newArray;
+		});
 		const cardWeights = deck.map((card, index) => {
 			if (
 				card.rating > averageRating + 1.5 ||
@@ -117,9 +129,10 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 				return 0;
 			}
 			let weight = 100.0 / deck.length;
-			weight += (averageRating - card.rating) * 0.1;
+			weight += (averageRating - card.rating) * 20;
+			weight = Math.max(weight, 0); // prevents negative weight
 			let multiplier;
-			switch (cardsStudiedThisSession - lastInstancesOfCard[index]) {
+			switch (currentCardsStudiedThisSession - lastInstancesOfCard[index]) {
 				case 2:
 					multiplier = 0.1;
 					break;
@@ -132,13 +145,18 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 				default:
 					multiplier =
 						1.0 +
-						0.1 * (cardsStudiedThisSession - lastInstancesOfCard[index]);
+						0.1 *
+							(currentCardsStudiedThisSession -
+								lastInstancesOfCard[index]);
 					break;
 			}
 			weight *= multiplier;
 			totalWeight += weight;
+			console.log("card:", index, "weight:", weight, "multi:", multiplier);
 			return weight;
 		});
+		console.log("last:", lastInstancesOfCard);
+		console.log(cardWeights);
 
 		// randomly determine a card based on weights
 		let rand = Math.random() * totalWeight;
@@ -183,8 +201,6 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		/>
 	);
 
-	
-
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			switch (event.code) {
@@ -222,6 +238,7 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 					break;
 				case "Digit1":
 					if (!is1Pressed && currentFlashcardShowAnswer) {
+						console.log("digit1 pressed");
 						goNextCard(1);
 					}
 					is1Pressed = true;
@@ -291,11 +308,13 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		};
 	}, [currentFlashcardIndex, currentFlashcardShowAnswer]);
 
-	return <div id="deck-session">
-		<div id="background-block"></div>
-		{dummyFlashcard}
-		{currentFlashcard}
-	</div>;
+	return (
+		<div id="deck-session">
+			<div id="background-block"></div>
+			{dummyFlashcard}
+			{currentFlashcard}
+		</div>
+	);
 };
 
 export default DeckSession;

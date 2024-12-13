@@ -72,6 +72,56 @@ signInWithPopup(auth, new GoogleAuthProvider())
 
 const tempData = [
 	{
+		name: "test0",
+		deck: [
+			{
+				question: "1st",
+				answer: "1st",
+				rating: 1,
+			},
+			{
+				question: "2nd",
+				answer: "2nd",
+				rating: 1,
+			},
+			{
+				question: "3rd",
+				answer: "3rd",
+				rating: 2,
+			},
+			{
+				question: "4th",
+				answer: "4th",
+				rating: 2,
+			},
+			{
+				question: "5th",
+				answer: "5th",
+				rating: 3,
+			},
+			{
+				question: "6th",
+				answer: "6th",
+				rating: 3,
+			},
+			{
+				question: "7th",
+				answer: "7th",
+				rating: 4,
+			},
+			{
+				question: "8th",
+				answer: "8th",
+				rating: 4,
+			},
+			{
+				question: "9th",
+				answer: "9th",
+				rating: 5,
+			},
+		],
+	},
+	{
 		name: "test1",
 		deck: [
 			{
