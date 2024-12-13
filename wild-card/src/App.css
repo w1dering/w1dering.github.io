@@ -49,7 +49,6 @@
 }
 
 :root {
-    --header-height: 7.5%;
     --sidebar-width: 20%;
 }
 
@@ -75,9 +74,7 @@ body,
 
 #app {
     display: grid;
-    grid-template-rows: var(--header-height) auto;
     grid-template-columns: var(--sidebar-width) auto;
     grid-template-areas:
-        "header header"
         "sidebar content";
 }

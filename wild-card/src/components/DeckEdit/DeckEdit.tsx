@@ -4,6 +4,7 @@ import DeckEditEntry from "../DeckEditEntry/DeckEditEntry";
 
 import "./DeckEdit.css";
 import Button from "../Button/Button";
+import Header from "../Header/Header";
 
 interface DeckData {
 	name: string;
@@ -46,7 +47,7 @@ const DeckEdit = ({ getDeckData, updateData, addFlashcard, deleteFlashcard}: Pro
 
 	return (
 		<div id="deck-edit">
-			<div>Editing {deckId}</div>
+			<Header id="deck-edit-header" content={`Editing ${deckId}`}/>
 			{deck.map((flashcard, index) => (
 				<DeckEditEntry
 					question={flashcard.question}

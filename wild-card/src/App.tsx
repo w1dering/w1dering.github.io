@@ -13,7 +13,6 @@ import {
 } from "react-router-dom";
 
 import DeckSession from "./components/DeskSession/DeckSession";
-import Header from "./components/Header/Header";
 import DeckList from "./components/DeckList/DeckList";
 import Sidebar from "./components/Sidebar/Sidebar";
 import DeckEdit from "./components/DeckEdit/DeckEdit";
@@ -302,7 +301,6 @@ const App = () => {
 	return (
 		<Router>
 			<div id="app">
-				<Header />
 				<Sidebar />
 				<Routes>
 					<Route

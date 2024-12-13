@@ -3,7 +3,7 @@
 
 .deck-edit-entry {
     width: 100%;
-    height: 20%;
+    flex: 0 0 20%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,24 +11,20 @@
 
 .deck-edit-entry-text-area {
     background-color:#F5F9FA;
-    height: 80%;
+    height: 100%;
     width: 20%;
     margin-right: 2%;
     padding: 0.5%;
     resize: none;
 }
 
-#deck-edit-add-flashcard-button {
-    width: 40%;
-    height: 10%;
-}
 
 #edit-rating-div {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 3%;
-    height: 80%;
+    height: 100%;
 }
 
 #edit-rating-text {

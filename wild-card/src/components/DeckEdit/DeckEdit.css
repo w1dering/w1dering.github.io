@@ -2,6 +2,25 @@
     grid-area: content;
     display: flex;
     flex-direction: column;
-    justify-content: start;
     align-items: center;
+    overflow-y: auto;
+    gap: 5%;
+}
+
+#deck-edit-header {
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    background-color: #C4C4C4;
+    width: 100%;
+    flex: 0 0 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#deck-edit-add-flashcard-button {
+    width: 40%;
+    flex: 0 0 10%;
+    margin-bottom: 1%;
 }
