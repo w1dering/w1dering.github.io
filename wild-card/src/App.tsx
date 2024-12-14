@@ -167,6 +167,14 @@ const App = () => {
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState(tempData);
 
+	const addDeck = () => {
+		setData((prevData) => {
+			const updatedData = [...prevData];
+			updatedData.push({name: `New Deck ${updatedData.length}`, deck: []});
+			return updatedData;
+		})
+	}
+
 	const updateData = (
 		deckName: string,
 		cardIndex: number,
@@ -311,6 +319,7 @@ const App = () => {
 									name: entry.name,
 									cards: entry.deck.length,
 								}))}
+								addDeck={addDeck}
 							/>
 						}
 					/>

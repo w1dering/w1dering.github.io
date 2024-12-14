@@ -4,4 +4,24 @@
     flex-direction: column;
     justify-content: start;
     align-items: start;
+    overflow-y: auto;
+}
+
+#deck-list-header {
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    background-color: #C4C4C4;
+    width: 100%;
+    flex: 0 0 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#deck-list-add-button {
+    width: 60%;
+    flex: 0 0 10%;
+    margin-bottom: 1%;
+    align-self: center;
 }
