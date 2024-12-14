@@ -5,6 +5,7 @@ import DeckEditEntry from "../DeckEditEntry/DeckEditEntry";
 import "./DeckEdit.css";
 import Button from "../Button/Button";
 import Header from "../Header/Header";
+import { useRef } from "react";
 
 interface DeckData {
 	name: string;
@@ -30,6 +31,7 @@ interface Props {
 const DeckEdit = ({ getDeckData, updateData, addFlashcard, deleteFlashcard}: Props) => {
 	const { deckId } = useParams();
 	const deckData = getDeckData(deckId!);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	if (!deckData) {
 		return <h1>Deck is null</h1>;
@@ -45,8 +47,15 @@ const DeckEdit = ({ getDeckData, updateData, addFlashcard, deleteFlashcard}: Pro
 		deleteFlashcard(deckData.name, cardIndex);
 	}
 
+	const addCard = () => {
+		addFlashcard(deckData.name);
+		if (containerRef.current){
+			containerRef.current.scrollTop = containerRef.current.scrollHeight;
+		}
+	}
+
 	return (
-		<div id="deck-edit">
+		<div id="deck-edit" ref={containerRef}>
 			<Header id="deck-edit-header" content={`Editing ${deckId}`}/>
 			{deck.map((flashcard, index) => (
 				<DeckEditEntry
@@ -58,7 +67,7 @@ const DeckEdit = ({ getDeckData, updateData, addFlashcard, deleteFlashcard}: Pro
 					deleteCard={deleteCard}
 				/>
 			))}
-			<Button content="Add Flashcard" fn={() => addFlashcard(deckData.name)} id="deck-edit-add-flashcard-button"/>
+			<Button content="Add Flashcard" fn={addCard} id="deck-edit-add-flashcard-button"/>
 		</div>
 	);
 };

@@ -107,7 +107,11 @@ const DeckEditEntry = ({
 				}}
 			/>
 
-			<Button content="Delete card" fn={() => deleteCard(index)}></Button>
+			<Button
+				content="Delete card"
+				fn={() => deleteCard(index)}
+				id="deck-edit-delete-card-button"
+			></Button>
 		</div>
 	);
 };
