@@ -1,9 +1,17 @@
 .deck-list-entry {
     display: flex;
-    justify-content: start;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
     flex: 0 0 15%;
     gap: 5%;
     width: 100%;
     padding-left: 5%;
+    border: 1px solid #C4c4c4;
+}
+
+.deck-list-entry-content {
+    display: flex;
+    gap: 5%;
+    width: 100%;
 }

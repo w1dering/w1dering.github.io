@@ -20,8 +20,11 @@
 }
 
 #deck-list-add-button {
-    width: 60%;
+    width: 100%;
     flex: 0 0 10%;
     margin-bottom: 1%;
-    align-self: center;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 5%;
 }

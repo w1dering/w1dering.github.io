@@ -7,9 +7,10 @@ import "./DeckListEntry.css";
 interface Props {
 	name: string;
 	cards: number;
+	deleteDeck: (name: string) => void;
 }
 
-const DeckListEntry = ({ name, cards }: Props) => {
+const DeckListEntry = ({ name, cards, deleteDeck }: Props) => {
 	const navigate = useNavigate();
 
 	const studyDeck = () => {
@@ -20,20 +21,30 @@ const DeckListEntry = ({ name, cards }: Props) => {
 		navigate(`/edit/${name}`);
 	};
 
+
 	return (
 		<div onClick={studyDeck} className="deck-list-entry">
 			<div>{name}</div>
-			<div>
-				{cards} {"card"}
-				{cards !== 1 && "s"}
+			<div className="deck-list-entry-content">
+				<div>
+					{cards} {"card"}
+					{cards !== 1 && "s"}
+				</div>
+				<Button
+					content="edit"
+					fn={(e: React.MouseEvent<HTMLButtonElement>) => {
+						e.stopPropagation();
+						editDeck();
+					}}
+				/>
+				<Button
+					content="delete"
+					fn={(e: React.MouseEvent<HTMLButtonElement>) => {
+						e.stopPropagation();
+						deleteDeck(name);
+					}}
+				/>
 			</div>
-			<Button
-				content="edit"
-				fn={(e: React.MouseEvent<HTMLButtonElement>) => {
-					e.stopPropagation();
-					editDeck();
-				}}
-			/>
 		</div>
 	);
 };

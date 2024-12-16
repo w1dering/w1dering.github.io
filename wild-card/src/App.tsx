@@ -166,11 +166,26 @@ const App = () => {
 	const [APIdata, setAPIData] = useState<APICall>(); // rename once you include api calls
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState(tempData);
+	const [totalDecksCreated, setTotalDecksCreated] = useState(data.length);
 
 	const addDeck = () => {
 		setData((prevData) => {
 			const updatedData = [...prevData];
-			updatedData.push({name: `New Deck ${updatedData.length}`, deck: []});
+			updatedData.push({name: `New Deck ${totalDecksCreated + 1}`, deck: []});
+			setTotalDecksCreated(cur => cur + 1);
+			return updatedData;
+		})
+	}
+
+	const deleteDeck = (name: string) => {
+		setData((prevData) => {
+			const updatedData = [...prevData];
+			let index = prevData.findIndex((elem) => elem.name === name);
+			if (index != -1) {
+				updatedData.splice(index, 1);
+			} else {
+				console.log("deck removal for name:", name, "failed");
+			}
 			return updatedData;
 		})
 	}
@@ -320,6 +335,7 @@ const App = () => {
 									cards: entry.deck.length,
 								}))}
 								addDeck={addDeck}
+								deleteDeck={deleteDeck}
 							/>
 						}
 					/>
