@@ -11,9 +11,10 @@ interface Props {
 	}[];
 	addDeck: () => void;
 	deleteDeck: (name: string) => void;
+	renameDeck: (name: string, newName: string) => string;
 }
 
-const DeckList = ({ entries, addDeck, deleteDeck }: Props) => {
+const DeckList = ({ entries, addDeck, deleteDeck, renameDeck }: Props) => {
 	return (
 		<div id="deck-list">
 			<Header id="deck-list-header" content="Choose a deck to study" />
@@ -22,6 +23,7 @@ const DeckList = ({ entries, addDeck, deleteDeck }: Props) => {
 					name={deckListEntry.name}
 					cards={deckListEntry.cards}
 					deleteDeck={deleteDeck}
+					renameDeck={renameDeck}
 				/>
 			))}
 			<Button content="Add deck" id="deck-list-add-button" fn={addDeck} />

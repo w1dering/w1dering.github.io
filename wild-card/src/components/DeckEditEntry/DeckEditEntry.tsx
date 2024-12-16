@@ -11,7 +11,7 @@ interface EditRatingPopupProps {
 const EditRatingPopup = ({ show, updateRating }: EditRatingPopupProps) => {
 	return (
 		<div
-			id="edit-rating-popup"
+			className="edit-rating-popup"
 			style={{ visibility: show ? "visible" : "hidden" }}
 		>
 			<Button
@@ -72,7 +72,7 @@ const DeckEditEntry = ({
 	return (
 		<div className="deck-edit-entry">
 			<div
-				id="edit-rating-div"
+				className="edit-rating-div"
 				onClick={() =>
 					setShowEditRatingPopup(
 						(prevShowEditRatingPopup) => !prevShowEditRatingPopup
@@ -84,7 +84,7 @@ const DeckEditEntry = ({
 					updateRating={updateRating}
 				/>
 				<div
-					id="edit-rating-text"
+					className="edit-rating-text"
 					style={{ backgroundColor: `${getColourFromRating(rating)}` }}
 				>
 					{rating}
@@ -110,7 +110,7 @@ const DeckEditEntry = ({
 			<Button
 				content="Delete card"
 				fn={() => deleteCard(index)}
-				id="deck-edit-delete-card-button"
+				className="deck-edit-delete-card-button"
 			></Button>
 		</div>
 	);

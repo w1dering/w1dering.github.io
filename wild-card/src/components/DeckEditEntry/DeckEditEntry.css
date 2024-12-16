@@ -10,7 +10,7 @@
 }
 
 .deck-edit-entry-text-area {
-    background-color:#F5F9FA;
+    background-color: #F5F9FA;
     height: 100%;
     width: 20%;
     margin-right: 2%;
@@ -19,7 +19,7 @@
 }
 
 
-#edit-rating-div {
+.edit-rating-div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,7 +27,7 @@
     height: 100%;
 }
 
-#edit-rating-text {
+.edit-rating-text {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,7 +36,7 @@
 }
 
 
-#edit-rating-popup {
+.edit-rating-popup {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -50,7 +50,7 @@
     width: 100%;
 }
 
-#deck-edit-delete-card-button {
+.deck-edit-delete-card-button {
     margin-left: -2%;
     height: 100%;
 }

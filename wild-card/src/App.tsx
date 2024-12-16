@@ -190,6 +190,28 @@ const App = () => {
 		})
 	}
 
+	const renameDeck = (name: string, newName: string) => {
+		let renameSuccessful = false;
+		setData((prevData) => {
+			const updatedData = [...prevData];
+			let index = prevData.findIndex((elem) => elem.name === name);
+			let copyIndex = prevData.findIndex((elem) => elem.name === newName);
+
+			if (index !== -1 && copyIndex === -1) {
+				updatedData[index].name = newName;
+				renameSuccessful = true;
+			} else {
+				console.log("deck rename for name:", name, "failed; likely due to nonunique name");
+			}
+			return updatedData;
+		})
+		if (renameSuccessful) {
+			return newName;
+		} else {
+			return name;
+		}
+	}
+
 	const updateData = (
 		deckName: string,
 		cardIndex: number,
@@ -336,6 +358,7 @@ const App = () => {
 								}))}
 								addDeck={addDeck}
 								deleteDeck={deleteDeck}
+								renameDeck={renameDeck}
 							/>
 						}
 					/>

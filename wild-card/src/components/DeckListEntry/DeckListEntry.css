@@ -15,3 +15,7 @@
     gap: 5%;
     width: 100%;
 }
+
+.deck-list-entry-title {
+    resize: none;
+}
