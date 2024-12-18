@@ -28,7 +28,7 @@ const DeckListEntry = ({ name, cards, deleteDeck, renameDeck }: Props) => {
 	const handleTextKeyDown = (
 		event: React.KeyboardEvent<HTMLTextAreaElement>
 	) => {
-		if (event.key === "Enter") {
+		if (event.key === "Enter" || event.key === "Escape") {
 			event.preventDefault();
 			event.currentTarget.blur();
 		}
@@ -57,11 +57,12 @@ const DeckListEntry = ({ name, cards, deleteDeck, renameDeck }: Props) => {
 					{cards !== 1 && "s"}
 				</div>
 				<Button
-					content="edit"
+					img={{src: "/img/edit.png", className: "deck-list-entry-edit-button-icon"}}
 					fn={(e: React.MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation();
 						editDeck();
 					}}
+					className="deck-list-entry-edit-button"
 				/>
 				<Button
 					content="delete"
