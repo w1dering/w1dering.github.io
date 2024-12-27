@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 interface Props {
 	name: string;
 	cards: number;
+	averageRating: number;
 	deleteDeck: (name: string) => void;
 	renameDeck: (name: string, newName: string) => string;
 }
 
-const DeckListEntry = ({ name, cards, deleteDeck, renameDeck }: Props) => {
+const DeckListEntry = ({ name, cards, averageRating, deleteDeck, renameDeck }: Props) => {
 	const [textAreaVal, setTextAreaVal] = useState(name);
 
 	const navigate = useNavigate();
@@ -52,12 +53,18 @@ const DeckListEntry = ({ name, cards, deleteDeck, renameDeck }: Props) => {
 				onBlur={confirmRename}
 			></textarea>
 			<div className="deck-list-entry-content">
-				<div>
-					{cards} {"card"}
-					{cards !== 1 && "s"}
+				<div className="deck-list-entry-blurb">
+					<div>
+						{`${cards} card`}
+						{cards !== 1 && "s"}
+					</div>
+					<div>{`Rating: ${averageRating}/5`}</div>
 				</div>
 				<Button
-					img={{src: "/img/edit.png", className: "deck-list-entry-edit-button-icon"}}
+					img={{
+						src: "/img/edit.png",
+						className: "deck-list-entry-edit-button-icon",
+					}}
 					fn={(e: React.MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation();
 						editDeck();
@@ -65,11 +72,15 @@ const DeckListEntry = ({ name, cards, deleteDeck, renameDeck }: Props) => {
 					className="deck-list-entry-edit-button"
 				/>
 				<Button
-					content="delete"
+					img={{
+						src: "/img/delete.png",
+						className: "deck-list-entry-delete-button-icon",
+					}}
 					fn={(e: React.MouseEvent<HTMLButtonElement>) => {
 						e.stopPropagation();
 						deleteDeck(name);
 					}}
+					className="deck-list-entry-delete-button"
 				/>
 			</div>
 		</div>

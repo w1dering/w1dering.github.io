@@ -171,11 +171,14 @@ const App = () => {
 	const addDeck = () => {
 		setData((prevData) => {
 			const updatedData = [...prevData];
-			updatedData.push({name: `New Deck ${totalDecksCreated + 1}`, deck: []});
-			setTotalDecksCreated(cur => cur + 1);
+			updatedData.push({
+				name: `New Deck ${totalDecksCreated + 1}`,
+				deck: [],
+			});
+			setTotalDecksCreated((cur) => cur + 1);
 			return updatedData;
-		})
-	}
+		});
+	};
 
 	const deleteDeck = (name: string) => {
 		setData((prevData) => {
@@ -187,8 +190,8 @@ const App = () => {
 				console.log("deck removal for name:", name, "failed");
 			}
 			return updatedData;
-		})
-	}
+		});
+	};
 
 	const renameDeck = (name: string, newName: string) => {
 		let renameSuccessful = false;
@@ -201,16 +204,20 @@ const App = () => {
 				updatedData[index].name = newName;
 				renameSuccessful = true;
 			} else {
-				console.log("deck rename for name:", name, "failed; likely due to nonunique name");
+				console.log(
+					"deck rename for name:",
+					name,
+					"failed; likely due to nonunique name"
+				);
 			}
 			return updatedData;
-		})
+		});
 		if (renameSuccessful) {
 			return newName;
 		} else {
 			return name;
 		}
-	}
+	};
 
 	const updateData = (
 		deckName: string,
@@ -281,7 +288,7 @@ const App = () => {
 			updatedData[currentIndex] = {
 				...prevData[currentIndex],
 				deck: updatedDeck,
-			}
+			};
 			return updatedData;
 		});
 	};
@@ -305,7 +312,7 @@ const App = () => {
 			};
 			return updatedData;
 		});
-	}
+	};
 
 	useEffect(() => {
 		const apiKey = import.meta.env.VITE_REACT_APP_X_AI_API_KEY;
@@ -355,6 +362,15 @@ const App = () => {
 								entries={data.map((entry) => ({
 									name: entry.name,
 									cards: entry.deck.length,
+									averageRating:
+										Math.round(
+											(100 *
+												entry.deck.reduce(
+													(prev, cur) => prev + cur.rating,
+													0
+												)) /
+												entry.deck.length
+										) / 100,
 								}))}
 								addDeck={addDeck}
 								deleteDeck={deleteDeck}

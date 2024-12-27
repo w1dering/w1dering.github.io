@@ -8,6 +8,7 @@ interface Props {
 	entries: {
 		name: string;
 		cards: number;
+		averageRating: number;
 	}[];
 	addDeck: () => void;
 	deleteDeck: (name: string) => void;
@@ -22,6 +23,7 @@ const DeckList = ({ entries, addDeck, deleteDeck, renameDeck }: Props) => {
 				<DeckListEntry
 					name={deckListEntry.name}
 					cards={deckListEntry.cards}
+					averageRating={deckListEntry.averageRating}
 					deleteDeck={deleteDeck}
 					renameDeck={renameDeck}
 				/>
