@@ -44,6 +44,11 @@
 .deck-list-entry-edit-button-icon {
     height: 100%;
     object-fit: contain;
+    transition: filter 0.3s ease;
+}
+
+.deck-list-entry-edit-button-icon:hover {
+    filter: sepia(0.5) invert(100%) saturate(5)
 }
 
 .deck-list-entry-delete-button {
@@ -54,4 +59,9 @@
 .deck-list-entry-delete-button-icon {
     height: 100%;
     object-fit: contain;
+    transition: filter 0.3s ease;
+}
+
+.deck-list-entry-delete-button-icon:hover {
+    filter: sepia(1) hue-rotate(-50deg) saturate(5);
 }
