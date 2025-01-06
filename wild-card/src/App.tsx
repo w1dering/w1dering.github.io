@@ -350,6 +350,8 @@ const App = () => {
 		// 	});
 	});
 
+	document.title = "Wild Card";
+
 	return (
 		<Router>
 			<div id="app">

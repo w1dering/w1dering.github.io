@@ -308,6 +308,8 @@ const DeckSession = ({ getDeckData, updateData }: Props) => {
 		};
 	}, [currentFlashcardIndex, currentFlashcardShowAnswer]);
 
+	document.title = `Wild Card - Studying ${deckData.name}`;
+
 	return (
 		<div id="deck-session">
 			<div id="background-block"></div>

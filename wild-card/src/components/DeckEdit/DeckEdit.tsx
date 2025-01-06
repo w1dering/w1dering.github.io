@@ -54,6 +54,8 @@ const DeckEdit = ({ getDeckData, updateData, addFlashcard, deleteFlashcard}: Pro
 		}
 	}
 
+	document.title = `Wild Card - Editing ${deckData.name}`;
+
 	return (
 		<div id="deck-edit" ref={containerRef}>
 			<Header id="deck-edit-header" content={`Editing ${deckId}`}/>
