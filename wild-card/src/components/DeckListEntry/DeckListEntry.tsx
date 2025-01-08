@@ -13,7 +13,13 @@ interface Props {
 	renameDeck: (name: string, newName: string) => string;
 }
 
-const DeckListEntry = ({ name, cards, averageRating, deleteDeck, renameDeck }: Props) => {
+const DeckListEntry = ({
+	name,
+	cards,
+	averageRating,
+	deleteDeck,
+	renameDeck,
+}: Props) => {
 	const [textAreaVal, setTextAreaVal] = useState(name);
 
 	const navigate = useNavigate();
@@ -38,7 +44,7 @@ const DeckListEntry = ({ name, cards, averageRating, deleteDeck, renameDeck }: P
 	const confirmRename = () => {
 		const newName = renameDeck(name, textAreaVal);
 		setTextAreaVal(newName);
-	}
+	};
 
 	return (
 		<div onClick={studyDeck} className="deck-list-entry">

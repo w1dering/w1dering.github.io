@@ -5,7 +5,7 @@ interface Props {
 	className?: string;
 	id?: string;
 	content: string;
-    children?: ReactNode;
+	children?: ReactNode;
 }
 
 const Header = ({ className = "", id = "", content }: Props) => {

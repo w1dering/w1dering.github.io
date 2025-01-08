@@ -7,7 +7,12 @@ interface Props {
 	show: boolean; // for being completely hidden instantly
 }
 
-const FlashcardAnswer = ({ content, visible, colour = "#c9c9c9", show}: Props) => {
+const FlashcardAnswer = ({
+	content,
+	visible,
+	colour = "#c9c9c9",
+	show,
+}: Props) => {
 	return (
 		<div
 			className="flashcard-answer"

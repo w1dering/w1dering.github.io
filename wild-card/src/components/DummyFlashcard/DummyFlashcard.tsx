@@ -19,7 +19,7 @@ const DummyFlashcard = ({ question, answer, rating, show }: Props) => {
 			id="flashcard-dummy"
 			style={{
 				visibility: show ? "visible" : "hidden",
-                position: "absolute"
+				position: "absolute",
 			}}
 		>
 			<FlashcardQuestion
@@ -30,7 +30,7 @@ const DummyFlashcard = ({ question, answer, rating, show }: Props) => {
 				content={answer}
 				visible={true}
 				colour={getColourFromRating(rating)}
-                show={true}
+				show={true}
 			/>
 		</div>
 	);
