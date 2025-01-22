@@ -1,0 +1,18 @@
+.project {
+    width: 40vh;
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.project-name {
+    flex: 1;
+    width: 100%;
+}
+
+.project-description {
+    flex: 9;
+    width: 100%;
+}
