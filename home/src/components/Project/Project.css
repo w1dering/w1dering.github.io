@@ -1,18 +1,59 @@
 .project {
+    position: relative;
     width: 40vh;
     height: 40vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: none;
+    border-radius: 3vh;
+    margin: 2vh;
+    background-size: cover;
+    transition: box-shadow 0.3s ease;
+}
+
+.project-overlay {
+    position: absolute;
+    border-radius: 3vh;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--darker-red);
+    opacity: 0.5;
+    transition: opacity 0.3s ease; /* Smooth transition for fading */
+}
+
+.project-overlay:hover {
+    opacity: 0;
 }
 
 .project-name {
-    flex: 1;
+    flex: 2;
     width: 100%;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: 10%;
 }
 
 .project-description {
-    flex: 9;
+    flex: 6;
     width: 100%;
+    color: black;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: 25px;
+    padding: 10%;
+}
+
+.project-footer {
+    flex: 2;
 }

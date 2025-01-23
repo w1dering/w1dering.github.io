@@ -1,0 +1,22 @@
+.social {
+    width: 7vh;
+    height: 7vh;
+    background-color: var(--red);
+    border: none;
+    border-radius: 10px;
+}
+
+.social-text {
+    font-size: 12px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.social-text:hover {
+    opacity: 1;
+}

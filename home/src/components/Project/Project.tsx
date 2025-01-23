@@ -8,14 +8,23 @@ interface Props {
 }
 
 const Project = ({ name, description, url, img }: Props) => {
+	const openURL = () => {
+		window.open(url, "_blank");
+	}
+
+	console.log(img);
+
 	return (
-		<div
+		<button
 			className="project"
-			style={{ backgroundImage: `url(${url})` }}
+			style={{ backgroundImage: `url(${img})` }}
+			onClick={openURL}
 		>
+			<div className="project-overlay"></div>
             <div className="project-name">{name}</div>
             <div className="project-description">{description}</div>
-        </div>
+			<div className="project-footer"></div>
+        </button>
 	);
 };
 
