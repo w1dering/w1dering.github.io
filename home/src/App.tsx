@@ -37,7 +37,7 @@ const App = () => {
 		},
 		{
 			name: "ARIE",
-			description: "make friends to be happy. marihacks 2024",
+			description: "make friends, be happy. marihacks 2024",
 			url: "https://w1dering.itch.io/arie",
 			img: "/arie.png",
 		},

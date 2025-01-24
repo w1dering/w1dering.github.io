@@ -1,12 +1,12 @@
 .project {
     position: relative;
-    flex: 0 0 30vh;
-    height: 30vh;
+    flex: 0 0 40vh;
+    height: 40vh;
     display: flex;
     flex-direction: column;
     border: none;
     border-radius: 3vh;
-    margin: 2vh;
+    margin: 1.5vh;
     background-size: cover;
     transition: all 0.3s ease;
 }
@@ -38,12 +38,14 @@
     flex: 1;
     width: 100%;
     color: black;
+    font-family: "Nunito", serif;
     font-weight: bold;
-    font-size: 2.5vh;
+    font-size: 3vh;
     display: flex;
     justify-content: left;
     align-items: start;
     padding-left: 5%;
+    padding-top: 3%;
 }
 
 .project-description {
@@ -52,9 +54,12 @@
     color: black;
     padding-left: 5%;
     
+    font-family: "Dosis", serif;
+    font-size: 2vh;
+    font-weight: 450;
+
     display: flex;
     justify-content: start;
     align-items: start;
-    font-size: 1.5vh;
     text-align: left;
 }
