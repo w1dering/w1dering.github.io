@@ -1,5 +1,4 @@
 #header {
-    flex: 2;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -7,6 +6,8 @@
     background-color: var(--darkest-red);
     padding-left: 15%;
     padding-right: 15%;
+    padding-top: 1%;
+    padding-bottom: 1%;
 }
 
 #header-title {

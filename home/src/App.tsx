@@ -31,9 +31,63 @@ const App = () => {
 		},
 		{
 			name: "sacabambaspis",
-			description: "satirical four-key rhythm game",
+			description: "a satirical rhythm game",
 			url: "https://w1dering.itch.io/sacabambaspis",
 			img: "/sacabambaspis.png",
+		},
+		{
+			name: "ARIE",
+			description: "make friends to be happy. marihacks 2024",
+			url: "https://w1dering.itch.io/arie",
+			img: "/arie.png",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
+		},
+		{
+			name: "blablabla",
+			description: "bla",
+			url: "",
+			img: "",
 		},
 	];
 
