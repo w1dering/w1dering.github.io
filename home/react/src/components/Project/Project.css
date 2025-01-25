@@ -24,7 +24,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--darker-red);
+    background-color: var(--darker);
     opacity: 0.5;
     transition: all 0.3s ease;
 }

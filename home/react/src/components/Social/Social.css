@@ -1,7 +1,7 @@
 .social {
     width: 7vh;
     height: 7vh;
-    background-color: var(--red);
+    background-color: var(--middle);
     border: none;
     border-radius: 1vh;
     position: relative;
@@ -22,7 +22,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--darker-red);
+    background-color: var(--darker);
     opacity: 0.5;
     transition: all 0.3s ease; 
 }

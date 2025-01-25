@@ -6,7 +6,7 @@
     top: calc(50% - 150vmax);
     border-radius: 50%;
     z-index: 2;
-    background-color: var(--darkest-red);
+    background-color: var(--darkest);
     display: flex;
     justify-content: center;
     align-items: center;

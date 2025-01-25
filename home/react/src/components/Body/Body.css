@@ -1,7 +1,7 @@
 #body {
     width: 100%;
     flex: 1;
-    background-color: var(--dark-red);
+    background-color: var(--dark);
     display: flex;
     justify-content: center;
     align-items: start;

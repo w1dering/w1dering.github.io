@@ -9,10 +9,10 @@
 
 :root {
     --cream: #fcf6bd;
-    --red: #b54c58;
-    --dark-red: #903e47;
-    --darker-red: #6f353c;
-    --darkest-red: #451723;
+    --middle: #30373e;
+    --dark: #1B1F23;
+    --darker: #131518;
+    --darkest: #0D1117;
 }
 
 * {
