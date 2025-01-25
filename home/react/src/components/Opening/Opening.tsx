@@ -29,7 +29,6 @@ const Opening = () => {
 	useEffect(() => {
 		if (animationIndex < animations.length) {
 			const timeout = setTimeout(() => {
-				console.log("just finished", animations[animationIndex].dur);
 				setAnimationIndex((prev) => prev + 1);
 				clearTimeout(timeout);
 			}, animations[animationIndex].dur);
@@ -98,9 +97,6 @@ const Opening = () => {
 					openingText.getBoundingClientRect();
 				const openingTextWidth = openingTextBoundingBox.width;
 				const openingTextHeight = openingTextBoundingBox.height;
-
-				console.log(openingTextWidth);
-				console.log(openingTextHeight);
 
 				setBkgStyle({
 					...bkgStyle,
