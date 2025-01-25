@@ -6,7 +6,7 @@ interface Props {
 	link: string;
 }
 
-const Social = ({ name, icon, link }: Props) => {
+const Social = ({ icon, link }: Props) => {
 	const openLink = () => {
 		window.open(link, "_blank");
 	};
