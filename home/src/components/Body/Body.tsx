@@ -1,13 +1,11 @@
 import Project from "../Project/Project";
 
+import { projects } from "../Data/ProjectData";
+
 import "./Body.css";
 
-interface Props {
-	projects: { name: string; description: string; url: string; img: string }[];
-}
 
-const Body = ({projects}: Props) => {
-
+const Body = () => {
 	return (
 		<div id="body">
 			<div id="body-project-container">
@@ -17,6 +15,7 @@ const Body = ({projects}: Props) => {
 						description={project.description}
 						url={project.url}
 						img={project.img}
+						techs={project.techs}
 						key={index}
 					/>
 				))}

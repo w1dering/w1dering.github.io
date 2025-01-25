@@ -2,11 +2,9 @@ import "./Header.css";
 
 import Social from "../Social/Social";
 
-interface Props {
-	socials: { name: string; icon: string; link: string }[];
-}
+import { socials } from "../Data/SocialData";
 
-const Header = ({ socials }: Props) => {
+const Header = () => {
 	return (
 		<div id="header">
 			<div id="header-title">w1dering</div>
@@ -16,7 +14,7 @@ const Header = ({ socials }: Props) => {
 						name={social.name}
 						icon={social.icon}
 						link={social.link}
-                        key={index}
+						key={index}
 					/>
 				))}
 			</div>

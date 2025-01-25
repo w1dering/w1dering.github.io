@@ -1,3 +1,6 @@
+import Tech from "../Tech/Tech";
+
+
 import "./Project.css";
 
 interface Props {
@@ -5,14 +8,15 @@ interface Props {
 	description: string;
 	url: string;
 	img: string;
+	techs: string[];
 }
 
-const Project = ({ name, description, url, img }: Props) => {
+const Project = ({ name, description, url, img, techs }: Props) => {
 	const openURL = () => {
-		window.open(url, "_blank");
-	}
-
-	console.log(img);
+		if (url) {
+			window.open(url, "_blank");
+		}
+	};
 
 	return (
 		<button
@@ -21,10 +25,17 @@ const Project = ({ name, description, url, img }: Props) => {
 			onClick={openURL}
 		>
 			<div className="project-overlay"></div>
-            <div className="project-name">{name}</div>
-            <div className="project-description">{description}</div>
-			<div className="project-footer"></div>
-        </button>
+			<div className="project-name">{name}</div>
+			<div className="project-description">{description}</div>
+			<div className="project-footer">
+				{techs.map((tech, index) => (
+					<Tech
+						name={tech}
+						key={index}
+					></Tech>
+				))}
+			</div>
+		</button>
 	);
 };
 

@@ -1,0 +1,12 @@
+.tech {
+    background-size: cover;
+    transition: all 0.3s ease;
+    height: 100%;
+    aspect-ratio: 1;
+    image-rendering: -webkit-optimize-contrast; /* For webkit browsers */
+    image-rendering: crisp-edges; /* For modern browsers */
+}
+
+.tech:hover {
+    transition: scale(1.05);
+}

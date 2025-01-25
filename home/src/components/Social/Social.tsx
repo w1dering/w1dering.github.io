@@ -6,10 +6,13 @@ interface Props {
 	link: string;
 }
 
-const Social = ({ name, icon }: Props) => {
+const Social = ({ name, icon, link }: Props) => {
+	const openLink = () => {
+		window.open(link, "_blank");
+	};
 	return (
-		<button className="social" style={{ backgroundImage: `url(${icon})` }}>
-			<p className="social-text">{name}</p>
+		<button className="social" style={{ backgroundImage: `url(${icon})` }} onClick={openLink}>
+			<div className="social-overlay"></div>
 		</button>
 	);
 };

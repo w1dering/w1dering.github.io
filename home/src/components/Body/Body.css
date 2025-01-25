@@ -4,15 +4,16 @@
     background-color: var(--dark-red);
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    align-items: start;
+    overflow: auto;
 }
 
 #body-project-container {
+    height: 90%;
     width: 70%;
     margin-top: 1.5vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    overflow: hidden;
+    align-items: start;
 }
