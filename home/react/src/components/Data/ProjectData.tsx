@@ -1,7 +1,7 @@
 export const projects = [
 	{
-		name: "VACF Visual Novel!",
-		description: "Ren'Py-based visual novel for UW Visual Arts Club",
+		name: "vacf visual novel",
+		description: "renpy-based visual novel for UW Visual Arts Club",
 		url: "https://github.com/UWVACF/dating-sim",
 		img: "/home/projects/vacf.png",
 		techs: ["python"],
