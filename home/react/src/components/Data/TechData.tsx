@@ -9,4 +9,5 @@ export const techIcons: { [key: string]: string } = {
 	cs: "/home/tech/cs.svg",
 	cpp: "/home/tech/cpp.svg",
 	openai: "/home/tech/openai.svg",
+	python: "/home/tech/python.svg",
 };

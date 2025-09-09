@@ -1,5 +1,12 @@
 export const projects = [
 	{
+		name: "VACF Visual Novel!",
+		description: "Ren'Py-based visual novel for UW Visual Arts Club",
+		url: "https://github.com/UWVACF/dating-sim",
+		img: "/home/projects/vacf.png",
+		techs: ["python"],
+	},
+	{
 		name: "canvas",
 		description: "a grid-based puzzle game",
 		url: "https://w1dering.github.io/canvas/canvas.html",
@@ -33,13 +40,6 @@ export const projects = [
 		url: "",
 		img: "",
 		techs: ["react", "ts", "openai"],
-	},
-	{
-		name: "coming soon!",
-		description: "",
-		url: "",
-		img: "",
-		techs: [],
 	},
 	
 ];
